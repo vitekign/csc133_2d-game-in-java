@@ -19,7 +19,7 @@ public class Bird extends Moveable {
 
     private float size;
 
-    Bird(Location location, float heading, float speed, Color color){
+    public Bird(Location location, float heading, float speed, Color color){
         super(color);
 
         this.X = location.getX();

@@ -1,4 +1,6 @@
-package a1.objects;
+package a1.model;
+
+import a1.objects.*;
 
 import java.awt.*;
 import java.util.Random;

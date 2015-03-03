@@ -17,7 +17,7 @@ public class OilSlick extends Fixed {
     private float width;
     private float length;
 
-    OilSlick(Location location, float width, float length, Color color){
+    public OilSlick(Location location, float width, float length, Color color){
         super(color);
 
         this.X = location.getX();

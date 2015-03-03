@@ -17,7 +17,7 @@ public class Pylon extends Fixed {
     final private int sequenceNumber;
     static private int count = 1;
 
-    Pylon(Location location, float radius, Color color){
+    public Pylon(Location location, float radius, Color color){
 
             super(color);
 

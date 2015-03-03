@@ -10,7 +10,7 @@ package a1.objects;
  */
 public class Location {
 
-    Location(float x, float y){
+    public Location(float x, float y){
         this.X = x;
         this.Y = y;
     }

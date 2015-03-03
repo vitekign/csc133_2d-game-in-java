@@ -37,7 +37,7 @@ public abstract class Moveable extends GameObject {
      * the implementation will differ, and the method
      * will turn into an abstract method.
      */
-     void move(){
+     public void move(){
 
          float angle =  (90 - heading);
          float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);
