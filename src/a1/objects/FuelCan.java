@@ -16,7 +16,7 @@ public class FuelCan extends Fixed {
 
     private float size;
 
-    FuelCan(Location location, float size, Color color){
+    public FuelCan(Location location, float size, Color color){
         super(color);
 
         this.X = location.getX();

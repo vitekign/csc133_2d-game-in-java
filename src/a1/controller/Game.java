@@ -1,6 +1,6 @@
 package a1.controller;
 
-import a1.objects.GameWorld;
+import a1.model.GameWorld;
 
 import java.util.Scanner;
 

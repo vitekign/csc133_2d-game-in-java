@@ -1,5 +1,7 @@
 package a1.objects;
 
+import a1.model.GameWorld;
+
 import java.awt.*;
 
 /**
@@ -29,7 +31,7 @@ public class Car extends Moveable implements ISteerable {
      */
     private GameWorld gw;
 
-    Car(Location location, GameWorld gw, Color color){
+    public Car(Location location, GameWorld gw, Color color){
         super(color);
 
         /**
@@ -68,7 +70,7 @@ public class Car extends Moveable implements ISteerable {
      *  2. The car’s fuel level is reduced by a small amount.
      */
     @Override
-    void move() {
+    public void move() {
         if(isCarInOilSlick()){
             return ;
         }

@@ -43,7 +43,7 @@ public class GameObject {
      * @return
      * Location of the object.
      */
-    Location getLocation(){
+    public Location getLocation(){
         return new Location(X, Y);
     }
 
