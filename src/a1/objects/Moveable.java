@@ -49,4 +49,21 @@ public abstract class Moveable extends GameObject {
          this.Y = temp.getY();
 
      }
+
+
+    public float getHeading() {
+        return heading;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setHeading(float heading) {
+        this.heading = heading;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
 }

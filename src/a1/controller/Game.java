@@ -1,6 +1,10 @@
 package a1.controller;
 
+import a1.commands.CollideWithBird;
+import a1.commands.QuitTheGame;
+import a1.commands.TriggerTick;
 import a1.model.GameWorld;
+import a1.model.ScoreView;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -16,6 +20,7 @@ public class Game extends JFrame{
 
 
     private GameWorld gw;
+    private ScoreView scoreView;
 
     public Game() {
         super("My Racing Game");
@@ -24,10 +29,23 @@ public class Game extends JFrame{
         gw.initLayout();
 
 
+        scoreView = new ScoreView();
 
 
 
         setLayout(new BorderLayout());
+
+
+        gw.addObserver(scoreView);
+        gw.notifyObserver();
+
+
+        //**********************************************
+        //              commands                      **
+        //**********************************************
+        QuitTheGame quit = QuitTheGame.getInstance();
+        TriggerTick tick = TriggerTick.getInstance();
+        CollideWithBird colWithBird = CollideWithBird.getInstance();
 
 
 
@@ -36,28 +54,7 @@ public class Game extends JFrame{
         //              top panel                     **
         //**********************************************
 
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,16,0));
-        topPanel.setBorder(new LineBorder(Color.blue,2));
-        this.add(topPanel,BorderLayout.NORTH);
-
-        JLabel currentTime = new JLabel("Time: ");
-        topPanel.add(currentTime);
-
-
-        JLabel livesLeft = new JLabel("Lives Left: ");
-        topPanel.add(livesLeft);
-
-        JLabel highestPylon = new JLabel("Highest Player Pylon: ");
-        topPanel.add(highestPylon);
-
-        JLabel remainingFuelLevel = new JLabel("Player Fuel Remaining: ");
-        topPanel.add(remainingFuelLevel);
-
-        JLabel playerDamageLevel = new JLabel("Player Damage Level: ");
-        topPanel.add(playerDamageLevel);
-
-        JLabel soundStatus = new JLabel("Sound: ");
-        topPanel.add(soundStatus);
+        add(scoreView, BorderLayout.NORTH);
 
 
         //**********************************************
@@ -77,6 +74,8 @@ public class Game extends JFrame{
         leftPanel.add(collideWithPylon);
 
         JButton collideWithBird = new JButton("Collide With Bird");
+        colWithBird.setTarget(gw);
+        collideWithBird.setAction(colWithBird);
         leftPanel.add(collideWithBird);
 
         JButton pickUpFuelCan = new JButton("Picked Up FuelCan");
@@ -92,9 +91,12 @@ public class Game extends JFrame{
         leftPanel.add(switchStrategy);
 
         JButton triggerTick = new JButton("Trigger Tick");
+        triggerTick.setAction(tick);
+        tick.setTarget(gw);
         leftPanel.add(triggerTick);
 
         JButton quitTheGame = new JButton("Quit");
+        quitTheGame.setAction(quit);
         leftPanel.add(quitTheGame);
 
 
@@ -116,10 +118,39 @@ public class Game extends JFrame{
         JMenuBar bar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
-        JMenuItem mItem = new JMenuItem("1");
-        fileMenu.add(mItem);
+        JMenuItem newMenuItem = new JMenuItem("New");
+        fileMenu.add(newMenuItem);
+
+        JMenuItem saveMenuItem = new JMenuItem("Save");
+        fileMenu.add(saveMenuItem);
+
+        JCheckBoxMenuItem soundMenuItem = new JCheckBoxMenuItem("Sound");
+        soundMenuItem.setState(true);
+        fileMenu.add(soundMenuItem);
+
+        JMenuItem aboutMenuItem = new JMenuItem("About");
+        fileMenu.add(aboutMenuItem);
+
+        JMenuItem quitTheGameMenuItem = new JMenuItem("Quit");
+        fileMenu.add(quitTheGameMenuItem);
+
+
+
+
+
 
         JMenu commandMenu = new JMenu("Commands");
+        JMenuItem pickUpFuelItem = new JMenuItem("fuel pickup");
+        commandMenu.add(pickUpFuelItem);
+
+        JMenuItem addOilSlickItem = new JMenuItem("add oil slick");
+        commandMenu.add(addOilSlickItem);
+
+        JMenuItem generateNewColorsItem = new JMenuItem("new colors");
+        commandMenu.add(generateNewColorsItem);
+
+
+
 
         bar.add(fileMenu);
         bar.add(commandMenu);

@@ -64,4 +64,20 @@ public class GameObject {
                 " color=[" + color.getRed() + " ," + color.getGreen() + ", "
                 + color.getBlue() + "]";
     }
+
+    public float getX() {
+        return X;
+    }
+
+    public float getY() {
+        return Y;
+    }
+
+    public void setY(float y) {
+        Y = y;
+    }
+
+    public void setX(float x) {
+        X = x;
+    }
 }

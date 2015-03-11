@@ -1,5 +1,6 @@
 package a1.objects;
 
+import a1.commands.IStrategy;
 import a1.model.GameWorld;
 
 import java.awt.*;
@@ -9,6 +10,8 @@ import java.awt.*;
  */
 public class Car extends Moveable implements ISteerable {
 
+
+    IStrategy strategy;
 
 
     private float width;
@@ -23,6 +26,45 @@ public class Car extends Moveable implements ISteerable {
     private float speed;
     private float damageLevel;
 
+    public float getWidth() {
+        return width;
+    }
+
+    public float getLength() {
+        return length;
+    }
+
+    public boolean isInOilSlick() {
+        return inOilSlick;
+    }
+
+    public float getSteeringDirection() {
+        return steeringDirection;
+    }
+
+    public float getMaximumSpeed() {
+        return maximumSpeed;
+    }
+
+    public float getMaximumDamageLevel() {
+        return maximumDamageLevel;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public GameWorld getGw() {
+        return gw;
+    }
+
+    public void setSteeringDirection(float steeringDirection) {
+        this.steeringDirection = steeringDirection;
+    }
+
+    public void setUpStrategy(IStrategy str){
+        strategy = str;
+    }
 
     /**
      * The car object needs to access the GameWorld
@@ -58,6 +100,7 @@ public class Car extends Moveable implements ISteerable {
         this.gw = gw;
 
         gw.setNewFuelLevel(this.fuelLevel);
+        gw.updateDamageLevel(this.damageLevel);
     }
 
 
@@ -69,33 +112,43 @@ public class Car extends Moveable implements ISteerable {
      *  steeringDirection.
      *  2. The car’s fuel level is reduced by a small amount.
      */
+
+
     @Override
     public void move() {
-        if(isCarInOilSlick()){
-            return ;
+
+        if(strategy != null){
+            strategy.performStrategy(this, gw);
+        }
+        else {
+            System.out.println("The strategy is not set up");
         }
 
-        heading += steeringDirection;
-        float angle = (float) (90 - heading);
-        float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);
-        float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed);
-        Location temp = new Location(this.getLocation().getX() + deltaX,
-                                     this.getLocation().getY() + deltaY);
-
-        this.X = temp.getX();
-        this.Y = temp.getY();
-
-
-        /**
-         * Decrease the amount of fuel
-         */
-        changeFuelLevel(-5);
-
-        /**
-         *  Reset steering direction after applying it to the direction
-         *  of the car.
-         */
-        steeringDirection = 0;
+//        if(isCarInOilSlick()){
+//            return ;
+//        }
+//
+//        heading += steeringDirection;
+//        float angle = (float) (90 - heading);
+//        float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);
+//        float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed);
+//        Location temp = new Location(this.getLocation().getX() + deltaX,
+//                                     this.getLocation().getY() + deltaY);
+//
+//        this.X = temp.getX();
+//        this.Y = temp.getY();
+//
+//
+//        /**
+//         * Decrease the amount of fuel
+//         */
+//        changeFuelLevel(-gw.DAMAGE_FOR_COLLIDING_WITH_CARS);
+//
+//        /**
+//         *  Reset steering direction after applying it to the direction
+//         *  of the car.
+//         */
+//        steeringDirection = 0;
 
     }
 
@@ -105,13 +158,14 @@ public class Car extends Moveable implements ISteerable {
      * the amount of fuel by which the amount should be
      * decrease/increased
      */
-    private void changeFuelLevel(float volume){
+    public void changeFuelLevel(float volume){
         fuelLevel += volume;
-        if(fuelLevel < 0) {
+        if(fuelLevel <= 0) {
             fuelLevel = 0;
             gw.deleteOneLife();
+        } else {
+            gw.setNewFuelLevel(this.fuelLevel);
         }
-        gw.setNewFuelLevel(this.fuelLevel);
     }
 
     /**
@@ -282,7 +336,7 @@ public class Car extends Moveable implements ISteerable {
      * fuel can to be picked up.
      */
     public void pickUpFuelCan(FuelCan fuelCan) {
-        this.fuelLevel += fuelCan.getSize();
+        changeFuelLevel(fuelCan.getSize());
     }
 
     /**

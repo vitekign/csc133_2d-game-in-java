@@ -1,5 +1,6 @@
 package a1.model;
 
+import a1.commands.StandartMoveStrategy;
 import a1.objects.*;
 
 import java.awt.*;
@@ -9,7 +10,14 @@ import java.util.Vector;
 /**
  * Created by Victor Ignatenkov on 2/9/15.
  */
-public class GameWorld implements Container {
+public class GameWorld implements Container , IObservable, IGameWorld{
+
+
+    /*
+     *  Code here to hold and manipulate world objects, handle
+     *  observer registration, invoke observer callbacks, etc.
+     */
+
 
     /**
      * Some basic constants
@@ -27,10 +35,10 @@ public class GameWorld implements Container {
     private int lastPylonReached = THE_FIRST_PYLON;
     private float currentFuelLevel;
     private float damageLevel;
-
     Car car;
 
     Vector<GameObject> theWorldVector;
+    Vector<IObserver> observers = new Vector<>();
 
     public void initLayout() {
 
@@ -38,7 +46,6 @@ public class GameWorld implements Container {
          * Collection with all game objects
          */
         theWorldVector = new Vector<>();
-
 
 
         /**
@@ -96,6 +103,9 @@ public class GameWorld implements Container {
 
         theWorldVector.add(new FuelCan(new Location(50, 50), rand.nextFloat() * 25, new Color(255, 25, 5)));
         theWorldVector.add(new FuelCan(new Location(20, 555), rand.nextFloat() * 25, new Color(5, 25, 255)));
+
+
+        car.setUpStrategy(new StandartMoveStrategy());
 
     }
 
@@ -230,6 +240,7 @@ public class GameWorld implements Container {
             }
         }
         currentClockTime++;
+        notifyObserver();
     }
 
     /**
@@ -262,6 +273,7 @@ public class GameWorld implements Container {
      */
     public void setNewFuelLevel(float volume) {
         currentFuelLevel = volume;
+        notifyObserver();
     }
 
     /**
@@ -272,6 +284,7 @@ public class GameWorld implements Container {
      */
     public void updateLastPylonReached(int seqNum) {
         lastPylonReached = seqNum;
+        notifyObserver();
     }
 
     public void updateDamageLevel(float newLevel) {
@@ -279,6 +292,8 @@ public class GameWorld implements Container {
         if (damageLevel == 100) {
             deleteOneLife();
         }
+
+        notifyObserver();
     }
 
     /**
@@ -291,7 +306,11 @@ public class GameWorld implements Container {
             System.out.println("You're out of lives!");
             quitTheGame();
         }
+
+        notifyObserver();
         resetTheGame();
+
+
     }
 
     /**
@@ -303,6 +322,7 @@ public class GameWorld implements Container {
         theWorldVector = null;
         Pylon.resetSequenceGeneratorTo(THE_FIRST_PYLON);
         initLayout();
+        notifyObserver();
     }
 
 
@@ -319,6 +339,43 @@ public class GameWorld implements Container {
     public Iterator getIterator() {
         return new GameObjectsIterator();
     }
+
+
+
+    @Override
+    public void addObserver(IObserver obs) {
+        observers.add(obs);
+    }
+
+    @Override
+    public void notifyObserver() {
+        for (int i = 0; i < observers.size(); i++){
+            observers.elementAt(i).update(this,this);
+        }
+    }
+
+
+
+    public int getCurrentClockTime() {
+        return currentClockTime;
+    }
+
+    public int getLivesRemaining() {
+        return livesRemaining;
+    }
+
+    public int getLastPylonReached() {
+        return lastPylonReached;
+    }
+
+    public float getCurrentFuelLevel() {
+        return currentFuelLevel;
+    }
+
+    public float getDamageLevel() {
+        return damageLevel;
+    }
+
 
     private class GameObjectsIterator implements Iterator {
 
