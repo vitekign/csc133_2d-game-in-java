@@ -3,6 +3,7 @@ package a1.commands;
 import a1.model.GameWorld;
 import a1.objects.Car;
 import a1.objects.Location;
+import a1.objects.NPCCar;
 
 /**
  * Created by Victor Ignatenkov on 3/10/15.
@@ -10,7 +11,7 @@ import a1.objects.Location;
 public class StandartMoveStrategy implements IStrategy {
 
     @Override
-    public void performStrategy(Car car, GameWorld gw) {
+    public void performStrategy(NPCCar car, GameWorld gw) {
         if(car.isInOilSlick()){
             return ;
         }

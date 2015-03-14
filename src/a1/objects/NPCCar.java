@@ -1,5 +1,16 @@
 package a1.objects;
 
+/**
+ * Created by Victor Ignatenkov on 3/13/15.
+ */
+
+import a1.commands.IStrategy;
+import a1.model.GameWorld;
+
+import java.awt.*;
+
+
+
 import a1.commands.IStrategy;
 import a1.model.GameWorld;
 
@@ -8,7 +19,7 @@ import java.awt.*;
 /**
  * Created by Victor Ignatenkov on 2/9/15.
  */
-public class Car extends Moveable implements ISteerable {
+public class NPCCar extends Moveable implements ISteerable {
 
 
     IStrategy strategy;
@@ -73,7 +84,9 @@ public class Car extends Moveable implements ISteerable {
      */
     private GameWorld gw;
 
-    public Car(Location location, GameWorld gw, Color color){
+    public NPCCar(Location location, GameWorld gw, Color color, float width, float length,
+                  float steeringDirection, float maximumSpeed, float fuelLevel,
+                  float speed, float damageLevel, float maximumDamageLevel, int lastHighestPylonReached){
         super(color);
 
         /**
@@ -82,25 +95,35 @@ public class Car extends Moveable implements ISteerable {
          * most of the following values will be
          * assigned by a corresponding constructor.
          */
-        width               = 5;
-        length              = 5;
-        steeringDirection   = 0;
-        maximumSpeed        = 100;
-        fuelLevel           = 100;
-        speed               = 0;
-        damageLevel         = 0;
-        maximumDamageLevel  = 100;
+        this.width = width;
+        this.length = length;
+        this.steeringDirection = steeringDirection;
+        this.maximumSpeed = maximumSpeed;
+        this.fuelLevel = fuelLevel;
+        this.speed = speed;
+        this.damageLevel = damageLevel;
+        this.maximumDamageLevel = maximumDamageLevel;
+        this.lastHighestPylonReached = lastHighestPylonReached;
+//        width               = 5;
+//        length              = 5;
+//        steeringDirection   = 0;
+//        maximumSpeed        = 100;
+//        fuelLevel           = 100;
+//        speed               = 0;
+//        damageLevel         = 0;
+//        maximumDamageLevel  = 100;
+//        lastHighestPylonReached = 1;
 
         inOilSlick = false;
-        lastHighestPylonReached = 1;
+
 
         this.X = location.getX();
         this.Y = location.getY();
 
         this.gw = gw;
 
-        gw.setNewFuelLevel(this.fuelLevel);
-        gw.updateDamageLevel(this.damageLevel);
+       // gw.setNewFuelLevel(this.fuelLevel);
+       // gw.updateDamageLevel(this.damageLevel);
     }
 
 
@@ -117,38 +140,38 @@ public class Car extends Moveable implements ISteerable {
     @Override
     public void move() {
 
-//        if(strategy != null){
-//            strategy.performStrategy(this, gw);
-//        }
-//        else {
-//            System.out.println("The strategy is not set up");
-//        }
-
-        if(isCarInOilSlick()){
-            return ;
+        if(strategy != null){
+            strategy.performStrategy(this, gw);
+        }
+        else {
+            System.out.println("The strategy is not set up");
         }
 
-        heading += steeringDirection;
-        float angle = (float) (90 - heading);
-        float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);
-        float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed);
-        Location temp = new Location(this.getLocation().getX() + deltaX,
-                                     this.getLocation().getY() + deltaY);
-
-        this.X = temp.getX();
-        this.Y = temp.getY();
-
-
-        /**
-         * Decrease the amount of fuel
-         */
-        changeFuelLevel(-gw.DAMAGE_FOR_COLLIDING_WITH_CARS);
-
-        /**
-         *  Reset steering direction after applying it to the direction
-         *  of the car.
-         */
-        steeringDirection = 0;
+//        if(isCarInOilSlick()){
+//            return ;
+//        }
+//
+//        heading += steeringDirection;
+//        float angle = (float) (90 - heading);
+//        float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);
+//        float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed);
+//        Location temp = new Location(this.getLocation().getX() + deltaX,
+//                                     this.getLocation().getY() + deltaY);
+//
+//        this.X = temp.getX();
+//        this.Y = temp.getY();
+//
+//
+//        /**
+//         * Decrease the amount of fuel
+//         */
+//        changeFuelLevel(-gw.DAMAGE_FOR_COLLIDING_WITH_CARS);
+//
+//        /**
+//         *  Reset steering direction after applying it to the direction
+//         *  of the car.
+//         */
+//        steeringDirection = 0;
 
     }
 

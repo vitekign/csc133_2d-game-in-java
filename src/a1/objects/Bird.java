@@ -29,7 +29,10 @@ public class Bird extends Moveable {
     }
 
 
+    @Override
+    public void changeColor(Color color) {
 
+    }
 
     @Override
     public String toString() {

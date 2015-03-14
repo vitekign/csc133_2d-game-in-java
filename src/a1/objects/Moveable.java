@@ -25,7 +25,8 @@ public abstract class Moveable extends GameObject {
     /**
      * heading specified by degrees, 0 North, 90 East
      */
-    protected float heading;
+    //TODO return back to private
+    public float heading;
     protected float speed;
 
 

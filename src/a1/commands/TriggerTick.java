@@ -29,6 +29,7 @@ public class TriggerTick extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
             gw.makeTick();
+
         } else {
             System.out.println("The target is not set up");
         }
@@ -36,6 +37,7 @@ public class TriggerTick extends AbstractAction {
     }
 
     public void setTarget(GameWorld gw){
+
         this.gw = gw;
     }
 }

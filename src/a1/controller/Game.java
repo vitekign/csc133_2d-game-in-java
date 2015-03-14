@@ -16,7 +16,22 @@ import java.util.Scanner;
 /**
  * Created by Victor Ignatenkov on 2/9/15.
  */
-public class Game extends JFrame{
+
+
+/**
+ * Override the JButton to avoid issues with
+ * hitting "SPACE" key.
+ */
+class ButtonSpaceKeyFocusAgnostic extends JButton{
+
+    public ButtonSpaceKeyFocusAgnostic(String str){
+        super(str);
+        this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+    }
+
+}
+
+public class Game extends JFrame {
 
 
     private GameWorld gw;
@@ -30,7 +45,6 @@ public class Game extends JFrame{
 
 
         scoreView = new ScoreView();
-
 
 
         setLayout(new BorderLayout());
@@ -48,8 +62,6 @@ public class Game extends JFrame{
         CollideWithBird colWithBird = CollideWithBird.getInstance();
 
 
-
-
         //**********************************************
         //              top panel                     **
         //**********************************************
@@ -60,44 +72,55 @@ public class Game extends JFrame{
         //**********************************************
         //              left panel                    **
         //**********************************************
+
+
         JPanel leftPanel = new JPanel();
         leftPanel.setBorder(new TitledBorder(" Options: "));
-        leftPanel.setLayout(new GridLayout(10,1));
+        leftPanel.setLayout(new GridLayout(10, 1));
 
-        leftPanel.setBorder(new LineBorder(Color.green,2));
+        leftPanel.setBorder(new LineBorder(Color.green, 2));
         this.add(leftPanel, BorderLayout.WEST);
 
-        JButton collideWithNPC = new JButton("Collide With NPC");
+        JButton collideWithNPC = new ButtonSpaceKeyFocusAgnostic("Collide With NPC");
         leftPanel.add(collideWithNPC);
 
-        JButton collideWithPylon = new JButton("Collide With Pylon");
+        JButton collideWithPylon = new ButtonSpaceKeyFocusAgnostic("Collide With Pylon");
         leftPanel.add(collideWithPylon);
 
-        JButton collideWithBird = new JButton("Collide With Bird");
+        JButton collideWithBird = new ButtonSpaceKeyFocusAgnostic("Collide With Bird");
         colWithBird.setTarget(gw);
         collideWithBird.setAction(colWithBird);
         leftPanel.add(collideWithBird);
 
-        JButton pickUpFuelCan = new JButton("Picked Up FuelCan");
+
+
+        JButton pickUpFuelCan = new ButtonSpaceKeyFocusAgnostic("Picked Up FuelCan");
         leftPanel.add(pickUpFuelCan);
 
-        JButton enterOilSlick = new JButton("Entered Oil Slick");
+        JButton enterOilSlick = new ButtonSpaceKeyFocusAgnostic("Entered Oil Slick");
         leftPanel.add(enterOilSlick);
 
-        JButton exitOilSlick = new JButton("Exited Oil Slick");
+        JButton exitOilSlick = new ButtonSpaceKeyFocusAgnostic("Exited Oil Slick");
         leftPanel.add(exitOilSlick);
 
-        JButton switchStrategy = new JButton("Switch Strategy");
+        JButton switchStrategy = new ButtonSpaceKeyFocusAgnostic("Switch Strategy");
         leftPanel.add(switchStrategy);
 
-        JButton triggerTick = new JButton("Trigger Tick");
+        JButton triggerTick = new ButtonSpaceKeyFocusAgnostic("Trigger Tick");
         triggerTick.setAction(tick);
         tick.setTarget(gw);
         leftPanel.add(triggerTick);
 
-        JButton quitTheGame = new JButton("Quit");
+        JButton quitTheGame = new ButtonSpaceKeyFocusAgnostic("Quit");
         quitTheGame.setAction(quit);
         leftPanel.add(quitTheGame);
+
+
+        //TODO Find out how to switch the focus to another jcomponent
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("T"), "doTick");
+        this.getRootPane().getActionMap().put("doTick",tick);
+
+
 
 
 
@@ -107,8 +130,8 @@ public class Game extends JFrame{
 
         JPanel centerPanel = new JPanel();
         centerPanel.setBorder(new EtchedBorder());
-        centerPanel.setBackground(new Color(100,100,123));
-        this.add(centerPanel,BorderLayout.CENTER);
+        centerPanel.setBackground(new Color(100, 100, 123));
+        this.add(centerPanel, BorderLayout.CENTER);
 
 
         //**********************************************
@@ -135,10 +158,6 @@ public class Game extends JFrame{
         fileMenu.add(quitTheGameMenuItem);
 
 
-
-
-
-
         JMenu commandMenu = new JMenu("Commands");
         JMenuItem pickUpFuelItem = new JMenuItem("fuel pickup");
         commandMenu.add(pickUpFuelItem);
@@ -150,15 +169,9 @@ public class Game extends JFrame{
         commandMenu.add(generateNewColorsItem);
 
 
-
-
         bar.add(fileMenu);
         bar.add(commandMenu);
         this.setJMenuBar(bar);
-
-
-
-
 
 
         setResizable(false);
@@ -180,7 +193,7 @@ public class Game extends JFrame{
 
     /**
      * Main loop of the game
-     *
+     * <p>
      * play() repeatedly calls a method named getCommand()
      * which prompts the user for one or two-character commands.
      * Each command returned by getCommand() should
@@ -264,4 +277,7 @@ public class Game extends JFrame{
             }
         }
     }
+
+
+
 }

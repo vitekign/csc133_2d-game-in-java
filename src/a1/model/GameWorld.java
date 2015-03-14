@@ -1,5 +1,6 @@
 package a1.model;
 
+import a1.commands.FollowThePlayerCarStrategy;
 import a1.commands.StandartMoveStrategy;
 import a1.objects.*;
 
@@ -105,7 +106,16 @@ public class GameWorld implements Container , IObservable, IGameWorld{
         theWorldVector.add(new FuelCan(new Location(20, 555), rand.nextFloat() * 25, new Color(5, 25, 255)));
 
 
-        car.setUpStrategy(new StandartMoveStrategy());
+        //100 150
+        NPCCar npcCar1 = new NPCCar(new Location(100,205), this, Services.generateRandomColor(),
+                5,5,0,100,100,10,500,500,1);
+        FollowThePlayerCarStrategy followStr = new FollowThePlayerCarStrategy();
+        followStr.setSpeedRatio((float)0.5);
+        npcCar1.setUpStrategy(followStr);
+        theWorldVector.add(npcCar1);
+
+
+
 
     }
 
@@ -376,6 +386,9 @@ public class GameWorld implements Container , IObservable, IGameWorld{
         return damageLevel;
     }
 
+    public Car getCharacterCar() {
+        return car;
+    }
 
     private class GameObjectsIterator implements Iterator {
 
