@@ -12,12 +12,9 @@ public class CollideWithBird extends AbstractAction {
 
 
     private GameWorld gw;
-
     private CollideWithBird(){
-        super("CollideWithBird");
+
     }
-
-
 
     private static CollideWithBird collideWithBird = new CollideWithBird();
 
@@ -32,9 +29,7 @@ public class CollideWithBird extends AbstractAction {
         } else {
             System.out.println("The target is not set up");
         }
-
     }
-
     public void setTarget(GameWorld gw){
         this.gw = gw;
     }

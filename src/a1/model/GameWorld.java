@@ -1,6 +1,7 @@
 package a1.model;
 
 import a1.commands.FollowThePlayerCarStrategy;
+import a1.commands.MoveTowardsPylonStrategy;
 import a1.commands.StandartMoveStrategy;
 import a1.objects.*;
 
@@ -20,13 +21,16 @@ public class GameWorld implements Container , IObservable, IGameWorld{
      */
 
 
+
     /**
      * Some basic constants
      */
     public static final int GLOBAL_WIDTH = 1000;
     public static final int GLOBAL_HEIGHT = 1000;
     public static final int THE_FIRST_PYLON = 1;
-    public final static float DAMAGE_FOR_COLLIDING_WITH_CARS = 5;
+
+    //TODO return DAMAGE_FOR_COLLIDING_WITH_CARS back to 5
+    public final static float DAMAGE_FOR_COLLIDING_WITH_CARS = 1;
     public static final int NUMBER_OF_LIVES = 3;
     Random rand = new Random();
 
@@ -36,6 +40,8 @@ public class GameWorld implements Container , IObservable, IGameWorld{
     private int lastPylonReached = THE_FIRST_PYLON;
     private float currentFuelLevel;
     private float damageLevel;
+    private boolean sound;
+
     Car car;
 
     Vector<GameObject> theWorldVector;
@@ -48,6 +54,7 @@ public class GameWorld implements Container , IObservable, IGameWorld{
          */
         theWorldVector = new Vector<>();
 
+        turnOnSound(false);
 
         /**
          * Initialize oll needed objects on the fly
@@ -55,10 +62,10 @@ public class GameWorld implements Container , IObservable, IGameWorld{
          * If one life is lost - make a hard reset and
          * initialize all objects again with the same data.
          */
-        theWorldVector.add(new Pylon(new Location(100, 150), 50, new Color(64, 64, 64)));
-        theWorldVector.add(new Pylon(new Location(100, 250), 50, new Color(64, 64, 64)));
-        theWorldVector.add(new Pylon(new Location(800, 500), 50, new Color(64, 64, 64)));
-        theWorldVector.add(new Pylon(new Location(150, 750), 50, new Color(64, 64, 64)));
+        theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64)));
+        theWorldVector.add(new Pylon(new Location(70, 100), 50, new Color(64, 64, 64)));
+        theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64)));
+        theWorldVector.add(new Pylon(new Location(70, 100), 50, new Color(64, 64, 64)));
 
 
         Services.supplyServicesWithCollectionOfObjects(theWorldVector);
@@ -108,14 +115,12 @@ public class GameWorld implements Container , IObservable, IGameWorld{
 
         //100 150
         NPCCar npcCar1 = new NPCCar(new Location(100,205), this, Services.generateRandomColor(),
-                5,5,0,100,100,10,500,500,1);
+                5,5,0,100,100,10,500,500,0);
         FollowThePlayerCarStrategy followStr = new FollowThePlayerCarStrategy();
-        followStr.setSpeedRatio((float)0.5);
-        npcCar1.setUpStrategy(followStr);
+        MoveTowardsPylonStrategy moveToPylon = new MoveTowardsPylonStrategy();
+
+        npcCar1.setUpStrategy(moveToPylon);
         theWorldVector.add(npcCar1);
-
-
-
 
     }
 
@@ -250,6 +255,25 @@ public class GameWorld implements Container , IObservable, IGameWorld{
             }
         }
         currentClockTime++;
+        notifyObserver();
+    }
+
+
+    public void turnOnSound(boolean val){
+        sound = val;
+        notifyObserver();
+    }
+
+    public boolean isSound() {
+        return sound;
+    }
+
+    public void switchSound() {
+        if(sound){
+            sound = false;
+        } else {
+            sound = true;
+        }
         notifyObserver();
     }
 
@@ -389,6 +413,10 @@ public class GameWorld implements Container , IObservable, IGameWorld{
     public Car getCharacterCar() {
         return car;
     }
+
+
+
+
 
     private class GameObjectsIterator implements Iterator {
 

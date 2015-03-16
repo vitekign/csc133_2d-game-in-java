@@ -63,7 +63,7 @@ public class ScoreView extends JPanel implements IObserver {
         highestPylon.setText("Highest Player Pylon: " + gw.getLastPylonReached());
         remainingFuelLevel.setText("Player Fuel Remaining: " + gw.getCurrentFuelLevel());
         playerDamageLevel.setText("Player Damage Level: " + gw.getDamageLevel());
-        soundStatus.setText("Sound: ");
+        soundStatus.setText("Sound: " + (gw.isSound() ? "ON" : "OFF"));
 
 
 

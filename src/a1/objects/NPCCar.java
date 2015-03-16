@@ -37,6 +37,21 @@ public class NPCCar extends Moveable implements ISteerable {
     private float speed;
     private float damageLevel;
 
+    private int firstPylonToMove;
+
+    public void setLastHighestPylonReached(int lastHighestPylonReached) {
+        this.lastHighestPylonReached = lastHighestPylonReached;
+    }
+
+    public int getFirstPylonToMove() {
+
+        return firstPylonToMove;
+    }
+
+    public void setFirstPylonToMove(int firstPylonToMove) {
+        this.firstPylonToMove = firstPylonToMove;
+    }
+
     public float getWidth() {
         return width;
     }

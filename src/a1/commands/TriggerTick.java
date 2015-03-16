@@ -14,10 +14,8 @@ public class TriggerTick extends AbstractAction {
     private GameWorld gw;
 
     private TriggerTick(){
-        super("TriggerTick");
+        super();
     }
-
-
 
     private static TriggerTick TriggerTick = new TriggerTick();
 

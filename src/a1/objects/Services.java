@@ -84,5 +84,16 @@ public class Services {
         throw new Exception("There are no fuelCans in the game");
     }
 
+    public static int findTheNumberOfPylons(){
+
+        int tempNumOfPylons = 0;
+
+        for (int i=0; i<theWorldVector.size(); i++) {
+            if (theWorldVector.elementAt(i) instanceof Pylon) {
+                tempNumOfPylons++;
+            }
+        }
+        return tempNumOfPylons;
+    }
 
 }
