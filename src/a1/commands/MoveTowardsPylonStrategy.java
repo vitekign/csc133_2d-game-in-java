@@ -10,6 +10,8 @@ import a1.objects.NPCCar;
 import a1.objects.Pylon;
 import a1.objects.Services;
 
+import static java.lang.Math.atan2;
+
 
 /**
  * Created by Victor Ignatenkov on 3/13/15.
@@ -118,18 +120,22 @@ public class MoveTowardsPylonStrategy implements IStrategy {
 
 
 
-            angleToAdd = (float) Math.toDegrees(Math.atan(op / adj));
-            //angleToAdd -= 90;
+//            angleToAdd = (float) Math.toDegrees(Math.atan(op / adj));
+//            //angleToAdd -= 90;
+//
+//            if(adj > 0 && op > 0){//1
+//                angleToAdd = Math.abs(angleToAdd);
+//            } else if(adj < 0 && op > 0 ) {// 2
+//                angleToAdd = Math.abs(angleToAdd) + 90;
+//            } else if(adj < 0 && op < 0) {//3
+//                angleToAdd = Math.abs(angleToAdd) + 180;
+//            } else if(adj > 0 && op < 0){//4
+//                angleToAdd = Math.abs(angleToAdd) + 270;
+//            }
 
-            if(adj > 0 && op > 0){//1
-                angleToAdd = Math.abs(angleToAdd);
-            } else if(adj < 0 && op > 0 ) {// 2
-                angleToAdd = Math.abs(angleToAdd) + 90;
-            } else if(adj < 0 && op < 0) {//3
-                angleToAdd = Math.abs(angleToAdd) + 180;
-            } else if(adj > 0 && op < 0){//4
-                angleToAdd = Math.abs(angleToAdd) + 270;
-            }
+            angleToAdd = (float) Math.toDegrees(atan2(op,adj));
+            //doesn't work like this
+
             car.heading = angleToAdd;
 
             System.out.println("angleToAdd is: " + angleToAdd);
