@@ -21,7 +21,7 @@ public class MapView extends JPanel implements IObserver {
 
     public MapView(){
 
-        textArea = new JTextArea(20, 53);
+        textArea = new JTextArea(20, 62);
        // JScrollPane scrollPane = new JScrollPane(textArea);
 
         //scrollPane.getInputMap().put(KeyStroke.getKeyStroke("UP"), "none");
@@ -29,7 +29,7 @@ public class MapView extends JPanel implements IObserver {
         textArea.setEditable(false);
         textArea.setBackground(new Color(0, 18, 51));
 
-        //TODO If you have time return back JScrollPane and find out how to make it stop eating up arrows
+        //TODO If you have time return back JScrollPane and find out how to make it stop eating up arr
         textArea.getInputMap().put(KeyStroke.getKeyStroke("UP"), "none");
         textArea.getInputMap().put(KeyStroke.getKeyStroke("DOWN"), "none");
         textArea.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "none");

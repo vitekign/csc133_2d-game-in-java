@@ -4,6 +4,8 @@ package a2.objects;
  * Created by Victor Ignatenkov on 3/13/15.
  */
 
+//TODO Create Maximum damage level
+
 import a2.commands.IStrategy;
 import a2.model.GameWorld;
 
@@ -39,6 +41,10 @@ public class NPCCar extends Moveable implements ISteerable {
     public int getFirstPylonToMove() {
 
         return firstPylonToMove;
+    }
+
+    public IStrategy returnCurrentStrategy(){
+        return strategy;
     }
 
     public void setFirstPylonToMove(int firstPylonToMove) {
@@ -154,33 +160,6 @@ public class NPCCar extends Moveable implements ISteerable {
         else {
             System.out.println("The strategy is not set up");
         }
-
-//        if(isCarInOilSlick()){
-//            return ;
-//        }
-//
-//        heading += steeringDirection;
-//        float angle = (float) (90 - heading);
-//        float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);
-//        float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed);
-//        Location temp = new Location(this.getLocation().getX() + deltaX,
-//                                     this.getLocation().getY() + deltaY);
-//
-//        this.X = temp.getX();
-//        this.Y = temp.getY();
-//
-//
-//        /**
-//         * Decrease the amount of fuel
-//         */
-//        changeFuelLevel(-gw.DAMAGE_FOR_COLLIDING_WITH_CARS);
-//
-//        /**
-//         *  Reset steering direction after applying it to the direction
-//         *  of the car.
-//         */
-//        steeringDirection = 0;
-
     }
 
     /**
@@ -286,7 +265,8 @@ public class NPCCar extends Moveable implements ISteerable {
                 " \n\t  maxSpeed=" + (int)this.maximumSpeed +
                 " steeringDirection=" + (int)this.steeringDirection +
                 " fuelLevel="         + (int)this.fuelLevel +
-                " damage="            + (int)this.damageLevel;
+                " damage="            + (int)this.damageLevel +
+                " strategy="          + this.strategy.toString();
     }
 
 

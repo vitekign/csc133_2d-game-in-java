@@ -9,5 +9,5 @@ import a2.objects.NPCCar;
 public interface IStrategy {
 
     public void performStrategy(NPCCar car, GameWorld gw);
-
+    public String toString();
 }

@@ -92,4 +92,8 @@ public class FollowThePlayerCarStrategy implements IStrategy{
     public void setSpeedRatio(float speedRatio) {
         this.SPEED_RATIO = speedRatio;
     }
+
+    public String toString(){
+        return "Follow the Player Car";
+    }
 }

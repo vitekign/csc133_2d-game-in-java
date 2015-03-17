@@ -11,6 +11,8 @@ import a2.objects.Services;
 import static java.lang.Math.atan2;
 
 
+//TODO each strategy must return the name of the strategy
+
 
 public class MoveTowardsPylonStrategy implements IStrategy {
 
@@ -152,5 +154,9 @@ public class MoveTowardsPylonStrategy implements IStrategy {
 
 
         }
+    }
+
+    public String toString(){
+        return "Move to Pylon";
     }
 }

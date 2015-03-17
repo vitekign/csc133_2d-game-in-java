@@ -11,7 +11,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.Scanner;
 
 /**
  * Created by Victor Ignatenkov on 2/9/15.
@@ -287,7 +286,7 @@ public class Game extends JFrame {
 
 
         setResizable(false);
-        setSize(800, 400);
+        setSize(900, 400);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 

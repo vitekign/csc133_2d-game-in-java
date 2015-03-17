@@ -1,6 +1,7 @@
 package a2.model;
 
 import a2.commands.FollowThePlayerCarStrategy;
+import a2.commands.IStrategy;
 import a2.commands.MoveTowardsPylonStrategy;
 import a2.objects.*;
 
@@ -20,6 +21,8 @@ public class GameWorld implements Container , IObservable{
      *  Code here to hold and manipulate world objects, handle
      *  observer registration, invoke observer callbacks, etc.
      */
+
+    //TODO refactor -90 degrees
 
 
 
@@ -48,6 +51,10 @@ public class GameWorld implements Container , IObservable{
 
     Vector<GameObject> theWorldVector;
     Vector<IObserver> observers = new Vector<>();
+
+
+    FollowThePlayerCarStrategy followStr;
+    MoveTowardsPylonStrategy moveToPylon;
 
     public void initLayout() {
 
@@ -124,8 +131,8 @@ public class GameWorld implements Container , IObservable{
         NPCCar npcCar3 = new NPCCar(new Location(100,205), this, Services.generateRandomColor(),
                 5,5,0,100,100,10,500,500,0);
 
-        FollowThePlayerCarStrategy followStr = new FollowThePlayerCarStrategy();
-        MoveTowardsPylonStrategy moveToPylon = new MoveTowardsPylonStrategy();
+         followStr = new FollowThePlayerCarStrategy();
+         moveToPylon = new MoveTowardsPylonStrategy();
 
         npcCar1.setUpStrategy(moveToPylon);
         npcCar2.setUpStrategy(followStr);
@@ -196,6 +203,31 @@ public class GameWorld implements Container , IObservable{
     public void carCollideWithCar() {
         car.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS);
 
+        Iterator iter = this.getIterator();
+
+        int counter = 0;
+        while(iter.hasNext()) {
+            GameObject mObj = (GameObject) iter.getNext();
+            if(mObj instanceof NPCCar){
+              counter++;
+            }
+        }
+        //3
+        int rand = new Random().nextInt(counter); // [0-2]
+        rand++;
+        //[1-3]
+        iter = this.getIterator();
+
+        int checkCounter = 0;
+        while(iter.hasNext()) {
+            GameObject mObj = (GameObject) iter.getNext();
+            if(mObj instanceof NPCCar){
+                checkCounter++;
+                if(checkCounter == rand) {
+                    ((NPCCar) mObj).increaseDamageLevel(-10);
+                }
+            }
+        }
         notifyObserver();
     }
 
@@ -314,7 +346,22 @@ public class GameWorld implements Container , IObservable{
     }
 
     public void switchStrategies(){
-        System.out.println("Switch strategies");
+        Iterator iter = this.getIterator();
+
+        while(iter.hasNext()) {
+            GameObject mObj = (GameObject) iter.getNext();
+            if(mObj instanceof NPCCar){
+                if(((NPCCar) mObj).returnCurrentStrategy() instanceof MoveTowardsPylonStrategy)
+                {
+                    ((NPCCar) mObj).setUpStrategy(followStr);
+                }
+                else if(((NPCCar)mObj).returnCurrentStrategy() instanceof FollowThePlayerCarStrategy){
+                    ((NPCCar) mObj).setUpStrategy(moveToPylon);
+                }
+            }
+
+        }
+        notifyObserver();
     }
 
     /**
