@@ -64,7 +64,7 @@ public class MoveTowardsPylonStrategy implements IStrategy {
 
 
                     System.out.println("angleToAdd is: " + angleToAdd);
-                    car.heading = angleToAdd;
+                    car.setHeading(angleToAdd);
 
 
                     car.setHeading(car.getHeading() + car.getSteeringDirection());
@@ -134,14 +134,14 @@ public class MoveTowardsPylonStrategy implements IStrategy {
             angleToAdd = (float) Math.toDegrees(atan2(op,adj));
             //doesn't work like this
 
-            car.heading = angleToAdd;
+            car.setHeading(angleToAdd);
 
             System.out.println("angleToAdd is: " + angleToAdd);
-            System.out.println("the heading is: " + car.heading);
+            System.out.println("the heading is: " + car.getHeading());
 
 
-            float deltaY = (float) (Math.sin(Math.toRadians(car.heading)) * car.getSpeed());
-            float deltaX = (float) (Math.cos(Math.toRadians(car.heading)) * car.getSpeed());
+            float deltaY = (float) (Math.sin(Math.toRadians(car.getHeading())) * car.getSpeed());
+            float deltaX = (float) (Math.cos(Math.toRadians(car.getHeading())) * car.getSpeed());
             Location temp = new Location(car.getLocation().getX() + deltaX, car.getLocation().getY() + deltaY);
 
             car.setX(temp.getX());

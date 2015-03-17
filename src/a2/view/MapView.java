@@ -8,7 +8,6 @@ import a2.objects.GameObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 
 /**
  * Created by Victor Ignatenkov on 3/3/15.
@@ -21,7 +20,8 @@ public class MapView extends JPanel implements IObserver {
 
     public MapView(){
 
-        textArea = new JTextArea(20, 62);
+        //TODO check the height on the big display
+        textArea = new JTextArea(90, 70);
        // JScrollPane scrollPane = new JScrollPane(textArea);
 
         //scrollPane.getInputMap().put(KeyStroke.getKeyStroke("UP"), "none");

@@ -59,7 +59,7 @@ public class FollowThePlayerCarStrategy implements IStrategy{
 
 
             System.out.println("angleToAdd is: " + angleToAdd);
-            car.heading = angleToAdd;
+            car.setHeading(angleToAdd);
 
 
             car.setHeading(car.getHeading() + car.getSteeringDirection());
@@ -69,17 +69,6 @@ public class FollowThePlayerCarStrategy implements IStrategy{
             Location temp = new Location(car.getLocation().getX() + deltaX,
                     car.getLocation().getY() + deltaY);
 
-//
-//            float overlapX = Math.abs(car.getX() - gw.getCharacterCar().getX());
-//            float overlapY = Math.abs(car.getY() - gw.getCharacterCar().getY());
-
-//            if(deltaX < overlapX | deltaY < overlapY){
-//                car.setX(temp.getX());
-//                car.setY(temp.getY());
-//            } else {
-//                car.setX(overlapX);
-//                car.setY(overlapY);
-//            }
 
             car.setX(temp.getX());
             car.setY(temp.getY());

@@ -28,8 +28,6 @@ public class Accelerate extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
             gw.accelerate();
-            //TODO get rid of sout
-            System.out.println("Accelerate");
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }

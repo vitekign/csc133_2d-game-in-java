@@ -11,20 +11,17 @@ import java.awt.*;
 public class Car extends Moveable implements ISteerable {
 
 
-    IStrategy strategy;
+    protected float width;
+    protected float length;
 
-
-    private float width;
-    private float length;
-
-    private boolean inOilSlick;
-    private int lastHighestPylonReached;
-    private float steeringDirection;
-    private float maximumSpeed;
-    private float maximumDamageLevel;
-    private float fuelLevel;
-    private float speed;
-    private float damageLevel;
+    protected boolean inOilSlick;
+    protected int lastHighestPylonReached;
+    protected float steeringDirection;
+    protected float maximumSpeed;
+    protected float maximumDamageLevel;
+    protected float fuelLevel;
+    protected float speed;
+    protected float damageLevel;
 
     public float getWidth() {
         return width;
@@ -62,16 +59,14 @@ public class Car extends Moveable implements ISteerable {
         this.steeringDirection = steeringDirection;
     }
 
-    public void setUpStrategy(IStrategy str){
-        strategy = str;
-    }
+
 
     /**
      * The car object needs to access the GameWorld
      * because it needs to know certain methods in the
      * GameWorld in order to update data.
      */
-    private GameWorld gw;
+    protected GameWorld gw;
 
     public Car(Location location, GameWorld gw, Color color){
         super(color);
@@ -158,6 +153,8 @@ public class Car extends Moveable implements ISteerable {
      * the amount of fuel by which the amount should be
      * decrease/increased
      */
+
+    //TODO 2. Fuel level not increased by indicated level
     public void changeFuelLevel(float volume){
         fuelLevel += volume;
         if(fuelLevel <= 0) {
@@ -256,6 +253,7 @@ public class Car extends Moveable implements ISteerable {
                 " steeringDirection=" + (int)this.steeringDirection +
                 " fuelLevel="         + (int)this.fuelLevel +
                 " damage="            + (int)this.damageLevel;
+
     }
 
 

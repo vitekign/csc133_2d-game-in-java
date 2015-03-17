@@ -6,7 +6,6 @@ import a2.view.MapView;
 import a2.view.ScoreView;
 
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -195,7 +194,7 @@ public class Game extends JFrame {
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("N"), "changeColors");
         this.getRootPane().getActionMap().put("changeColors", changeColorsAction);
 
-        //TODO arrows don't work unless a button pressed
+
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0),"accelerate");
         this.getRootPane().getActionMap().put("accelerate", accelerateAction);
 
@@ -222,15 +221,9 @@ public class Game extends JFrame {
         //              central panel                **
         //**********************************************
 
-        JPanel centerPanel = new JPanel();
 
-
-
-        this.getRootPane().getActionMap().put("accelerate", accelerateAction);
-        centerPanel.setBorder(new EtchedBorder());
-        centerPanel.setBackground(new Color(123, 0, 11));
         this.add(mapView, BorderLayout.CENTER);
-        centerPanel.getInputMap().put(KeyStroke.getKeyStroke("UP"), "none");
+
 
         //**********************************************
         //                    menu                    **
@@ -286,15 +279,13 @@ public class Game extends JFrame {
 
 
         setResizable(false);
-        setSize(900, 400);
+        setSize(gw.GLOBAL_WIDTH, gw.GLOBAL_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
         play();
 
     }
-
-
 
     /**
      * Main loop of the game

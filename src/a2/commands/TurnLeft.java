@@ -28,8 +28,6 @@ public class TurnLeft extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
             gw.changeSteeringToLeft();
-            //TODO get rid of sout
-            System.out.println("Turn left");
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }

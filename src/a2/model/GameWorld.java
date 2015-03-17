@@ -29,13 +29,13 @@ public class GameWorld implements Container , IObservable{
     /**
      * Some basic constants
      */
-    //TODO Change to the specification defaults
+
     public static final int GLOBAL_WIDTH = 1000;
-    public static final int GLOBAL_HEIGHT = 1000;
+    public static final int GLOBAL_HEIGHT = 800;
     public static final int THE_FIRST_PYLON = 1;
 
-    //TODO return DAMAGE_FOR_COLLIDING_WITH_CARS back to 5
-    public final static float DAMAGE_FOR_COLLIDING_WITH_CARS = 1;
+
+    public final static float DAMAGE_FOR_COLLIDING_WITH_CARS = 5;
     public static final int NUMBER_OF_LIVES = 3;
     Random rand = new Random();
 
@@ -122,8 +122,6 @@ public class GameWorld implements Container , IObservable{
         theWorldVector.add(new FuelCan(new Location(20, 555), rand.nextFloat() * 25, new Color(5, 25, 255)));
 
 
-        //TODO Add three NPCs
-        //100 150
         NPCCar npcCar1 = new NPCCar(new Location(100,205), this, Services.generateRandomColor(),
                 5,5,0,100,100,10,500,500,0);
         NPCCar npcCar2 = new NPCCar(new Location(100,205), this, Services.generateRandomColor(),
@@ -200,6 +198,7 @@ public class GameWorld implements Container , IObservable{
      * Pretend that the car has collided with
      * another car
      */
+    // TODO here is a bug, it applies 500 of damage to character's car
     public void carCollideWithCar() {
         car.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS);
 

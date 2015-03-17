@@ -30,8 +30,6 @@ public class Brake extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
             gw.brake();
-            //TODO get rid of sout
-            System.out.println("Brake");
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }

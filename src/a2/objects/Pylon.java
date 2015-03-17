@@ -5,7 +5,7 @@ package a2.objects;
  */
 
 import java.awt.*;
-//TODO Pylon doesn't generate new colors ???
+
 /**
  * Pylon class.
  *
