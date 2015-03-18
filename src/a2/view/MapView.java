@@ -1,35 +1,43 @@
-package a2.view;
+/**
+ * Created by Victor Ignatenkov on 3/3/15.
+ */
 
+package a2.view;
 import a2.model.GameWorld;
 import a2.model.IObservable;
 import a2.model.IObserver;
 import a2.model.Iterator;
 import a2.objects.GameObject;
-
 import javax.swing.*;
 import java.awt.*;
 
+
 /**
- * Created by Victor Ignatenkov on 3/3/15.
+ * MapView is used to show the map of the current
+ * state of the game. In this version, the date change
+ * is shown in the Console and also in the textArea on the screen.
  */
 public class MapView extends JPanel implements IObserver {
 
 
+    /**
+     * Create a textArea to show the current
+     * state of the game on the screen.
+     */
     JTextArea textArea;
 
 
     public MapView(){
 
-        //TODO check the height on the big display
         textArea = new JTextArea(90, 70);
-       // JScrollPane scrollPane = new JScrollPane(textArea);
-
-        //scrollPane.getInputMap().put(KeyStroke.getKeyStroke("UP"), "none");
 
         textArea.setEditable(false);
-        textArea.setBackground(new Color(0, 18, 51));
+        textArea.setBackground(new Color(8, 27, 52));
 
-        //TODO If you have time return back JScrollPane and find out how to make it stop eating up arr
+        /**
+         * Disable textArea's consuming of the arrows buttons
+         * when they're pressed.
+         */
         textArea.getInputMap().put(KeyStroke.getKeyStroke("UP"), "none");
         textArea.getInputMap().put(KeyStroke.getKeyStroke("DOWN"), "none");
         textArea.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "none");
@@ -42,7 +50,8 @@ public class MapView extends JPanel implements IObserver {
     public void update(IObservable o, Object arg){
         /**
          * Code here to output current map information (based on
-         * the data in the Observable ) to the console
+         * the data in the Observable ) to the console and to the
+         * screen through JTextAre
          */
 
         GameWorld gw = (GameWorld)arg;

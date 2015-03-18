@@ -1,11 +1,11 @@
-package a2.commands;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-
 /**
  * Created by Victor Ignatenkov on 3/8/15.
  */
+package a2.app.commands;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
+
 public class QuitTheGame extends AbstractAction {
     private QuitTheGame(){
         super("Quit");
@@ -17,6 +17,11 @@ public class QuitTheGame extends AbstractAction {
         return quitTheGame;
     }
 
+    /**
+     * Provides the functionality to quit the game
+     * with an additional confirmation window.
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         int result = JOptionPane.showConfirmDialog(null,

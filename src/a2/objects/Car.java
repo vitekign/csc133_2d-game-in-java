@@ -1,6 +1,5 @@
 package a2.objects;
 
-import a2.commands.IStrategy;
 import a2.model.GameWorld;
 
 import java.awt.*;
@@ -111,13 +110,6 @@ public class Car extends Moveable implements ISteerable {
 
     @Override
     public void move() {
-
-//        if(strategy != null){
-//            strategy.performStrategy(this, gw);
-//        }
-//        else {
-//            System.out.println("The strategy is not set up");
-//        }
 
         if(isCarInOilSlick()){
             return ;
@@ -242,13 +234,18 @@ public class Car extends Moveable implements ISteerable {
     }
 
 
+    /**
+     * Create a thorough information.
+     * @return
+     * string with information about main features.
+     */
     @Override
     public String toString() {
         return "Car: "       + super.toString() +
                 " width="    + (int)this.width +
                 " length="   + (int)this.length +
                 " heading="  + (int)heading +
-                " speed="    + speed +
+                " speed="    + (int)speed +
                 " \n\t  maxSpeed=" + (int)this.maximumSpeed +
                 " steeringDirection=" + (int)this.steeringDirection +
                 " fuelLevel="         + (int)this.fuelLevel +

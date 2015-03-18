@@ -1,6 +1,6 @@
 package a2.controller;
 
-import a2.commands.*;
+import a2.app.commands.*;
 import a2.model.GameWorld;
 import a2.view.MapView;
 import a2.view.ScoreView;
@@ -31,6 +31,10 @@ class ButtonSpaceKeyFocusAgnostic extends JButton{
 
 }
 
+/**
+ * Game - functions as a controller of the
+ * game.
+ */
 public class Game extends JFrame {
 
 
@@ -63,6 +67,13 @@ public class Game extends JFrame {
         //**********************************************
         //              commands                      **
         //**********************************************
+
+        /**
+         * Create a set of commands which are responsible
+         * for specific business logic. Each command is created
+         * only once because it is a singleton in its nature.
+         */
+
         QuitTheGame quitAction = QuitTheGame.getInstance();
         TriggerTick tickAction = TriggerTick.getInstance();
         CollideWithBird colWithBirdAction = CollideWithBird.getInstance();
@@ -109,6 +120,11 @@ public class Game extends JFrame {
         //              top panel                     **
         //**********************************************
 
+        /**
+         * The ScoreView is implemented in the
+         * different class, and then just add it the
+         * main JPanel.
+         */
         add(scoreView, BorderLayout.NORTH);
 
 
@@ -116,10 +132,16 @@ public class Game extends JFrame {
         //              left panel                    **
         //**********************************************
 
+        /**
+         * Left Panel - represents a set of buttons
+         * which are located on the left side.
+         * 1. Create a button.
+         * 2. Supply the button's setAction with appropriate Command
+         */
 
         JPanel leftPanel = new JPanel();
         leftPanel.setBorder(new TitledBorder(" Options: "));
-        leftPanel.setLayout(new GridLayout(10, 1));
+        leftPanel.setLayout(new GridLayout(20, 1));
 
         leftPanel.setBorder(new LineBorder(Color.green, 2));
         this.add(leftPanel, BorderLayout.WEST);
@@ -179,9 +201,13 @@ public class Game extends JFrame {
         quitAction.putValue(Action.NAME, "Quit");
 
 
-        // ‘o’ (add oil slick), and ‘n’ (new colors).
 
-        //TODO Find out how to switch the focus to another jcomponent
+
+        //**********************************************
+        //      Set up logic for key strokes.         **
+        //**********************************************
+
+        //TODO Find out how to switch the focus to another JComponent
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("T"), "doTick");
         this.getRootPane().getActionMap().put("doTick",tickAction);
 
@@ -193,7 +219,6 @@ public class Game extends JFrame {
 
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("N"), "changeColors");
         this.getRootPane().getActionMap().put("changeColors", changeColorsAction);
-
 
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0),"accelerate");
         this.getRootPane().getActionMap().put("accelerate", accelerateAction);
@@ -222,12 +247,22 @@ public class Game extends JFrame {
         //**********************************************
 
 
+        /**
+         * Central panel is implemented in another class
+         * and then just add the main JPanel.
+         */
         this.add(mapView, BorderLayout.CENTER);
 
 
         //**********************************************
         //                    menu                    **
         //**********************************************
+
+        /**
+         * Create a menu in the main JPanel.
+         * All buttons in the menu do specific functionality
+         * by supplying them with an appropriate Command.
+         */
 
         JMenuBar bar = new JMenuBar();
 
@@ -272,17 +307,29 @@ public class Game extends JFrame {
         generateNewColorsItem.setAction(changeColorsAction);
         changeColorsAction.putValue(Action.NAME, "Change Colors");
 
-
         bar.add(fileMenu);
         bar.add(commandMenu);
         this.setJMenuBar(bar);
 
+
+        //**********************************************
+        //              main JPanel                   **
+        //**********************************************
+        /**
+         * Set up the main JPanel.
+         */
 
         setResizable(false);
         setSize(gw.GLOBAL_WIDTH, gw.GLOBAL_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
+        /**
+         * Right now play() is not used,
+         * however, it might be need in the next
+         * versions of the game by implementing
+         * a game loop.
+         */
         play();
 
     }

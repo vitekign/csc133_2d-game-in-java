@@ -1,21 +1,30 @@
-package a2.commands;
-import a2.model.GameWorld;
-import a2.objects.Location;
-import a2.objects.NPCCar;
-
-import static java.lang.Math.atan2;
-
-
 /**
  * Created by Victor Ignatenkov on 3/13/15.
  */
-public class FollowThePlayerCarStrategy implements IStrategy{
+
+package a2.app.strategies;
+import a2.model.GameWorld;
+import a2.objects.Location;
+import a2.objects.NPCCar;
+import static java.lang.Math.atan2;
 
 
-    private float SPEED_RATIO = 1;
+
+
+/**
+ * FollowThePlayerCarStrategy implements the IStrategy so
+ * it can be used for the NPCCars as a strategy.
+ */
+public class FollowThePlayerCarStrategy implements IStrategy {
+
 
     @Override
     public void performStrategy(NPCCar car, GameWorld gw) {
+
+        /**
+         * In this version instead of using unit vector logic,
+         * the logic of calculating the right ange is used.
+         */
 
         /**
          * 1. Find the distance between npc and character in terms
@@ -39,6 +48,15 @@ public class FollowThePlayerCarStrategy implements IStrategy{
         car.setY(car.getY() + unit.getY());
         */
 
+        /**
+         * This strategy executes the following steps:
+         * 1. Acquire the Location of the Car
+         * 2. Acquire the Location of the NPCCar
+         * 3. Find out the ange between them in terms of 360 degrees
+         * 4. Change the location of the NPCCar with respect
+         * to the character car.
+         */
+
         if(car.getX() != gw.getCharacterCar().getX() |
                 car.getY() != gw.getCharacterCar().getY()) {
 
@@ -48,27 +66,23 @@ public class FollowThePlayerCarStrategy implements IStrategy{
             float adj = characterLocation.getX() - npcLocation.getX();
             float op = characterLocation.getY() - npcLocation.getY();
 
-            System.out.println("Adj is :  " + adj);
-            System.out.println("Op is : " + op);
-
 
             float angleToAdd;
 
             angleToAdd = (float) Math.toDegrees(atan2(op, adj));
-          //  angleToAdd -= 90;
 
 
-            System.out.println("angleToAdd is: " + angleToAdd);
+
             car.setHeading(angleToAdd);
 
 
             car.setHeading(car.getHeading() + car.getSteeringDirection());
-           // float angle = (float) (90 + car.getHeading());
             float deltaY = (float) (Math.sin(Math.toRadians(angleToAdd)) * car.getSpeed());
             float deltaX = (float) (Math.cos(Math.toRadians(angleToAdd)) * car.getSpeed());
             Location temp = new Location(car.getLocation().getX() + deltaX,
                     car.getLocation().getY() + deltaY);
 
+            car.setHeading(90 - angleToAdd);
 
             car.setX(temp.getX());
             car.setY(temp.getY());
@@ -78,10 +92,11 @@ public class FollowThePlayerCarStrategy implements IStrategy{
 
     }
 
-    public void setSpeedRatio(float speedRatio) {
-        this.SPEED_RATIO = speedRatio;
-    }
 
+    /**
+     * The name of the strategy.
+     * @return
+     */
     public String toString(){
         return "Follow the Player Car";
     }

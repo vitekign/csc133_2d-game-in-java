@@ -1,5 +1,8 @@
 package a2.objects;
 
+import a2.model.GameWorld;
+import a2.model.Iterator;
+
 import java.awt.*;
 import java.util.Random;
 import java.util.Vector;
@@ -17,23 +20,25 @@ import java.util.Vector;
 
 public class Services {
 
-    private static Vector<GameObject> theWorldVector;
 
+    private static GameWorld gw;
 
 
     private Services(){
     }
 
-    public static void supplyServicesWithCollectionOfObjects( Vector<GameObject> collection)
+    public static void supplyServicesWithGameWorld( GameWorld gameWorld)
     {
-        theWorldVector  = collection;
+        gw  = gameWorld;
     }
+
 
 
     /**
      * @return
      * Returns a randomly generated java Color
      */
+
     public static Color generateRandomColor(){
         //(inclusive)(exclusive)
         Random rand = new Random();
@@ -53,18 +58,17 @@ public class Services {
      * there is no Pylons to be found
      */
     public static Pylon findPylonWithIndexNumber(int indexNumber) throws Exception {
+        Iterator iter = gw.getIterator();
 
-        for (int i=0; i<theWorldVector.size(); i++) {
-            if (theWorldVector.elementAt(i) instanceof Pylon) {
-                Pylon temp = (Pylon) theWorldVector.elementAt(i);
-                if(temp.getIndexNumber() == indexNumber){
-                    return temp;
-                }
+        while(iter.hasNext()) {
+            GameObject mObj = (GameObject) iter.getNext();
+                if(((Pylon) mObj).getIndexNumber() == indexNumber){
+                    return ((Pylon) mObj);
+
             }
         }
         throw new Exception("There are no pylons");
     }
-
 
     /**
      *
@@ -74,23 +78,34 @@ public class Services {
      * there is no FuelCans to be found
      */
     public static FuelCan findTheFirstFuelCan() throws Exception {
-        FuelCan temp = null;
-        for (int i=0; i<theWorldVector.size(); i++) {
-            if (theWorldVector.elementAt(i) instanceof FuelCan) {
-                temp = (FuelCan) theWorldVector.elementAt(i);
-                return temp;
+        Iterator iter = gw.getIterator();
+
+        while(iter.hasNext()) {
+            GameObject mObj = (GameObject) iter.getNext();
+            if(mObj instanceof FuelCan){
+                return ((FuelCan) mObj);
+
             }
         }
         throw new Exception("There are no fuelCans in the game");
     }
 
+    /**
+     * Find the number of pylons in the collection of game objects
+     * @return
+     * number of pylons in collection of game objects
+     */
     public static int findTheNumberOfPylons(){
 
         int tempNumOfPylons = 0;
 
-        for (int i=0; i<theWorldVector.size(); i++) {
-            if (theWorldVector.elementAt(i) instanceof Pylon) {
+        Iterator iter = gw.getIterator();
+
+        while(iter.hasNext()) {
+            GameObject mObj = (GameObject) iter.getNext();
+            if(mObj instanceof Pylon){
                 tempNumOfPylons++;
+
             }
         }
         return tempNumOfPylons;

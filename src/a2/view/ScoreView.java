@@ -1,15 +1,19 @@
-package a2.view;
+/**
+ * Created by Victor Ignatenkov on 3/3/15.
+ */
 
+package a2.view;
 import a2.model.GameWorld;
 import a2.model.IObservable;
 import a2.model.IObserver;
-
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
- * Created by Victor Ignatenkov on 3/3/15.
+ * ScoreView is used to show some of the data
+ * of the current state of the game on the screen.
+ * It's going to be stick to the top part of the window.
  */
 public class ScoreView extends JPanel implements IObserver {
 
@@ -17,7 +21,9 @@ public class ScoreView extends JPanel implements IObserver {
     //              top panel                     **
     //**********************************************
 
-
+    /**
+     * The state which are going to be updated.
+     */
     private JLabel currentTime;
     private JLabel livesLeft;
     private JLabel highestPylon;
@@ -28,8 +34,6 @@ public class ScoreView extends JPanel implements IObserver {
     public ScoreView(){
         setBorder(new LineBorder(Color.blue, 2));
         setLayout(new FlowLayout(FlowLayout.LEFT,16,0));
-
-     //   this.add(topPanel,BorderLayout.NORTH);
 
         currentTime = new JLabel("Time: ");
         add(currentTime);
@@ -55,7 +59,9 @@ public class ScoreView extends JPanel implements IObserver {
 
     public void update (IObservable o, Object arg){
         /**
-         * code here to update JLabels from data in the Observable
+         * Code here to update JLabels from data in the Observable.
+         * Every time there is a change in the GameWorld date, the
+         * information is going to be updated with update() method.
          */
 
         GameWorld gw = (GameWorld)arg;

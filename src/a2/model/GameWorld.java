@@ -1,19 +1,18 @@
+/**
+ * Created by Victor Ignatenkov on 2/9/15.
+ */
+
 package a2.model;
-
-import a2.commands.FollowThePlayerCarStrategy;
-import a2.commands.IStrategy;
-import a2.commands.MoveTowardsPylonStrategy;
+import a2.app.strategies.FollowThePlayerCarStrategy;
+import a2.app.strategies.MoveTowardsPylonStrategy;
 import a2.objects.*;
-
 import java.awt.*;
 import java.util.Random;
 import java.util.Vector;
 
 
 
-/**
- * Created by Victor Ignatenkov on 2/9/15.
- */
+
 public class GameWorld implements Container , IObservable{
 
 
@@ -22,7 +21,6 @@ public class GameWorld implements Container , IObservable{
      *  observer registration, invoke observer callbacks, etc.
      */
 
-    //TODO refactor -90 degrees
 
 
 
@@ -74,11 +72,10 @@ public class GameWorld implements Container , IObservable{
         theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64)));
         theWorldVector.add(new Pylon(new Location(70, 100), 50, new Color(64, 64, 64)));
         theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64)));
-        theWorldVector.add(new Pylon(new Location(70, 100), 50, new Color(64, 64, 64)));
+        theWorldVector.add(new Pylon(new Location(800, 800), 50, new Color(64, 64, 64)));
 
 
-        Services.supplyServicesWithCollectionOfObjects(theWorldVector);
-
+        Services.supplyServicesWithGameWorld(this);
 
         /**
          * Find the pylon with the sequence number of THE_FIRST_PYLON
@@ -122,12 +119,12 @@ public class GameWorld implements Container , IObservable{
         theWorldVector.add(new FuelCan(new Location(20, 555), rand.nextFloat() * 25, new Color(5, 25, 255)));
 
 
-        NPCCar npcCar1 = new NPCCar(new Location(100,205), this, Services.generateRandomColor(),
-                5,5,0,100,100,10,500,500,0);
-        NPCCar npcCar2 = new NPCCar(new Location(100,205), this, Services.generateRandomColor(),
-                5,5,0,100,100,10,500,500,0);
-        NPCCar npcCar3 = new NPCCar(new Location(100,205), this, Services.generateRandomColor(),
-                5,5,0,100,100,10,500,500,0);
+        NPCCar npcCar1 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
+                5,5,0,100,100,10,0,200,0);
+        NPCCar npcCar2 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
+                5,5,0,100,100,10,0,200,0);
+        NPCCar npcCar3 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
+                5,5,0,100,100,10,0,200,0);
 
          followStr = new FollowThePlayerCarStrategy();
          moveToPylon = new MoveTowardsPylonStrategy();
@@ -198,7 +195,7 @@ public class GameWorld implements Container , IObservable{
      * Pretend that the car has collided with
      * another car
      */
-    // TODO here is a bug, it applies 500 of damage to character's car
+
     public void carCollideWithCar() {
         car.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS);
 
@@ -223,7 +220,7 @@ public class GameWorld implements Container , IObservable{
             if(mObj instanceof NPCCar){
                 checkCounter++;
                 if(checkCounter == rand) {
-                    ((NPCCar) mObj).increaseDamageLevel(-10);
+                    ((NPCCar) mObj).increaseDamageLevel(10);
                 }
             }
         }
@@ -278,7 +275,8 @@ public class GameWorld implements Container , IObservable{
      * Pretend that the car has entered
      * an oilSlick
      */
-    //TODO Do you need notifyObserver on enterOilSlick methods like....
+
+
     public void enterOilSlick() {
         car.enterAnOilSlick();
 
@@ -301,10 +299,14 @@ public class GameWorld implements Container , IObservable{
      * have their color changed.
      */
     public void generateNewColors() {
-        for (int i = 0; i < theWorldVector.size(); i++) {
-            GameObject obj = theWorldVector.elementAt(i);
-            obj.changeColor(Services.generateRandomColor());
+        Iterator iter = this.getIterator();
+
+        while(iter.hasNext()) {
+            GameObject mObj = (GameObject) iter.getNext();
+            mObj.changeColor(Services.generateRandomColor());
+
         }
+
 
         notifyObserver();
     }
@@ -315,11 +317,15 @@ public class GameWorld implements Container , IObservable{
      */
     public void makeTick() {
 
-        for (int i = 0; i < theWorldVector.size(); i++) {
-            if (theWorldVector.elementAt(i) instanceof Moveable) {
-                Moveable mObj = (Moveable) theWorldVector.elementAt(i);
-                mObj.move();
+
+        Iterator iter = this.getIterator();
+
+        while(iter.hasNext()) {
+            GameObject mObj = (GameObject) iter.getNext();
+            if(mObj instanceof Moveable){
+              ((Moveable) mObj).move();
             }
+
         }
         currentClockTime++;
         notifyObserver();
@@ -361,29 +367,6 @@ public class GameWorld implements Container , IObservable{
 
         }
         notifyObserver();
-    }
-
-    /**
-     * Generate underlying information of the objects
-     * held in the main collection.
-     */
-    public void generateDisplay() {
-
-        System.out.println("Lives remaining: " + livesRemaining);
-        System.out.println("Clock value: " + currentClockTime);
-        System.out.println("Last highest pylon: " + lastPylonReached);
-        System.out.println("Fuel level: " + currentFuelLevel + ";" + " Damage level: " + car.getDamageLevel());
-    }
-
-    /**
-     * Generate descriptive information of the
-     * current state of objects.
-     */
-    public void generateMap() {
-        for (int i = 0; i < theWorldVector.size(); i++) {
-            GameObject mObj = theWorldVector.elementAt(i);
-            System.out.println(mObj.toString());
-        }
     }
 
     /**
