@@ -12,7 +12,7 @@ import java.awt.*;
  *
  * The size of a fuel can corresponds to the amount of fuel it contains.
  */
-public class FuelCan extends Fixed {
+public class FuelCan extends Fixed implements IDrawable {
 
     private float size;
 
@@ -39,5 +39,10 @@ public class FuelCan extends Fixed {
      */
     public float getSize() {
         return size;
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        g.drawString("FuelCan " + (int)getSize(), (int)getX(), (int)getY());
     }
 }

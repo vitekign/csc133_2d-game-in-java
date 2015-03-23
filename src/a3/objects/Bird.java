@@ -15,7 +15,7 @@ import java.awt.*;
  */
 
 
-public class Bird extends Moveable {
+public class Bird extends Moveable implements IDrawable {
 
     private float size;
 
@@ -39,6 +39,11 @@ public class Bird extends Moveable {
         return "Bird: " + super.toString() + ", " +
                 "heading=" + (int)this.heading + "," +
                 " size=" + (int)this.size;
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        g.drawString("Bird", (int)getX(), (int)getY());
     }
 }
 

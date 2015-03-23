@@ -4,6 +4,7 @@
 
 package a3.view;
 import a3.model.GameWorld;
+import a3.model.GameWorldProxy;
 import a3.model.IObservable;
 import a3.model.IObserver;
 import javax.swing.*;
@@ -57,16 +58,12 @@ public class ScoreView extends JPanel implements IObserver {
 
 
 
-    public void update (IObservable o, Object arg){
+    public void update (GameWorldProxy gw, Object arg){
         /**
          * Code here to update JLabels from data in the Observable.
          * Every time there is a change in the GameWorld date, the
          * information is going to be updated with update() method.
          */
-
-        GameWorld gw = (GameWorld)arg;
-
-
         currentTime.setText("Time: " + gw.getCurrentClockTime());
         livesLeft.setText("Lives Left: " + gw.getLivesRemaining());
         highestPylon.setText("Highest Player Pylon: " + gw.getLastPylonReached());

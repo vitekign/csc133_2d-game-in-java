@@ -7,7 +7,7 @@ import java.awt.*;
 /**
  * Created by Victor Ignatenkov on 2/9/15.
  */
-public class Car extends Moveable implements ISteerable {
+public class Car extends Moveable implements ISteerable , IDrawable{
 
 
     protected float width;
@@ -343,5 +343,10 @@ public class Car extends Moveable implements ISteerable {
      */
     public static float damageForCollidingWithBirds(){
         return GameWorld.DAMAGE_FOR_COLLIDING_WITH_CARS /2;
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        g.drawString("Car", (int)getX(), (int)getY());
     }
 }

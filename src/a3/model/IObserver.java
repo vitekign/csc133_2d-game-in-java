@@ -5,5 +5,5 @@ package a3.model;
  */
 
 public interface IObserver {
-    public void update (IObservable o, Object arg);
+    public void update (GameWorldProxy o, Object arg);
 }

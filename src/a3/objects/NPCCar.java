@@ -16,6 +16,14 @@ import java.awt.*;
 public class NPCCar extends Car {
 
 
+    @Override
+    public void draw(Graphics g) {
+        g.drawString("NPC", (int)getX(), (int)getY());
+    }
+
+
+
+
     IStrategy strategy;
     private int firstPylonToMove;
 

@@ -11,7 +11,7 @@ import java.awt.*;
  * Oil Slicks - are places where cars
  * lose a part of their normal functionality.
  */
-public class OilSlick extends Fixed {
+public class OilSlick extends Fixed implements IDrawable {
 
 
     private float width;
@@ -51,5 +51,10 @@ public class OilSlick extends Fixed {
                 super.toString() +
                 " width="   + (int)width +
                 " length="  + (int)length;
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        g.drawString("OilSlick", (int)getX(), (int)getY());
     }
 }

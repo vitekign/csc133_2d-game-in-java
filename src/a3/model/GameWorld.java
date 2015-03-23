@@ -5,6 +5,7 @@
 package a3.model;
 import a3.app.strategies.FollowThePlayerCarStrategy;
 import a3.app.strategies.MoveTowardsPylonStrategy;
+import a3.controller.IGameWorld;
 import a3.objects.*;
 import java.awt.*;
 import java.util.Random;
@@ -13,7 +14,7 @@ import java.util.Vector;
 
 
 
-public class GameWorld implements Container , IObservable{
+public class GameWorld implements Container , IObservable, IGameWorld {
 
 
     /*
@@ -251,7 +252,7 @@ public class GameWorld implements Container , IObservable{
             temp = Services.findTheFirstFuelCan();
             car.pickUpFuelCan(temp);
             theWorldVector.remove(temp);
-            temp = new FuelCan(new Location(3, 3), (rand.nextFloat() * 20) + 1, Services.generateRandomColor());
+            temp = new FuelCan(new Location(new Random().nextInt(800), new Random().nextInt(800)), (rand.nextFloat() * 20) + 1, Services.generateRandomColor());
             theWorldVector.add(temp);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -452,8 +453,11 @@ public class GameWorld implements Container , IObservable{
 
     @Override
     public void notifyObserver() {
+        GameWorldProxy proxy = new GameWorldProxy(this);
+
         for (int i = 0; i < observers.size(); i++){
-            observers.elementAt(i).update(this,this);
+            observers.elementAt(i).update(proxy,null);
+
         }
     }
 

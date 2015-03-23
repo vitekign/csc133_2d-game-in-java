@@ -3,11 +3,10 @@
  */
 
 package a3.view;
-import a3.model.GameWorld;
-import a3.model.IObservable;
-import a3.model.IObserver;
-import a3.model.Iterator;
+import a3.model.*;
 import a3.objects.GameObject;
+import a3.objects.IDrawable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -26,43 +25,54 @@ public class MapView extends JPanel implements IObserver {
      */
     JTextArea textArea;
 
-
+    GameWorldProxy gw;
     public MapView(){
 
-        textArea = new JTextArea(90, 70);
-
-        textArea.setEditable(false);
-        textArea.setBackground(new Color(8, 27, 52));
-
-        /**
-         * Disable textArea's consuming of the arrows buttons
-         * when they're pressed.
-         */
-        textArea.getInputMap().put(KeyStroke.getKeyStroke("UP"), "none");
-        textArea.getInputMap().put(KeyStroke.getKeyStroke("DOWN"), "none");
-        textArea.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "none");
-        textArea.getInputMap().put(KeyStroke.getKeyStroke("RIGHT"), "none");
-
-        textArea.setForeground(new Color(230,230,230));
-        this.add(textArea);
     }
 
-    public void update(IObservable o, Object arg){
+    public void update(GameWorldProxy gw, Object arg){
         /**
          * Code here to output current map information (based on
          * the data in the Observable ) to the console and to the
          * screen through JTextAre
          */
+        this.gw = gw;
 
-        GameWorld gw = (GameWorld)arg;
+
         Iterator iter = gw.getIterator();
 
-        textArea.setText("");
+
 
         while(iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
             System.out.println(mObj.toString());
-            textArea.append("  " + mObj.toString() + "\n");
+
         }
+
+
+        repaint();
+
+
     }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        setBackground(new Color(200, 200, 200));
+       // g.drawString(String.valueOf(gw.getCurrentClockTime()), 200, 200);
+
+
+        Iterator iter = gw.getIterator();
+        while(iter.hasNext()) {
+            GameObject mObj = (GameObject) iter.getNext();
+            ((IDrawable)mObj).draw(g);
+        }
+
+
+
+    }
+
+
+
 }

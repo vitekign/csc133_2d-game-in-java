@@ -11,7 +11,7 @@ import java.awt.*;
  *
  * Not allowed to change color once they're created
  */
-public class Pylon extends Fixed {
+public class Pylon extends Fixed implements IDrawable {
 
     private float radius;
     final private int sequenceNumber;
@@ -71,5 +71,10 @@ public class Pylon extends Fixed {
      */
     public static int getCount(){
         return count-1;
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        g.drawString("Pylon " + getIndexNumber(), (int)getX(), (int)getY());
     }
 }
