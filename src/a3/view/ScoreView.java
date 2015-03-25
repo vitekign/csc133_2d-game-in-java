@@ -10,6 +10,7 @@ import a3.model.IObserver;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.sql.Time;
 
 /**
  * ScoreView is used to show some of the data
@@ -31,6 +32,9 @@ public class ScoreView extends JPanel implements IObserver {
     private JLabel remainingFuelLevel;
     private JLabel playerDamageLevel;
     private JLabel soundStatus;
+
+    int time = 0;
+    long lastTime = 0;
 
     public ScoreView(){
         setBorder(new LineBorder(Color.blue, 2));
@@ -64,7 +68,20 @@ public class ScoreView extends JPanel implements IObserver {
          * Every time there is a change in the GameWorld date, the
          * information is going to be updated with update() method.
          */
-        currentTime.setText("Time: " + gw.getCurrentClockTime());
+
+        //TODO Refactor, so instead of system time it's using frames from the game world
+        long currentTime = System.currentTimeMillis();
+        if((currentTime - lastTime) > 1000){
+            this.currentTime.setText("Time: " + time);
+            lastTime = System.currentTimeMillis();
+            time++;
+        }
+
+
+
+
+
+
         livesLeft.setText("Lives Left: " + gw.getLivesRemaining());
         highestPylon.setText("Highest Player Pylon: " + gw.getLastPylonReached());
         //TODO find out if getCurrentFuelLevel have dependencies relying on float

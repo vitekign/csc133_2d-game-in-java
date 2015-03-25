@@ -5,13 +5,14 @@ package a3.objects;
  */
 
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * Pylon class.
  *
  * Not allowed to change color once they're created
  */
-public class Pylon extends Fixed implements IDrawable {
+public class Pylon extends Fixed implements IDrawable, ICollider {
 
     private float radius;
     final private int sequenceNumber;
@@ -20,6 +21,8 @@ public class Pylon extends Fixed implements IDrawable {
     public Pylon(Location location, float radius, Color color){
 
             super(color);
+
+            objectsCollidedWith = new Vector<>();
 
             this.X = location.getX();
             this.Y = location.getY();
@@ -75,6 +78,30 @@ public class Pylon extends Fixed implements IDrawable {
 
     @Override
     public void draw(Graphics g) {
-        g.drawString("Pylon " + getIndexNumber(), (int)getX(), (int)getY());
+
+        g.fillOval((int)getX()-(int)radius/2, (int)getY()-(int)radius/2, (int)radius, (int)radius);
+        g.setColor(Color.white);
+        g.fillOval((int)getX(), (int)getY(), 1, 1);
+        g.drawString(String.valueOf(getIndexNumber()),  (int)getX()-(int)radius/2, (int)getY()-(int)radius/2);
+        g.setColor(Color.black);
+    }
+
+
+    /*
+     * Confirms to ICollider
+     */
+    @Override
+    public boolean collidesWith(ICollider obj) {
+        return false;
+    }
+
+    @Override
+    public void handleCollision(ICollider otherObject) {
+
+    }
+
+    @Override
+    public float getDistanceOfReference() {
+        return radius;
     }
 }

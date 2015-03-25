@@ -36,8 +36,11 @@ public abstract class Moveable extends GameObject {
      * it's very likely that in the future versions
      * the implementation will differ, and the method
      * will turn into an abstract method.
+     * @param framesPerSecond
      */
-     public void move(){
+
+
+     public void move(int framesPerSecond){
 
          float angle =  (90 - heading);
          float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);

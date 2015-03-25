@@ -45,7 +45,7 @@ public class MapView extends JPanel implements IObserver {
 
         while(iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
-            System.out.println(mObj.toString());
+            //System.out.println(mObj.toString());
 
         }
 

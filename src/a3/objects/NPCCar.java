@@ -8,6 +8,7 @@ package a3.objects;
 import a3.app.strategies.IStrategy;
 import a3.model.GameWorld;
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * NPCCar class inherits from the Car
@@ -18,7 +19,12 @@ public class NPCCar extends Car {
 
     @Override
     public void draw(Graphics g) {
-        g.drawString("NPC", (int)getX(), (int)getY());
+
+
+        g.drawRect((int)getX() - (int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
+        g.setColor(Color.white);
+        g.drawOval((int)getX(), (int)getY(), 1,1);
+        g.setColor(Color.black);
     }
 
 
@@ -68,6 +74,8 @@ public class NPCCar extends Car {
         super(location, gw, color);
 
 
+        objectsCollidedWith = new Vector<>();
+
         this.width = width;
         this.length = length;
         this.steeringDirection = steeringDirection;
@@ -92,9 +100,10 @@ public class NPCCar extends Car {
      * strategy pattern. Basically, it redirects move's
      * responsibility from NPCCar to the performStrategy
      * method of the Strategy class.
+     * @param framesPerSecond
      */
     @Override
-    public void move() {
+    public void move(int framesPerSecond) {
 
         if(strategy != null){
             strategy.performStrategy(this, gw);
@@ -153,5 +162,24 @@ public class NPCCar extends Car {
         if(damageLevel > maximumDamageLevel){
             damageLevel = maximumDamageLevel;
         }
+    }
+
+
+    /*
+     * ICollider implementation
+     */
+    @Override
+    public float getDistanceOfReference() {
+        return (width + length) / 2;
+    }
+
+    @Override
+    public boolean collidesWith(ICollider obj) {
+        return false;
+    }
+
+    @Override
+    public void handleCollision(ICollider otherObject) {
+
     }
 }

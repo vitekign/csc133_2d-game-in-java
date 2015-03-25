@@ -47,7 +47,7 @@ public class Game extends JFrame {
 
         gw = new GameWorld();
         gw.initLayout();
-
+        gw.startTimer();
 
         scoreView = new ScoreView();
         mapView = new MapView();
@@ -188,13 +188,6 @@ public class Game extends JFrame {
         switchStrategy.setAction(switchStrategiesAction);
         switchStrategiesAction.putValue(Action.NAME, "Switch Strategy");
 
-        JButton triggerTick = new ButtonSpaceKeyFocusAgnostic("");
-        leftPanel.add(triggerTick);
-        triggerTick.setAction(tickAction);
-        tickAction.setTarget(gw);
-        tickAction.putValue(Action.NAME, "Trigger Tick");
-
-
         ButtonSpaceKeyFocusAgnostic quitTheGame = new ButtonSpaceKeyFocusAgnostic("");
         quitTheGame.setAction(quitAction);
         leftPanel.add(quitTheGame);
@@ -208,8 +201,6 @@ public class Game extends JFrame {
         //**********************************************
 
         //TODO Find out how to switch the focus to another JComponent
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("T"), "doTick");
-        this.getRootPane().getActionMap().put("doTick",tickAction);
 
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F"), "pickUpFuelCan");
         this.getRootPane().getActionMap().put("pickUpFuelCan", pickUpFuelCanAction);

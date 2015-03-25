@@ -13,4 +13,5 @@ public interface IGameWorld {
     public float getCurrentFuelLevel();
     public float getDamageLevel();
     public boolean isSound();
+    public int getFramesPerSecond();
 }

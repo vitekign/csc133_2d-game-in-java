@@ -52,4 +52,9 @@ public class GameWorldProxy implements  IGameWorld {
     public boolean isSound() {
         return realGameWorld.isSound();
     }
+
+    @Override
+    public int getFramesPerSecond() {
+        return realGameWorld.getFramesPerSecond();
+    }
 }

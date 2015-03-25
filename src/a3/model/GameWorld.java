@@ -7,14 +7,18 @@ import a3.app.strategies.FollowThePlayerCarStrategy;
 import a3.app.strategies.MoveTowardsPylonStrategy;
 import a3.controller.IGameWorld;
 import a3.objects.*;
+
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 import java.util.Vector;
 
 
 
 
-public class GameWorld implements Container , IObservable, IGameWorld {
+public class GameWorld implements Container , IObservable, IGameWorld, ActionListener {
 
 
     /*
@@ -28,6 +32,11 @@ public class GameWorld implements Container , IObservable, IGameWorld {
     /**
      * Some basic constants
      */
+
+    //TODO it's not FRAMES_PER_SECOND
+    //There are actually 50 frames per second
+    public static final int FRAMES_PER_SECOND = 1000/50;
+
 
     public static final int GLOBAL_WIDTH = 1000;
     public static final int GLOBAL_HEIGHT = 800;
@@ -50,10 +59,14 @@ public class GameWorld implements Container , IObservable, IGameWorld {
 
     Vector<GameObject> theWorldVector;
     Vector<IObserver> observers = new Vector<>();
-
+    public Vector<GameObject> gameObjectsToDelete;
 
     FollowThePlayerCarStrategy followStr;
     MoveTowardsPylonStrategy moveToPylon;
+
+
+    Timer timer;
+
 
     public void initLayout() {
 
@@ -61,7 +74,7 @@ public class GameWorld implements Container , IObservable, IGameWorld {
          * Collection with all game objects
          */
         theWorldVector = new Vector<>();
-
+        gameObjectsToDelete = new Vector<>();
         turnOnSound(false);
 
         /**
@@ -98,11 +111,15 @@ public class GameWorld implements Container , IObservable, IGameWorld {
          * Add another required objects with random data
          */
         theWorldVector.add(new Bird(new Location(new Random().nextFloat() * GLOBAL_WIDTH,
-                new Random().nextFloat() * GLOBAL_HEIGHT), new Random().nextFloat() * 360,
-                new Random().nextFloat() * 3, new Color(255, 0, 255)));
+                new Random().nextFloat() * GLOBAL_HEIGHT),
+                new Random().nextFloat() * 30 + 20,
+                new Random().nextFloat() * 360,
+                new Random().nextFloat() * 1, new Color(255, 0, 255)));
         theWorldVector.add(new Bird(new Location(new Random().nextFloat() * GLOBAL_WIDTH,
-                new Random().nextFloat() * GLOBAL_HEIGHT), new Random().nextFloat() * 360,
-                new Random().nextFloat() * 3, new Color(255, 100, 0)));
+                new Random().nextFloat() * GLOBAL_HEIGHT),
+                new Random().nextFloat() * 30 + 20,
+                new Random().nextFloat() * 360,
+                new Random().nextFloat() * 1, new Color(255, 100, 0)));
 
 
         theWorldVector.add(new OilSlick(new Location(rand.nextFloat() * GLOBAL_WIDTH,
@@ -121,11 +138,11 @@ public class GameWorld implements Container , IObservable, IGameWorld {
 
 
         NPCCar npcCar1 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
-                5,5,0,100,100,10,0,200,0);
+                25,25,0,100,100,10,0,200,0);
         NPCCar npcCar2 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
-                5,5,0,100,100,10,0,200,0);
+                25,25,0,100,100,10,0,200,0);
         NPCCar npcCar3 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
-                5,5,0,100,100,10,0,200,0);
+                25,25,0,100,100,10,0,200,0);
 
          followStr = new FollowThePlayerCarStrategy();
          moveToPylon = new MoveTowardsPylonStrategy();
@@ -139,6 +156,72 @@ public class GameWorld implements Container , IObservable, IGameWorld {
         theWorldVector.add(npcCar2);
         theWorldVector.add(npcCar3);
 
+
+
+        timer = new Timer(FRAMES_PER_SECOND, this);
+
+
+    }
+
+
+
+    public void startTimer(){
+        timer.start();
+    }
+
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Iterator iter = this.getIterator();
+        while(iter.hasNext()){
+            GameObject obj = (GameObject)iter.getNext();
+            if(obj instanceof Moveable){
+                ((Moveable)obj).move(FRAMES_PER_SECOND/10);
+                doCollisionChecking();
+                deleteUnnecessaryOjbects();
+            }
+        }
+        notifyObserver();
+    }
+
+    public void doCollisionChecking(){
+        Iterator iter = this.getIterator();
+        while(iter.hasNext()){
+            ICollider currObject = (ICollider)iter.getNext();
+            Iterator iter2 = this.getIterator();
+            while (iter2.hasNext()) {
+                ICollider otherObject = (ICollider) iter2.getNext();
+                if(otherObject != currObject){
+                    //check for collision
+                    if(currObject.collidesWith(otherObject)){
+                           if( !((GameObject)currObject).objectsCollidedWith.contains((GameObject)otherObject)){
+                            currObject.handleCollision(otherObject);
+                        }
+                    } else {
+                        if(((GameObject)currObject).objectsCollidedWith.contains((GameObject)otherObject)){
+                            ((GameObject)currObject).objectsCollidedWith.remove((GameObject)otherObject);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void deleteUnnecessaryOjbects(){
+
+            for (int i = 0; i < gameObjectsToDelete.size(); i++) {
+                for (int j = 0; j < theWorldVector.size(); j++) {
+                   // System.out.println("gameObjectsToDelete size is: " + gameObjectsToDelete.size());
+                   // System.out.println("theWorldVector size is: " + theWorldVector.size());
+                    if (gameObjectsToDelete.elementAt(i) == theWorldVector.elementAt(j)) {
+                        System.out.println("Im inside");
+                        theWorldVector.remove(j);
+                    }
+                }
+            }
+
+        gameObjectsToDelete.clear();
     }
 
 
@@ -324,7 +407,7 @@ public class GameWorld implements Container , IObservable, IGameWorld {
         while(iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
             if(mObj instanceof Moveable){
-              ((Moveable) mObj).move();
+              ((Moveable) mObj).move(FRAMES_PER_SECOND);
             }
 
         }
@@ -340,6 +423,11 @@ public class GameWorld implements Container , IObservable, IGameWorld {
 
     public boolean isSound() {
         return sound;
+    }
+
+    @Override
+    public int getFramesPerSecond() {
+        return FRAMES_PER_SECOND;
     }
 
     public void switchSound() {
@@ -486,7 +574,6 @@ public class GameWorld implements Container , IObservable, IGameWorld {
     public Car getCharacterCar() {
         return car;
     }
-
 
 
 

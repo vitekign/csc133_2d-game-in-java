@@ -5,6 +5,7 @@ package a3.objects;
  */
 
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * FuelCan class.
@@ -12,12 +13,14 @@ import java.awt.*;
  *
  * The size of a fuel can corresponds to the amount of fuel it contains.
  */
-public class FuelCan extends Fixed implements IDrawable {
+public class FuelCan extends Fixed implements IDrawable, ICollider{
 
     private float size;
 
     public FuelCan(Location location, float size, Color color){
         super(color);
+
+        objectsCollidedWith = new Vector<>();
 
         this.X = location.getX();
         this.Y = location.getY();
@@ -43,6 +46,34 @@ public class FuelCan extends Fixed implements IDrawable {
 
     @Override
     public void draw(Graphics g) {
-        g.drawString("FuelCan " + (int)getSize(), (int)getX(), (int)getY());
+
+        int width = (int)size;
+        int length = (int)size;
+
+
+        g.fillRect((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int) width, (int) length);
+        g.drawOval((int) getX(), (int) getY(), 1, 1);
+        g.setColor(Color.white);
+        g.drawString(String.valueOf((int)getSize()), (int) getX()-(width/2), (int) getY()-(int)(length/2));
+        g.setColor(Color.black);
+    }
+
+
+    /*
+     * ICollider Implementation
+     */
+    @Override
+    public boolean collidesWith(ICollider obj) {
+        return false;
+    }
+
+    @Override
+    public void handleCollision(ICollider otherObject) {
+
+    }
+
+    @Override
+    public float getDistanceOfReference() {
+        return size/2;
     }
 }

@@ -2,12 +2,17 @@ package a3.objects;
 
 import a3.model.GameWorld;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Vector;
 
 /**
  * Created by Victor Ignatenkov on 2/9/15.
  */
-public class Car extends Moveable implements ISteerable , IDrawable{
+public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
 
 
     protected float width;
@@ -21,6 +26,8 @@ public class Car extends Moveable implements ISteerable , IDrawable{
     protected float fuelLevel;
     protected float speed;
     protected float damageLevel;
+
+
 
     public float getWidth() {
         return width;
@@ -70,14 +77,16 @@ public class Car extends Moveable implements ISteerable , IDrawable{
     public Car(Location location, GameWorld gw, Color color){
         super(color);
 
+        objectsCollidedWith = new Vector<>();
+
         /**
          * If further versions of the game require
          * creating multiple versions of cars, then
          * most of the following values will be
          * assigned by a corresponding constructor.
          */
-        width               = 5;
-        length              = 5;
+        width               = 25;
+        length              = 25;
         steeringDirection   = 0;
         maximumSpeed        = 100;
         fuelLevel           = 100;
@@ -105,11 +114,13 @@ public class Car extends Moveable implements ISteerable , IDrawable{
      *  heading should be incremented or decremented by the car’s
      *  steeringDirection.
      *  2. The car’s fuel level is reduced by a small amount.
+     * @param framesPerSecond
      */
 
 
     @Override
-    public void move() {
+    public void move(int framesPerSecond) {
+        //TODO find out what to do with framesPerSecond
 
         if(isCarInOilSlick()){
             return ;
@@ -117,8 +128,8 @@ public class Car extends Moveable implements ISteerable , IDrawable{
 
         heading += steeringDirection;
         float angle = (float) (90 - heading);
-        float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);
-        float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed);
+        float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed * framesPerSecond/5);
+        float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed * framesPerSecond/5);
         Location temp = new Location(this.getLocation().getX() + deltaX,
                                      this.getLocation().getY() + deltaY);
 
@@ -129,7 +140,8 @@ public class Car extends Moveable implements ISteerable , IDrawable{
         /**
          * Decrease the amount of fuel
          */
-        changeFuelLevel(-gw.DAMAGE_FOR_COLLIDING_WITH_CARS);
+        //TODO Find out by which amount to decrease the amount of fuel
+        changeFuelLevel((float) -0.1);
 
         /**
          *  Reset steering direction after applying it to the direction
@@ -347,6 +359,85 @@ public class Car extends Moveable implements ISteerable , IDrawable{
 
     @Override
     public void draw(Graphics g) {
-        g.drawString("Car", (int)getX(), (int)getY());
+
+         Image image;
+
+
+
+        String slash = File.separator;
+        String characterCarName = "car.png";
+
+
+        Image img1 = Toolkit.getDefaultToolkit().getImage("car.png");
+
+        ImageIcon i = new ImageIcon(characterCarName);
+        image = i.getImage();
+
+
+
+        g.drawOval((int) getX(), (int) getY(), 1, 1);
+
+
+
+
+
+
+
+
+
+
+
+        try {
+            Image imageRes = ImageIO.read(this.getClass().getResource("car.png"));
+
+
+
+
+
+
+            g.drawImage( imageRes,  (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 45, 30, null);
+
+
+
+        }catch (IOException ex){
+            System.out.println("An error happened: " + ex.getMessage());
+        }
+
+    }
+
+
+
+    @Override
+    public boolean collidesWith(ICollider obj) {
+
+        float distX = this.getX() - ((GameObject)obj).getX();
+        float distY = this.getY() - ((GameObject)obj).getY();
+        float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
+
+        if((this.getDistanceOfReference() + obj.getDistanceOfReference() >
+                distanceBtwnCenters)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    @Override
+    public void handleCollision(ICollider otherObject) {
+       if(otherObject instanceof Bird){
+           System.out.println("Just collided with bird");
+           //gw.gameObjectsToDelete.add((GameObject)otherObject);
+           if(!objectsCollidedWith.contains((GameObject)otherObject)){
+               objectsCollidedWith.add((GameObject)otherObject);
+           }
+
+           gw.birdFlyOver();
+       }
+    }
+
+    @Override
+    public float getDistanceOfReference() {
+        return (width + length)/2;
     }
 }

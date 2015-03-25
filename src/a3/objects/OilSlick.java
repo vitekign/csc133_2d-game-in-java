@@ -5,13 +5,14 @@ package a3.objects;
  */
 
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * OilSlick class.
  * Oil Slicks - are places where cars
  * lose a part of their normal functionality.
  */
-public class OilSlick extends Fixed implements IDrawable {
+public class OilSlick extends Fixed implements IDrawable, ICollider {
 
 
     private float width;
@@ -19,6 +20,9 @@ public class OilSlick extends Fixed implements IDrawable {
 
     public OilSlick(Location location, float width, float length, Color color){
         super(color);
+
+        objectsCollidedWith = new Vector<>();
+
 
         this.X = location.getX();
         this.Y = location.getY();
@@ -55,6 +59,28 @@ public class OilSlick extends Fixed implements IDrawable {
 
     @Override
     public void draw(Graphics g) {
-        g.drawString("OilSlick", (int)getX(), (int)getY());
+
+
+        g.fillOval((int)getX()-(int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
+
+    }
+
+
+    /*
+     * Confirms to ICollider
+     */
+    @Override
+    public boolean collidesWith(ICollider obj) {
+        return false;
+    }
+
+    @Override
+    public void handleCollision(ICollider otherObject) {
+
+    }
+
+    @Override
+    public float getDistanceOfReference() {
+        return (width + length)/2;
     }
 }

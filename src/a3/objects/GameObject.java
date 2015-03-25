@@ -1,6 +1,7 @@
 package a3.objects;
 
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * Created by Victor Ignatenkov on 2/9/15.
@@ -17,6 +18,13 @@ public class GameObject {
 
     protected float X;
     protected float Y;
+
+    //TODO refactor to private
+    public Vector<GameObject> objectsCollidedWith;
+
+    //TODO refactor to private
+    public boolean toDelete;
+    public boolean hasCollided;
 
     protected Color color;
 
