@@ -28,6 +28,9 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     protected float damageLevel;
 
 
+    Image imageRes;
+
+
 
     public float getWidth() {
         return width;
@@ -104,6 +107,25 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
 
         gw.setNewFuelLevel(this.fuelLevel);
         gw.updateDamageLevel(this.damageLevel);
+
+
+
+        try {
+            String slash = File.separator;
+
+            String pathToResources = ".."+slash+".."+slash+"resources"+slash+"img"+slash;
+            String imgName = "car.png";
+
+             imageRes= ImageIO.read(this.getClass().getResource(pathToResources+imgName));
+
+
+
+
+
+        }catch (IOException ex){
+            System.out.println("An error happened: " + ex.getMessage());
+        }
+
     }
 
 
@@ -379,13 +401,14 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
 
 
         String slash = File.separator;
-        String characterCarName = "car.png";
+        String pathToResources = "." + slash + "resources" +
+                slash + "img" + slash + "car.png";
 
+        Image img1 = Toolkit.getDefaultToolkit().getImage("." + slash + "resources" +
+                slash + "img" + slash + "car.png");
 
-        Image img1 = Toolkit.getDefaultToolkit().getImage("car.png");
-
-        ImageIcon i = new ImageIcon(characterCarName);
-        image = i.getImage();
+        ImageIcon i = new ImageIcon(pathToResources);
+      //  image = i.getImage();
 
 
 
@@ -401,21 +424,9 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
 
 
 
-        try {
-            Image imageRes = ImageIO.read(this.getClass().getResource("car.png"));
-
-
-
-
-
-
             g.drawImage( imageRes,  (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 45, 30, null);
 
 
-
-        }catch (IOException ex){
-            System.out.println("An error happened: " + ex.getMessage());
-        }
 
     }
 
@@ -466,6 +477,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
            }
 
            gw.carCollideWithCar();
+           gw.switchStrategies();
        }
 
        else if(otherObject instanceof OilSlick){

@@ -6,7 +6,10 @@ package a3.objects;
 
 import a3.model.GameWorld;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -22,6 +25,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
 
     private float size;
     private GameWorld gw;
+    Image imageRes;
 
     public Bird(Location location, float size, float heading, float speed, Color color, GameWorld gw){
         super(color);
@@ -35,6 +39,20 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         this.heading = heading;
         this.speed = speed;
         this.size = size;
+
+
+
+        String slash = File.separator;
+
+        String pathToResources = ".."+slash+".."+slash+"resources"+slash+"img"+slash;
+        String imgName = "bird.png";
+
+        try {
+            imageRes = ImageIO.read(this.getClass().getResource(pathToResources + imgName));
+        } catch (Exception e){
+            System.out.println("The picture for Bird wasn't found");
+        }
+
     }
 
 
@@ -62,7 +80,12 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         int length = (int)size;
 
         g.setColor(this.getColor());
-        g.drawOval((int)getX()-(int)width/2, (int)getY()-(int)length/2,width, length);
+
+
+
+            g.drawImage( imageRes,  (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 20, 20, null);
+
+       // g.drawOval((int)getX()-(int)width/2, (int)getY()-(int)length/2,width, length);
         g.setColor(Color.black);
     }
 

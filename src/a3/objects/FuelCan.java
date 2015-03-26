@@ -6,7 +6,10 @@ package a3.objects;
 
 import a3.model.GameWorld;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -20,6 +23,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider{
     private float size;
     private GameWorld gw;
 
+    Image imageRes;
+
     public FuelCan(Location location, float size, Color color, GameWorld gw){
         super(color);
 
@@ -31,6 +36,22 @@ public class FuelCan extends Fixed implements IDrawable, ICollider{
         this.Y = location.getY();
 
         this.size = size;
+
+
+        try {
+            String slash = File.separator;
+
+            String pathToResources = ".."+slash+".."+slash+"resources"+slash+"img"+slash;
+            String imgName = "fuelcan.png";
+
+            imageRes= ImageIO.read(this.getClass().getResource(pathToResources+imgName));
+
+        }catch (IOException ex){
+            System.out.println("An error happened: " + ex.getMessage());
+        }
+
+
+
     }
 
     @Override
@@ -55,11 +76,25 @@ public class FuelCan extends Fixed implements IDrawable, ICollider{
         int width = (int)size;
         int length = (int)size;
 
+
+
+
         g.setColor(this.getColor());
-        g.fillRect((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int) width, (int) length);
+       // g.fillRect((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int) width, (int) length);
+
+
+
         g.drawOval((int) getX(), (int) getY(), 1, 1);
         g.setColor(Color.white);
+        g.setColor(this.getColor());
         g.drawString(String.valueOf((int)getSize()), (int) getX()-(width/2), (int) getY()-(int)(length/2));
+
+
+
+        g.drawImage( imageRes,  (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 30, 30, null);
+
+
+
         g.setColor(Color.black);
     }
 

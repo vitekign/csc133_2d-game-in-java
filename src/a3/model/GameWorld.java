@@ -83,10 +83,10 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
          * If one life is lost - make a hard reset and
          * initialize all objects again with the same data.
          */
-        theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64),this));
-        theWorldVector.add(new Pylon(new Location(70, 100), 50, new Color(64, 64, 64),this));
-        theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64),this));
-        theWorldVector.add(new Pylon(new Location(800, 800), 50, new Color(64, 64, 64),this));
+        theWorldVector.add(new Pylon(new Location(50, 50), 50, new Color(64, 64, 64),this));
+        theWorldVector.add(new Pylon(new Location(300, 100), 50, new Color(64, 64, 64),this));
+        theWorldVector.add(new Pylon(new Location(400, 50), 50, new Color(64, 64, 64),this));
+        theWorldVector.add(new Pylon(new Location(600, 600), 50, new Color(64, 64, 64),this));
 
 
         Services.supplyServicesWithGameWorld(this);
