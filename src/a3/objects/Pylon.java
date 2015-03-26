@@ -4,6 +4,8 @@ package a3.objects;
  * Created by Victor Ignatenkov on 2/14/15.
  */
 
+import a3.model.GameWorld;
+
 import java.awt.*;
 import java.util.Vector;
 
@@ -18,9 +20,12 @@ public class Pylon extends Fixed implements IDrawable, ICollider {
     final private int sequenceNumber;
     static private int count = 1;
 
-    public Pylon(Location location, float radius, Color color){
+    private GameWorld gw;
 
+    public Pylon(Location location, float radius, Color color, GameWorld gw){
             super(color);
+
+            this.gw = gw;
 
             objectsCollidedWith = new Vector<>();
 
@@ -92,12 +97,29 @@ public class Pylon extends Fixed implements IDrawable, ICollider {
      */
     @Override
     public boolean collidesWith(ICollider obj) {
-        return false;
+        float distX = this.getX() - ((GameObject)obj).getX();
+        float distY = this.getY() - ((GameObject)obj).getY();
+        float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
+
+        if((this.getDistanceOfReference() + obj.getDistanceOfReference() >
+                distanceBtwnCenters)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void handleCollision(ICollider otherObject) {
-
+        if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
+            System.out.println("Just collided Pylon" + this.getIndexNumber());
+           // gw.gameObjectsToDelete.add((GameObject)this);
+            if(!objectsCollidedWith.contains((GameObject)otherObject)){
+                objectsCollidedWith.add((GameObject)otherObject);
+                ((GameObject)otherObject).objectsCollidedWith.add(this);
+            }
+            gw.carCollideWithPylon(this.getIndexNumber());
+        }
     }
 
     @Override

@@ -31,7 +31,7 @@ public class PickUpFuelCan extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
-            gw.pickUpFuelCan();
+           // gw.pickUpFuelCan(((FuelCan) otherObject).getSize());
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }

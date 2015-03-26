@@ -122,32 +122,46 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     public void move(int framesPerSecond) {
         //TODO find out what to do with framesPerSecond
 
-        if(isCarInOilSlick()){
-            return ;
+        if(isCarInOilSlick()){  float angle = (float) (90 - heading);
+            float deltaY = (float) (Math.sin(Math.toRadians(angle + 180))*speed * framesPerSecond/5);
+            float deltaX = (float) (Math.cos(Math.toRadians(angle + 180))*speed * framesPerSecond/5);
+            Location temp = new Location(this.getLocation().getX() + deltaX,
+                    this.getLocation().getY() + deltaY);
+
+            this.X = temp.getX();
+            this.Y = temp.getY();
+
+
+            /**
+             * Decrease the amount of fuel
+             */
+            //TODO Find out by which amount to decrease the amount of fuel
+            changeFuelLevel((float) -0.02);
+        } else {
+
+            heading += steeringDirection;
+            float angle = (float) (90 - heading);
+            float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
+            float deltaX = (float) (Math.cos(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
+            Location temp = new Location(this.getLocation().getX() + deltaX,
+                    this.getLocation().getY() + deltaY);
+
+            this.X = temp.getX();
+            this.Y = temp.getY();
+
+
+            /**
+             * Decrease the amount of fuel
+             */
+            //TODO Find out by which amount to decrease the amount of fuel
+            changeFuelLevel((float) -0.02);
+
+            /**
+             *  Reset steering direction after applying it to the direction
+             *  of the car.
+             */
+            steeringDirection = 0;
         }
-
-        heading += steeringDirection;
-        float angle = (float) (90 - heading);
-        float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed * framesPerSecond/5);
-        float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed * framesPerSecond/5);
-        Location temp = new Location(this.getLocation().getX() + deltaX,
-                                     this.getLocation().getY() + deltaY);
-
-        this.X = temp.getX();
-        this.Y = temp.getY();
-
-
-        /**
-         * Decrease the amount of fuel
-         */
-        //TODO Find out by which amount to decrease the amount of fuel
-        changeFuelLevel((float) -0.1);
-
-        /**
-         *  Reset steering direction after applying it to the direction
-         *  of the car.
-         */
-        steeringDirection = 0;
 
     }
 
@@ -430,14 +444,56 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
            //gw.gameObjectsToDelete.add((GameObject)otherObject);
            if(!objectsCollidedWith.contains((GameObject)otherObject)){
                objectsCollidedWith.add((GameObject)otherObject);
+               ((GameObject)otherObject).objectsCollidedWith.add(this);
+           }
+           gw.birdFlyOver();
+       }
+        else if(otherObject instanceof FuelCan){
+           System.out.println("Just collided with Fuel Can");
+           gw.gameObjectsToDelete.add((GameObject)otherObject);
+           if(!objectsCollidedWith.contains((GameObject)otherObject)){
+               objectsCollidedWith.add((GameObject)otherObject);
+               ((GameObject)otherObject).objectsCollidedWith.add(this);
+           }
+           gw.pickUpFuelCan((FuelCan)otherObject);
+       }
+        else if(otherObject instanceof NPCCar){
+           System.out.println("Just collided with NPC");
+           //gw.gameObjectsToDelete.add((GameObject)otherObject);
+           if(!objectsCollidedWith.contains((GameObject)otherObject)){
+               objectsCollidedWith.add((GameObject)otherObject);
+               ((GameObject)otherObject).objectsCollidedWith.add(this);
            }
 
-           gw.birdFlyOver();
+           gw.carCollideWithCar();
+       }
+
+       else if(otherObject instanceof OilSlick){
+           System.out.println("Just collided Oil Slick");
+           //gw.gameObjectsToDelete.add((GameObject)otherObject);
+           if(!objectsCollidedWith.contains((GameObject)otherObject)){
+               objectsCollidedWith.add((GameObject)otherObject);
+               ((GameObject)otherObject).objectsCollidedWith.add(this);
+           }
+
+           gw.enterOilSlick();
+       }
+
+       else if(otherObject instanceof Pylon){
+           System.out.println("Just collided Pylon" + ((Pylon) otherObject).getIndexNumber());
+           //gw.gameObjectsToDelete.add((GameObject)otherObject);
+           if(!objectsCollidedWith.contains((GameObject)otherObject)){
+               objectsCollidedWith.add((GameObject)otherObject);
+               ((GameObject)otherObject).objectsCollidedWith.add(this);
+           }
+
+           gw.carCollideWithPylon( ((Pylon) otherObject).getIndexNumber());
        }
     }
 
     @Override
     public float getDistanceOfReference() {
-        return (width + length)/2;
+        //TODO supply an actual number
+        return 15;
     }
 }

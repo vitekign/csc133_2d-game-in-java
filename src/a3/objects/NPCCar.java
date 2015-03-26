@@ -175,11 +175,30 @@ public class NPCCar extends Car {
 
     @Override
     public boolean collidesWith(ICollider obj) {
-        return false;
+        float distX = this.getX() - ((GameObject)obj).getX();
+        float distY = this.getY() - ((GameObject)obj).getY();
+        float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
+
+        if((this.getDistanceOfReference() + obj.getDistanceOfReference() >
+                distanceBtwnCenters)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void handleCollision(ICollider otherObject) {
+        if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
+            System.out.println("Just collided with NPC");
+            //gw.gameObjectsToDelete.add((GameObject)otherObject);
+            if(!objectsCollidedWith.contains((GameObject)otherObject)){
+                objectsCollidedWith.add((GameObject)otherObject);
+                ((GameObject)otherObject).objectsCollidedWith.add(this);
+            }
+
+            gw.carCollideWithCar();
+        }
 
     }
 }

@@ -83,10 +83,10 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
          * If one life is lost - make a hard reset and
          * initialize all objects again with the same data.
          */
-        theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64)));
-        theWorldVector.add(new Pylon(new Location(70, 100), 50, new Color(64, 64, 64)));
-        theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64)));
-        theWorldVector.add(new Pylon(new Location(800, 800), 50, new Color(64, 64, 64)));
+        theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64),this));
+        theWorldVector.add(new Pylon(new Location(70, 100), 50, new Color(64, 64, 64),this));
+        theWorldVector.add(new Pylon(new Location(200, 50), 50, new Color(64, 64, 64),this));
+        theWorldVector.add(new Pylon(new Location(800, 800), 50, new Color(64, 64, 64),this));
 
 
         Services.supplyServicesWithGameWorld(this);
@@ -114,35 +114,42 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
                 new Random().nextFloat() * GLOBAL_HEIGHT),
                 new Random().nextFloat() * 30 + 20,
                 new Random().nextFloat() * 360,
-                new Random().nextFloat() * 1, new Color(255, 0, 255)));
+                new Random().nextFloat() * 1, new Color(255, 0, 255),this));
         theWorldVector.add(new Bird(new Location(new Random().nextFloat() * GLOBAL_WIDTH,
                 new Random().nextFloat() * GLOBAL_HEIGHT),
                 new Random().nextFloat() * 30 + 20,
                 new Random().nextFloat() * 360,
-                new Random().nextFloat() * 1, new Color(255, 100, 0)));
+                new Random().nextFloat() * 1, new Color(255, 100, 0),this));
 
 
         theWorldVector.add(new OilSlick(new Location(rand.nextFloat() * GLOBAL_WIDTH,
                 rand.nextFloat() * GLOBAL_HEIGHT),
                 rand.nextFloat() * 100,
                 rand.nextFloat() * 100,
-                new Color(0, 0, 0)));
+                new Color(0, 0, 0), this));
         theWorldVector.add(new OilSlick(new Location(rand.nextFloat() * GLOBAL_WIDTH,
                 rand.nextFloat() * GLOBAL_HEIGHT),
                 rand.nextFloat() * 100,
                 rand.nextFloat() * 100,
-                new Color(0, 0, 0)));
+                new Color(0, 0, 0), this));
 
-        theWorldVector.add(new FuelCan(new Location(50, 50), rand.nextFloat() * 25, new Color(255, 25, 5)));
-        theWorldVector.add(new FuelCan(new Location(20, 555), rand.nextFloat() * 25, new Color(5, 25, 255)));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
 
 
         NPCCar npcCar1 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
-                25,25,0,100,100,10,0,200,0);
+                25,25,0,100,100,1,0,200,0);
         NPCCar npcCar2 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
-                25,25,0,100,100,10,0,200,0);
+                25,25,0,100,100,1,0,200,0);
         NPCCar npcCar3 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
-                25,25,0,100,100,10,0,200,0);
+                25,25,0,100,100,1,0,200,0);
 
          followStr = new FollowThePlayerCarStrategy();
          moveToPylon = new MoveTowardsPylonStrategy();
@@ -197,9 +204,13 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
                     if(currObject.collidesWith(otherObject)){
                            if( !((GameObject)currObject).objectsCollidedWith.contains((GameObject)otherObject)){
                             currObject.handleCollision(otherObject);
-                        }
+                           }
                     } else {
                         if(((GameObject)currObject).objectsCollidedWith.contains((GameObject)otherObject)){
+                            if(((GameObject)otherObject) instanceof OilSlick){
+                                this.leaveOilSlick();
+                                System.out.println("Leaving oil slick");
+                            }
                             ((GameObject)currObject).objectsCollidedWith.remove((GameObject)otherObject);
                         }
                     }
@@ -269,7 +280,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
     public void addOilSlick() {
         OilSlick oilSlick = new OilSlick(new Location(rand.nextFloat() * GLOBAL_WIDTH,
                 rand.nextFloat() * GLOBAL_HEIGHT), rand.nextFloat() * 50,
-                rand.nextFloat() * 50, Services.generateRandomColor());
+                rand.nextFloat() * 50, Services.generateRandomColor(), this);
         theWorldVector.addElement(oilSlick);
 
         notifyObserver();
@@ -328,14 +339,16 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
      * Pretend that the car has picked up a fuel can.
      * Grab hold of the first fuelCan in the collection
      * by using general-purpose Services class.
+     * @param fuelCan
      */
-    public void pickUpFuelCan() {
+    public void pickUpFuelCan(FuelCan fuelCan) {
+
         FuelCan temp = null;
         try {
-            temp = Services.findTheFirstFuelCan();
-            car.pickUpFuelCan(temp);
-            theWorldVector.remove(temp);
-            temp = new FuelCan(new Location(new Random().nextInt(800), new Random().nextInt(800)), (rand.nextFloat() * 20) + 1, Services.generateRandomColor());
+           // temp = Services.findTheFirstFuelCan();
+            car.pickUpFuelCan(fuelCan);
+          //  theWorldVector.remove(temp);
+            temp = new FuelCan(new Location(new Random().nextInt(800), new Random().nextInt(800)), (rand.nextFloat() * 50) + 1, Services.generateRandomColor(),this);
             theWorldVector.add(temp);
         } catch (Exception e) {
             System.out.println(e.getMessage());

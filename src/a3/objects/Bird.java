@@ -4,6 +4,8 @@ package a3.objects;
  * Created by Victor Ignatenkov on 2/14/15.
  */
 
+import a3.model.GameWorld;
+
 import java.awt.*;
 import java.util.Vector;
 
@@ -19,9 +21,12 @@ import java.util.Vector;
 public class Bird extends Moveable implements IDrawable, ICollider {
 
     private float size;
+    private GameWorld gw;
 
-    public Bird(Location location, float size, float heading, float speed, Color color){
+    public Bird(Location location, float size, float heading, float speed, Color color, GameWorld gw){
         super(color);
+
+        this.gw = gw;
 
         objectsCollidedWith = new Vector<>();
 
@@ -38,12 +43,17 @@ public class Bird extends Moveable implements IDrawable, ICollider {
 
     }
 
+
+
     @Override
     public String toString() {
         return "Bird: " + super.toString() + ", " +
                 "heading=" + (int)this.heading + "," +
                 " size=" + (int)this.size;
     }
+
+
+
 
     @Override
     public void draw(Graphics g) {
@@ -56,11 +66,12 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         g.setColor(Color.black);
     }
 
+
+
     @Override
     public void move(int framesPerSecond){
-
-        framesPerSecond /= 10;
-        float angle =  (90 - heading);
+        framesPerSecond *=3;
+      float angle =  (90 - heading);
         float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed * framesPerSecond);
         float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed * framesPerSecond);
         Location temp = new Location(this.getLocation().getX() + deltaX,
@@ -76,7 +87,6 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         if((getY() >= 1000) || (getY() < 0)){
             speed = -speed;
         }
-
     }
 
 
@@ -86,14 +96,35 @@ public class Bird extends Moveable implements IDrawable, ICollider {
 
     @Override
     public boolean collidesWith(ICollider obj) {
-        return false;
+
+        float distX = this.getX() - ((GameObject)obj).getX();
+        float distY = this.getY() - ((GameObject)obj).getY();
+        float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
+
+        if((this.getDistanceOfReference() + obj.getDistanceOfReference() >
+                distanceBtwnCenters)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
     @Override
     public void handleCollision(ICollider otherObject) {
+        if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
+            System.out.println("Just collided with bird");
+            //gw.gameObjectsToDelete.add((GameObject)otherObject);
+            if(!objectsCollidedWith.contains((GameObject)otherObject)){
+                objectsCollidedWith.add((GameObject)otherObject);
+                ((GameObject)otherObject).objectsCollidedWith.add(this);
+            }
 
+            gw.birdFlyOver();
+        }
     }
+
+
 
     @Override
     public float getDistanceOfReference() {

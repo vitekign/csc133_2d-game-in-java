@@ -4,6 +4,8 @@ package a3.objects;
  * Created by Victor Ignatenkov on 2/14/15.
  */
 
+import a3.model.GameWorld;
+
 import java.awt.*;
 import java.util.Vector;
 
@@ -16,9 +18,12 @@ import java.util.Vector;
 public class FuelCan extends Fixed implements IDrawable, ICollider{
 
     private float size;
+    private GameWorld gw;
 
-    public FuelCan(Location location, float size, Color color){
+    public FuelCan(Location location, float size, Color color, GameWorld gw){
         super(color);
+
+        this.gw = gw;
 
         objectsCollidedWith = new Vector<>();
 
@@ -50,7 +55,7 @@ public class FuelCan extends Fixed implements IDrawable, ICollider{
         int width = (int)size;
         int length = (int)size;
 
-
+        g.setColor(this.getColor());
         g.fillRect((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int) width, (int) length);
         g.drawOval((int) getX(), (int) getY(), 1, 1);
         g.setColor(Color.white);
@@ -64,12 +69,29 @@ public class FuelCan extends Fixed implements IDrawable, ICollider{
      */
     @Override
     public boolean collidesWith(ICollider obj) {
-        return false;
+        float distX = this.getX() - ((GameObject)obj).getX();
+        float distY = this.getY() - ((GameObject)obj).getY();
+        float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
+
+        if((this.getDistanceOfReference() + obj.getDistanceOfReference() >
+                distanceBtwnCenters)){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void handleCollision(ICollider otherObject) {
-
+        if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
+            System.out.println("Just collided Fuel Can");
+            gw.gameObjectsToDelete.add((GameObject)this);
+            if(!objectsCollidedWith.contains((GameObject)otherObject)){
+                objectsCollidedWith.add((GameObject)otherObject);
+                ((GameObject)otherObject).objectsCollidedWith.add(this);
+            }
+            gw.pickUpFuelCan(this);
+        }
     }
 
     @Override
