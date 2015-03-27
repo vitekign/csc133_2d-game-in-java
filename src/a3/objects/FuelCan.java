@@ -18,12 +18,16 @@ import java.util.Vector;
  *
  * The size of a fuel can corresponds to the amount of fuel it contains.
  */
-public class FuelCan extends Fixed implements IDrawable, ICollider{
+public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
     private float size;
     private GameWorld gw;
 
     Image imageRes;
+
+
+    private boolean isSelected;
+
 
     public FuelCan(Location location, float size, Color color, GameWorld gw){
         super(color);
@@ -70,6 +74,39 @@ public class FuelCan extends Fixed implements IDrawable, ICollider{
         return size;
     }
 
+
+    /**
+     * Confirms to ISelectable
+     */
+    @Override
+    public void setSelected(boolean yesNo) {
+        this.isSelected = yesNo;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    @Override
+    public boolean contains(Point p) {
+
+        size = 25;
+
+        int px = (int) p.getX();
+        int py = (int) p.getY();
+        int xLoc = (int)getX();
+        int yLoc = (int)getY();
+
+        if((px >= xLoc) && (px <= xLoc+ this.getSize())
+                && (py >= yLoc)&& (py <= yLoc + this.getSize()))
+            return true;
+        else
+            return false;
+    }
+
+
+
     @Override
     public void draw(Graphics g) {
 
@@ -91,8 +128,12 @@ public class FuelCan extends Fixed implements IDrawable, ICollider{
 
 
 
-        g.drawImage( imageRes,  (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 30, 30, null);
+        if(isSelected){
 
+            g.fillRect((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int)this.getSize()/2, (int)this.getSize()/2 );
+        } else {
+            g.drawImage(imageRes, (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 30, 30, null);
+        }
 
 
         g.setColor(Color.black);

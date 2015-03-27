@@ -2,6 +2,8 @@ package a3.controller;
 
 import a3.app.commands.*;
 import a3.model.GameWorld;
+import a3.model.Iterator;
+import a3.objects.*;
 import a3.view.MapView;
 import a3.view.ScoreView;
 
@@ -10,6 +12,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import static java.awt.Color.*;
 
 /**
  * Created by Victor Ignatenkov on 2/9/15.
@@ -35,7 +41,7 @@ class ButtonSpaceKeyFocusAgnostic extends JButton{
  * Game - functions as a controller of the
  * game.
  */
-public class Game extends JFrame {
+public class Game extends JFrame{
 
 
     private GameWorld gw;
@@ -61,6 +67,7 @@ public class Game extends JFrame {
 
 
 
+
         gw.notifyObserver();
 
 
@@ -82,6 +89,21 @@ public class Game extends JFrame {
         PickUpFuelCan pickUpFuelCanAction = PickUpFuelCan.getInstance();
         EnterOilSlick enterOilSlickAction = EnterOilSlick.getInstance();
         LeaveOilSlick leaveOilSlickAction = LeaveOilSlick.getInstance();
+
+        PlayPause playPause = PlayPause.getInstance();
+        playPause.setTarget(gw);
+
+        DeleteObject deleteObjectAction = DeleteObject.getInstance();
+        deleteObjectAction.setTarget(gw);
+        deleteObjectAction.setEnabled(false);
+
+        AddPylon addPylonAction = AddPylon.getInstance();
+        addPylonAction.setTarget(gw);
+        addPylonAction.setEnabled(false);
+
+        AddFuelCan addFuelCanAction = AddFuelCan.getInstance();
+        addFuelCanAction.setTarget(gw);
+        addFuelCanAction.setEnabled(false);
 
         AddOilSlick addOilSlickAction = AddOilSlick.getInstance();
         addOilSlickAction.setTarget(gw);
@@ -109,7 +131,7 @@ public class Game extends JFrame {
         TurnLeft turnLeftAction = TurnLeft.getInstance();
         turnLeftAction.setTarget(gw);
 
-        TurnRight turnRightAction = TurnRight.getInstance();
+         TurnRight turnRightAction = TurnRight.getInstance();
         turnRightAction.setTarget(gw);
 
         SwitchStrategies switchStrategiesAction = SwitchStrategies.getInstance();
@@ -139,12 +161,20 @@ public class Game extends JFrame {
          * 2. Supply the button's setAction with appropriate Command
          */
 
+
+
         JPanel leftPanel = new JPanel();
         leftPanel.setBorder(new TitledBorder(" Options: "));
         leftPanel.setLayout(new GridLayout(20, 1));
 
-        leftPanel.setBorder(new LineBorder(Color.green, 2));
+        leftPanel.setBorder(new LineBorder(green, 2));
         this.add(leftPanel, BorderLayout.WEST);
+
+        JButton playBtn = new ButtonSpaceKeyFocusAgnostic("Play");
+        leftPanel.add(playBtn);
+        colWithNPCAction.setTarget(gw);
+        playBtn.setAction(playPause);
+        colWithNPCAction.putValue(Action.NAME, "Play");
 
         JButton collideWithNPC = new ButtonSpaceKeyFocusAgnostic("Collide With NPC");
         leftPanel.add(collideWithNPC);
@@ -163,6 +193,7 @@ public class Game extends JFrame {
         colWithBirdAction.setTarget(gw);
         collideWithBird.setAction(colWithBirdAction);
         colWithBirdAction.putValue(Action.NAME, "Collide With Bird");
+
 
 
         JButton pickUpFuelCan = new ButtonSpaceKeyFocusAgnostic("Picked Up FuelCan");
@@ -188,10 +219,28 @@ public class Game extends JFrame {
         switchStrategy.setAction(switchStrategiesAction);
         switchStrategiesAction.putValue(Action.NAME, "Switch Strategy");
 
+
+        JButton deleteGameObjectBtn = new ButtonSpaceKeyFocusAgnostic("Delete");
+        leftPanel.add(deleteGameObjectBtn);
+        deleteGameObjectBtn.setAction(deleteObjectAction);
+
+        JButton addPylonBtn = new ButtonSpaceKeyFocusAgnostic("Add Pylon");
+        leftPanel.add(addPylonBtn);
+        addPylonBtn.setAction(addPylonAction);
+
+        JButton addFuelCanBtn = new ButtonSpaceKeyFocusAgnostic("Add FuelCan");
+        leftPanel.add(addFuelCanBtn);
+        addFuelCanBtn.setAction(addFuelCanAction);
+
+
+
+
+
         ButtonSpaceKeyFocusAgnostic quitTheGame = new ButtonSpaceKeyFocusAgnostic("");
         quitTheGame.setAction(quitAction);
         leftPanel.add(quitTheGame);
         quitAction.putValue(Action.NAME, "Quit");
+
 
 
 
@@ -282,7 +331,6 @@ public class Game extends JFrame {
         fileMenu.add(quitTheGameMenuItem);
         quitTheGameMenuItem.setAction(quitAction);
 
-
         JMenu commandMenu = new JMenu("Commands");
         JMenuItem pickUpFuelItem = new JMenuItem("fuel pickup");
         pickUpFuelItem.setAction(pickUpFuelCanAction);
@@ -313,6 +361,7 @@ public class Game extends JFrame {
         setResizable(false);
         setSize(gw.GLOBAL_WIDTH, gw.GLOBAL_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+       // setBackground(Color.GRAY);
         setVisible(true);
 
         /**
@@ -324,6 +373,13 @@ public class Game extends JFrame {
         play();
 
     }
+
+
+
+
+
+
+
 
     /**
      * Main loop of the game

@@ -6,9 +6,12 @@ package a3.view;
 import a3.model.*;
 import a3.objects.GameObject;
 import a3.objects.IDrawable;
+import a3.objects.ISelectable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 
 /**
@@ -16,7 +19,7 @@ import java.awt.*;
  * state of the game. In this version, the date change
  * is shown in the Console and also in the textArea on the screen.
  */
-public class MapView extends JPanel implements IObserver {
+public class MapView extends JPanel implements IObserver, MouseListener {
 
 
     /**
@@ -26,8 +29,10 @@ public class MapView extends JPanel implements IObserver {
     JTextArea textArea;
 
     GameWorldProxy gw;
-    public MapView(){
+    public MapView(
 
+    ){
+        this.addMouseListener(this);
     }
 
     public void update(GameWorldProxy gw, Object arg){
@@ -59,6 +64,7 @@ public class MapView extends JPanel implements IObserver {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
+
         setBackground(new Color(200, 200, 200));
        // g.drawString(String.valueOf(gw.getCurrentClockTime()), 200, 200);
 
@@ -74,5 +80,43 @@ public class MapView extends JPanel implements IObserver {
     }
 
 
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Point p = e.getPoint();
+        GameObject temp = null;
 
+        Iterator iter = gw.getIterator();
+        while(iter.hasNext()){
+            temp = (GameObject)iter.getNext();
+            if(temp instanceof ISelectable) {
+
+            if (((ISelectable) temp).contains(p)) {
+                ((ISelectable) temp).setSelected(true);
+            } else {
+                ((ISelectable) temp).setSelected(false);
+            }
+        }
+        }
+        repaint();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }

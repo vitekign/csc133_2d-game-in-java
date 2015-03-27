@@ -134,15 +134,17 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
                 new Color(0, 0, 0), this));
 
         theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
 
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        /*
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), rand.nextFloat() * 25, new Color(255, 25, 5),this));
+*/
 
         NPCCar npcCar1 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
                 25,25,0,100,100,1,0,200,0);
@@ -173,7 +175,11 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
     public void startTimer(){
-        timer.start();
+        if(timer.isRunning()){
+            timer.stop();
+        } else {
+            timer.start();
+        }
     }
 
 
@@ -202,12 +208,19 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
                 if(otherObject != currObject){
                     //check for collision
                     if(currObject.collidesWith(otherObject)){
+                            /*
+                            Check if two collided objects are in a collision state.
+                             */
                            if( !((GameObject)currObject).objectsCollidedWith.contains((GameObject)otherObject)){
                             currObject.handleCollision(otherObject);
                            }
                     } else {
+                        /*
+                        Clear the collision state.
+                         */
                         if(((GameObject)currObject).objectsCollidedWith.contains((GameObject)otherObject)){
-                            if(((GameObject)otherObject) instanceof OilSlick){
+                            if(((GameObject)otherObject) instanceof OilSlick && (GameObject)currObject instanceof Car &&
+                                    !((GameObject)currObject instanceof NPCCar)){
                                 this.leaveOilSlick();
                                 System.out.println("Leaving oil slick");
                             }
@@ -588,7 +601,9 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         return car;
     }
 
-
+    public void playPause() {
+        startTimer();
+    }
 
 
     private class GameObjectsIterator implements Iterator {
