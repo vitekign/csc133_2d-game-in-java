@@ -85,19 +85,26 @@ public class MapView extends JPanel implements IObserver, MouseListener {
         Point p = e.getPoint();
         GameObject temp = null;
 
-        Iterator iter = gw.getIterator();
-        while(iter.hasNext()){
-            temp = (GameObject)iter.getNext();
-            if(temp instanceof ISelectable) {
+        if(gw.isItInPause()) {
+            Iterator iter = gw.getIterator();
+            while (iter.hasNext()) {
+                temp = (GameObject) iter.getNext();
+                if (temp instanceof ISelectable) {
 
-            if (((ISelectable) temp).contains(p)) {
-                ((ISelectable) temp).setSelected(true);
-            } else {
-                ((ISelectable) temp).setSelected(false);
+                    if (((ISelectable) temp).contains(p)) {
+                        ((ISelectable) temp).setSelected(true);
+                        gw.addToTheDeleteObjectsCollection(temp);
+
+                    } else {
+                        if (!e.isControlDown()) {
+                            ((ISelectable) temp).setSelected(false);
+                            gw.eraseFromTheDeleteObjectsCollections(temp);
+                        }
+                    }
+                }
             }
+            repaint();
         }
-        }
-        repaint();
     }
 
     @Override

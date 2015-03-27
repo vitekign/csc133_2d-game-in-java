@@ -67,8 +67,9 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
     public void draw(Graphics g) {
 
 
-        g.fillOval((int)getX()-(int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
 
+        g.fillOval((int)getX()-(int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
+        g.setColor(Color.black);
     }
 
 
@@ -93,7 +94,7 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
     public void handleCollision(ICollider otherObject) {
         if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
             System.out.println("Just collided Oil Slick");
-            gw.gameObjectsToDelete.add((GameObject)this);
+            //gw.gameObjectsToDelete.add((GameObject)this);
             if(!objectsCollidedWith.contains((GameObject)otherObject)){
                 objectsCollidedWith.add((GameObject)otherObject);
                 ((GameObject)otherObject).objectsCollidedWith.add(this);

@@ -1,5 +1,7 @@
 package a3.controller;
 
+import a3.objects.GameObject;
+
 /**
  * Created by Victor Ignatenkov on 3/22/15.
  */
@@ -14,4 +16,7 @@ public interface IGameWorld {
     public float getDamageLevel();
     public boolean isSound();
     public int getFramesPerSecond();
+    public void addToTheDeleteObjectsCollection(GameObject obj);
+    public void eraseFromTheDeleteObjectsCollections(GameObject obj);
+    public boolean isItInPause();
 }

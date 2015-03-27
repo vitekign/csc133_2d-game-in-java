@@ -91,15 +91,15 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     @Override
     public boolean contains(Point p) {
 
-        size = 25;
+
 
         int px = (int) p.getX();
         int py = (int) p.getY();
         int xLoc = (int)getX();
         int yLoc = (int)getY();
 
-        if((px >= xLoc) && (px <= xLoc+ this.getSize())
-                && (py >= yLoc)&& (py <= yLoc + this.getSize()))
+        if((px >= xLoc - (this.getSize()/2)) && (px <= xLoc + (this.getSize()/2))
+                && (py >= yLoc - (this.getSize()/2))&& (py <= yLoc + (this.getSize()/2)))
             return true;
         else
             return false;
@@ -114,29 +114,20 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         int length = (int)size;
 
 
-
-
-        g.setColor(this.getColor());
-       // g.fillRect((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int) width, (int) length);
-
-
-
-        g.drawOval((int) getX(), (int) getY(), 1, 1);
-        g.setColor(Color.white);
-        g.setColor(this.getColor());
-        g.drawString(String.valueOf((int)getSize()), (int) getX()-(width/2), (int) getY()-(int)(length/2));
-
-
-
         if(isSelected){
-
-            g.fillRect((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int)this.getSize()/2, (int)this.getSize()/2 );
+            g.setColor(this.getColor());
+            g.fillRect( (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int)size, (int)size);
         } else {
-            g.drawImage(imageRes, (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 30, 30, null);
+            g.drawImage(imageRes, (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2),  (int)size, (int)size, null);
         }
 
 
-        g.setColor(Color.black);
+        g.setColor(Color.red);
+        g.drawString(String.valueOf((int)getSize()), (int) getX(), (int) getY());
+
+
+        g.setColor(Color.white);
+        g.fillOval( (int) getX() , (int) getY() ,  2, 2);
     }
 
 

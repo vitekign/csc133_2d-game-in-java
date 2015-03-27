@@ -9,7 +9,6 @@ import a3.model.GameWorld;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -54,6 +53,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         }
 
     }
+
 
 
     @Override
@@ -103,12 +103,16 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         this.X = temp.getX();
         this.Y = temp.getY();
 
+        //TODO find out how to make the change of the angle better
         if((getX() >= 1000) || (getX() < 0)){
             speed = -speed;
+            this.setHeading(this.getHeading() + 90);
+
         }
 
         if((getY() >= 1000) || (getY() < 0)){
             speed = -speed;
+            this.setHeading(this.getHeading() + 90);
         }
     }
 

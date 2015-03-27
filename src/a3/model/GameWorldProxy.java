@@ -2,6 +2,7 @@ package a3.model;
 
 
 import a3.controller.IGameWorld;
+import a3.objects.GameObject;
 
 /**
  * Created by Victor Ignatenkov on 3/22/15.
@@ -57,4 +58,21 @@ public class GameWorldProxy implements  IGameWorld {
     public int getFramesPerSecond() {
         return realGameWorld.getFramesPerSecond();
     }
+
+    @Override
+    public void addToTheDeleteObjectsCollection(GameObject obj) {
+        realGameWorld.addToTheDeleteObjectsCollection(obj);
+    }
+
+    @Override
+    public void eraseFromTheDeleteObjectsCollections(GameObject obj) {
+        realGameWorld.eraseFromTheDeleteObjectsCollections(obj);
+    }
+
+    @Override
+    public boolean isItInPause() {
+        return realGameWorld.isItInPause();
+    }
+
+
 }

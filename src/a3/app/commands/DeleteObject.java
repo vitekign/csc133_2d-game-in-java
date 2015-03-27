@@ -34,7 +34,7 @@ public class DeleteObject extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
-         //delete object
+         gw.deleteSelectedElements();
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }
