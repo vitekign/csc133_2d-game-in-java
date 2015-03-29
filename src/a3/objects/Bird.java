@@ -153,6 +153,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
 
 
 
+
     @Override
     public float getDistanceOfReference() {
         return size;

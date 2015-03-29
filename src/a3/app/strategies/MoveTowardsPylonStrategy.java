@@ -112,7 +112,8 @@ public class MoveTowardsPylonStrategy implements IStrategy {
              * reached any pylon in the world.
              */
             int lastHighestPylonReached = car.getLastHighestPylonReached();
-            if(lastHighestPylonReached == Services.findTheNumberOfPylons()){
+            if(lastHighestPylonReached > Services.findTheNumberOfPylons()){
+               //System.out.println("The number of pylons is: " + Services.findTheNumberOfPylons());
                // System.out.println("Too many movements, set a lower pylon");
                 car.setLastHighestPylonReached(1);
                 lastHighestPylonReached = car.getLastHighestPylonReached();
@@ -120,9 +121,11 @@ public class MoveTowardsPylonStrategy implements IStrategy {
 
             Pylon tmpPylon = null;
             try {
-                tmpPylon = Services.findPylonWithIndexNumber(++lastHighestPylonReached);
+                tmpPylon = Services.findPylonWithIndexNumber(lastHighestPylonReached);
             } catch (Exception e) {
-                System.out.println("No such a pylon " + e.toString() + e.getStackTrace());
+                System.out.println("The number of pylons is: " + Services.findTheNumberOfPylons());
+                System.out.println("The last pylons reached is " + lastHighestPylonReached);
+                System.out.println("Nooooooooo such a pylon " + e.toString() + e.getStackTrace());
             }
 
             /**

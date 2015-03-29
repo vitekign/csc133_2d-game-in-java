@@ -4,6 +4,8 @@ package a3.model;
 import a3.controller.IGameWorld;
 import a3.objects.GameObject;
 
+import java.awt.event.MouseEvent;
+
 /**
  * Created by Victor Ignatenkov on 3/22/15.
  */
@@ -72,6 +74,11 @@ public class GameWorldProxy implements  IGameWorld {
     @Override
     public boolean isItInPause() {
         return realGameWorld.isItInPause();
+    }
+
+    @Override
+    public void setLastMouseEvent(MouseEvent e) {
+        realGameWorld.setLastMouseEvent(e);
     }
 
 

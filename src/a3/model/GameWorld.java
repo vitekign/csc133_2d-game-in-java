@@ -5,6 +5,7 @@
 package a3.model;
 import a3.app.strategies.FollowThePlayerCarStrategy;
 import a3.app.strategies.MoveTowardsPylonStrategy;
+import a3.controller.Game;
 import a3.controller.IGameWorld;
 import a3.objects.*;
 
@@ -12,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.Random;
 import java.util.Vector;
 
@@ -54,6 +56,10 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
     private float currentFuelLevel;
     private float damageLevel;
     private boolean sound;
+    private boolean isAfterThePause;
+    private MouseEvent lastMouseEvent = null;
+
+
 
     Car car;
 
@@ -183,7 +189,16 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
             timer.stop();
         } else {
             gameObjectsToDelete.removeAllElements();
+            lastMouseEvent = null;
 
+            Iterator iter = this.getIterator();
+            while(iter.hasNext()){
+                GameObject temp = (GameObject)iter.getNext();
+                if(temp instanceof ISelectable){
+                    ((ISelectable) temp).setSelected(false);
+                }
+            }
+            notifyObserver();
             timer.start();
         }
     }
@@ -254,6 +269,25 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         gameObjectsToDelete.clear();
     }
 
+
+    public void createNewPylon(){
+        if(isItInPause() && lastMouseEvent != null){
+            theWorldVector.add(new Pylon(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), 50, new Color(64, 64, 64),this));
+            notifyObserver();
+            lastMouseEvent = null;
+
+        }
+
+
+    }
+
+    public void createNewFuelCan(){
+        if(isItInPause() && lastMouseEvent != null){
+            theWorldVector.add(new FuelCan(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), 30, new Color(255, 25, 5),this));
+            notifyObserver();
+            lastMouseEvent = null;
+        }
+    }
 
     /**
      * Additional methods to manipulate world
@@ -619,6 +653,14 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         }
     }
 
+
+    public MouseEvent getLastMouseEvent() {
+        return lastMouseEvent;
+    }
+
+    public void setLastMouseEvent(MouseEvent lastMouseEvent) {
+        this.lastMouseEvent = lastMouseEvent;
+    }
 
 
     public int getCurrentClockTime() {

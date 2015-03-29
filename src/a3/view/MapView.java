@@ -82,6 +82,9 @@ public class MapView extends JPanel implements IObserver, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
+        gw.setLastMouseEvent(e);
+
         Point p = e.getPoint();
         GameObject temp = null;
 
@@ -94,7 +97,6 @@ public class MapView extends JPanel implements IObserver, MouseListener {
                     if (((ISelectable) temp).contains(p)) {
                         ((ISelectable) temp).setSelected(true);
                         gw.addToTheDeleteObjectsCollection(temp);
-
                     } else {
                         if (!e.isControlDown()) {
                             ((ISelectable) temp).setSelected(false);

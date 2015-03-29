@@ -30,7 +30,7 @@ public class AddFuelCan extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
-            //add fuelCan
+            gw.createNewFuelCan();
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }

@@ -61,9 +61,10 @@ public class Services {
 
         while(iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
-                if(((Pylon) mObj).getIndexNumber() == indexNumber){
-                    return ((Pylon) mObj);
-
+                if (mObj instanceof Pylon) {
+                    if(((Pylon) mObj).getIndexNumber() == indexNumber) {
+                        return ((Pylon) mObj);
+                }
             }
         }
         throw new Exception("There are no pylons");
