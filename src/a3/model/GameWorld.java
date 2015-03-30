@@ -180,6 +180,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
             timer = new Timer(FRAMES_PER_SECOND, this);
 
 
+        System.out.println("The number of pylons is: " + Pylon.getCount());
     }
 
 
@@ -272,7 +273,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     public void createNewPylon(){
         if(isItInPause() && lastMouseEvent != null){
-            theWorldVector.add(new Pylon(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), 50, new Color(64, 64, 64),this));
+            theWorldVector.add(new Pylon(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), 50, new Color(64, 64, 64), this));
             notifyObserver();
             lastMouseEvent = null;
 
@@ -529,6 +530,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
        // System.out.println("Delete All Objects");
         this.deleteUnnecessaryOjbects();
        // gameObjectsToDelete.removeAllElements();
+        this.setLastMouseEvent(null);
         notifyObserver();
     }
 

@@ -91,8 +91,6 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     @Override
     public boolean contains(Point p) {
 
-
-
         int px = (int) p.getX();
         int py = (int) p.getY();
         int xLoc = (int)getX();

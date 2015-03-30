@@ -14,13 +14,15 @@ import java.util.Vector;
  *
  * Not allowed to change color once they're created
  */
-public class Pylon extends Fixed implements IDrawable, ICollider {
+public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
     private float radius;
     final private int sequenceNumber;
     static private int count = 1;
 
     private GameWorld gw;
+
+    private boolean isSelected;
 
     public Pylon(Location location, float radius, Color color, GameWorld gw){
             super(color);
@@ -78,23 +80,65 @@ public class Pylon extends Fixed implements IDrawable, ICollider {
      * number of pylons created + 1
      */
     public static int getCount(){
-        return count-1;
+        return count - 1;
     }
+
+
+    /****************************************/
+    /* Confirms to ISelectable              */
+    /****************************************/
+    @Override
+    public void setSelected(boolean yesNo) {
+        this.isSelected = yesNo;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    @Override
+    public boolean contains(Point p) {
+        int px = (int) p.getX();
+        int py = (int) p.getY();
+        int xLoc = (int)getX();
+        int yLoc = (int)getY();
+
+        if((px >= xLoc - (this.getDistanceOfReference()/2)) && (px <= xLoc + (this.getDistanceOfReference()/2))
+                && (py >= yLoc - (this.getDistanceOfReference()/2))&& (py <= yLoc + (this.getDistanceOfReference()/2)))
+            return true;
+        else
+            return false;
+    }
+    /****************************************/
+
+
+
 
     @Override
     public void draw(Graphics g) {
 
-        g.fillOval((int)getX()-(int)radius/2, (int)getY()-(int)radius/2, (int)radius, (int)radius);
-        g.setColor(Color.white);
-        g.fillOval((int)getX(), (int)getY(), 1, 1);
-        g.drawString(String.valueOf(getIndexNumber()),  (int)getX()-(int)radius/2, (int)getY()-(int)radius/2);
-        g.setColor(Color.black);
+        if(isSelected){
+            g.setColor(Color.gray);
+            g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
+            g.setColor(Color.white);
+            g.fillOval((int) getX(), (int) getY(), 1, 1);
+            g.drawString(String.valueOf(getIndexNumber()), (int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
+            g.setColor(Color.black);
+        } else {
+            g.setColor(Color.black);
+            g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
+            g.setColor(Color.white);
+            g.fillOval((int) getX(), (int) getY(), 1, 1);
+            g.drawString(String.valueOf(getIndexNumber()), (int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
+            g.setColor(Color.black);
+        }
     }
 
 
-    /*
-     * Confirms to ICollider
-     */
+    /****************************************/
+    /* Confirms to ICollider                */
+    /****************************************/
     @Override
     public boolean collidesWith(ICollider obj) {
         float distX = this.getX() - ((GameObject)obj).getX();
@@ -126,4 +170,6 @@ public class Pylon extends Fixed implements IDrawable, ICollider {
     public float getDistanceOfReference() {
         return radius;
     }
+
+    /****************************************/
 }

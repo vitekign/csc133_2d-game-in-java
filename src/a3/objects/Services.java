@@ -56,7 +56,7 @@ public class Services {
      * @throws Exception
      * there is no Pylons to be found
      */
-    public static Pylon findPylonWithIndexNumber(int indexNumber) throws Exception {
+    public static Pylon findPylonWithIndexNumber(int indexNumber){
         Iterator iter = gw.getIterator();
 
         while(iter.hasNext()) {
@@ -67,7 +67,7 @@ public class Services {
                 }
             }
         }
-        throw new Exception("There are no pylons");
+        return null;
     }
 
     /**
