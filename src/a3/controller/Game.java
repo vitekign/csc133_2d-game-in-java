@@ -2,20 +2,12 @@ package a3.controller;
 
 import a3.app.commands.*;
 import a3.model.GameWorld;
-import a3.model.Iterator;
-import a3.objects.*;
 import a3.view.MapView;
 import a3.view.ScoreView;
-
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import static java.awt.Color.*;
 
 /**
  * Created by Victor Ignatenkov on 2/9/15.
@@ -164,10 +156,12 @@ public class Game extends JFrame{
 
 
         JPanel leftPanel = new JPanel();
+        leftPanel.setBackground(new Color(22, 22, 22));
+
         leftPanel.setBorder(new TitledBorder(" Options: "));
         leftPanel.setLayout(new GridLayout(20, 1));
 
-        leftPanel.setBorder(new LineBorder(green, 2));
+       // leftPanel.setBorder(new LineBorder(green, 2));
         this.add(leftPanel, BorderLayout.WEST);
 
         JButton playBtn = new ButtonSpaceKeyFocusAgnostic("Play");
@@ -175,6 +169,7 @@ public class Game extends JFrame{
         colWithNPCAction.setTarget(gw);
         playBtn.setAction(playPause);
         colWithNPCAction.putValue(Action.NAME, "Play");
+
 
         JButton collideWithNPC = new ButtonSpaceKeyFocusAgnostic("Collide With NPC");
         leftPanel.add(collideWithNPC);
@@ -363,6 +358,7 @@ public class Game extends JFrame{
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
        // setBackground(Color.GRAY);
         setVisible(true);
+
 
         /**
          * Right now play() is not used,

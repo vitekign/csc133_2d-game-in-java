@@ -29,11 +29,24 @@ public class AddPylon extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
-            gw.createNewPylon();
+            try {
+                int input = proccessInput();
+                gw.createNewPylon(input);
+            } catch (Exception ex) {
+                if(ex.getMessage() != "null") {
+                    JOptionPane.showMessageDialog(null, "Please enter a number");
+                }
+            }
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }
     }
+
+    private int proccessInput() throws Exception{
+        String inputString = JOptionPane.showInputDialog("Please input the number of pylon");
+        return Integer.parseInt(inputString);
+    }
+
 
     /**
      * Supply the target, so the command has the

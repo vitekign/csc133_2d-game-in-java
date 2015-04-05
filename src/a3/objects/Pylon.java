@@ -38,6 +38,21 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         sequenceNumber = count++;
     }
 
+    public Pylon(Location location, float radius, Color color, GameWorld gw, int seqNumberOfPylon){
+        super(color);
+
+        this.gw = gw;
+
+        objectsCollidedWith = new Vector<>();
+
+        this.X = location.getX();
+        this.Y = location.getY();
+        this.radius = radius;
+
+        sequenceNumber = seqNumberOfPylon;
+                count++;
+    }
+
     @Override
     public String toString() {
         return "Pylon " +

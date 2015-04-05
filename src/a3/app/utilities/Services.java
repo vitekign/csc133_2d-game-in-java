@@ -1,9 +1,18 @@
-package a3.objects;
+package a3.app.utilities;
 
 import a3.model.GameWorld;
 import a3.model.Iterator;
+import a3.objects.FuelCan;
+import a3.objects.GameObject;
+import a3.objects.Pylon;
 
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.applet.AudioClip;
 import java.awt.*;
+import java.io.File;
 import java.util.Random;
 
 /**
@@ -110,5 +119,27 @@ public class Services {
         }
         return tempNumOfPylons;
     }
+
+    public static Clip retrieveSoundFromResources(String soundName) {
+
+        String slash = File.separator;
+        String pathToResources = ".." + slash + ".." + slash + "resources" + slash + "sounds" + slash;
+
+        AudioInputStream inputStream = null;
+
+        Clip clip = null;
+        try {
+            inputStream = AudioSystem.getAudioInputStream(gw.getClass().getResource(pathToResources + soundName));
+            clip = AudioSystem.getClip();
+            clip.open(inputStream);
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return clip;
+    }
+
+
 
 }

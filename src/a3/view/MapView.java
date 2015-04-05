@@ -8,10 +8,12 @@ import a3.objects.GameObject;
 import a3.objects.IDrawable;
 import a3.objects.ISelectable;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 
 
 /**
@@ -27,6 +29,7 @@ public class MapView extends JPanel implements IObserver, MouseListener {
      * state of the game on the screen.
      */
     JTextArea textArea;
+    public boolean drawBackFlag = false;
 
     GameWorldProxy gw;
     public MapView(
@@ -65,14 +68,51 @@ public class MapView extends JPanel implements IObserver, MouseListener {
         super.paintComponent(g);
 
 
-        setBackground(new Color(200, 200, 200));
+       // setBackground(new Color(200, 200, 200));
+        //TODO Refactor background image drawing, now it redraws the background each time it's being updated
+
+
+         //   System.out.println("I'm inside paintCopmonent");
+
+            Image imageRes;
+            imageRes = null;
+            String slash = File.separator;
+
+            String pathToResources = ".." + slash + ".." + slash + "resources" + slash + "img" + slash;
+            String imgName = "asphalt.png";
+            try {
+                imageRes = ImageIO.read(this.getClass().getResource(pathToResources + imgName));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+            int ratio = 200;
+            for (int i = 0; i < 20; i++) {
+                for (int j = 0; j < 20; j++) {
+                    g.drawImage(imageRes, ratio * i, ratio * j, ratio, ratio, null);
+                }
+            }
+
+
+
+
+
+
+
+
        // g.drawString(String.valueOf(gw.getCurrentClockTime()), 200, 200);
+
+
+        Graphics2D g2d = (Graphics2D)g;
+//        g2d.translate(0, this.getHeight());
+//        g2d.rotate(Math.toRadians(0));
+//        g2d.scale(1,-1);
 
 
         Iterator iter = gw.getIterator();
         while(iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
-            ((IDrawable)mObj).draw(g);
+            ((IDrawable)mObj).draw(g2d);
         }
 
 

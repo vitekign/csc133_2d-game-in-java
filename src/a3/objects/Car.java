@@ -1,5 +1,6 @@
 package a3.objects;
 
+import a3.app.utilities.Sound;
 import a3.model.GameWorld;
 
 import javax.imageio.ImageIO;
@@ -76,6 +77,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
      * GameWorld in order to update data.
      */
     protected GameWorld gw;
+    public Sound colideWithNPCSound;
 
     public Car(Location location, GameWorld gw, Color color){
         super(color);
@@ -108,6 +110,8 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
         gw.setNewFuelLevel(this.fuelLevel);
         gw.updateDamageLevel(this.damageLevel);
 
+        colideWithNPCSound = new Sound("hittingWall.wav");
+
 
 
         try {
@@ -129,6 +133,10 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     }
 
 
+
+    public void playSound(){
+        colideWithNPCSound.play();
+    }
 
     /**
      *  If not in oil slick, then:
@@ -416,14 +424,6 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
 
 
 
-
-
-
-
-
-
-
-
             g.drawImage( imageRes,  (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 45, 30, null);
 
 
@@ -476,6 +476,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
                ((GameObject)otherObject).objectsCollidedWith.add(this);
            }
 
+           playSound();
            gw.carCollideWithCar();
            gw.switchStrategies();
        }

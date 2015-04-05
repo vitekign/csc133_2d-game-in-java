@@ -5,10 +5,12 @@
 package a3.model;
 import a3.app.strategies.FollowThePlayerCarStrategy;
 import a3.app.strategies.MoveTowardsPylonStrategy;
-import a3.controller.Game;
+import a3.app.utilities.Services;
+import a3.app.utilities.Sound;
 import a3.controller.IGameWorld;
 import a3.objects.*;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -72,7 +74,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
     Timer timer;
-
+    GameObjectsFactory factory;
 
     public void initLayout() {
 
@@ -83,19 +85,21 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         gameObjectsToDelete = new Vector<>();
         turnOnSound(false);
 
+        factory = new GameObjectsFactory();
+        factory.setTargetForGameWorld(this);
+
         /**
          * Initialize oll needed objects on the fly
          * and add them to the collection.
          * If one life is lost - make a hard reset and
          * initialize all objects again with the same data.
          */
-        theWorldVector.add(new Pylon(new Location(50, 50), 50, new Color(64, 64, 64),this));
-        theWorldVector.add(new Pylon(new Location(300, 100), 50, new Color(64, 64, 64),this));
-        theWorldVector.add(new Pylon(new Location(400, 50), 50, new Color(64, 64, 64),this));
-        theWorldVector.add(new Pylon(new Location(600, 600), 50, new Color(64, 64, 64),this));
+        theWorldVector.add(factory.makePylonWithLocation(new Location(50, 50)));
+        theWorldVector.add(factory.makePylonWithLocation(new Location(300, 100)));
+        theWorldVector.add(factory.makePylonWithLocation(new Location(400, 50)));
+        theWorldVector.add(factory.makePylonWithLocation(new Location(600, 600)));
 
-
-        Services.supplyServicesWithGameWorld(this);
+                Services.supplyServicesWithGameWorld(this);
 
         /**
          * Find the pylon with the sequence number of THE_FIRST_PYLON
@@ -108,37 +112,25 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         /**
          * Add another required objects with random data
          */
+        theWorldVector.add(factory.makeOilSlickWithRandomData());
+        theWorldVector.add(factory.makeOilSlickWithRandomData());
+
+        theWorldVector.add(factory.makeFuelCanWithRandomData());
+        theWorldVector.add(factory.makeFuelCanWithRandomData());
+        theWorldVector.add(factory.makeFuelCanWithRandomData());
+        theWorldVector.add(factory.makeFuelCanWithRandomData());
+        theWorldVector.add(factory.makeFuelCanWithRandomData());
+        theWorldVector.add(factory.makeFuelCanWithRandomData());
+        theWorldVector.add(factory.makeFuelCanWithRandomData());
+        theWorldVector.add(factory.makeFuelCanWithRandomData());
 
 
 
-        theWorldVector.add(new OilSlick(new Location(rand.nextFloat() * GLOBAL_WIDTH,
-                rand.nextFloat() * GLOBAL_HEIGHT),
-                rand.nextFloat() * 100,
-                rand.nextFloat() * 100,
-                new Color(0, 0, 0), this));
-        theWorldVector.add(new OilSlick(new Location(rand.nextFloat() * GLOBAL_WIDTH,
-                rand.nextFloat() * GLOBAL_HEIGHT),
-                rand.nextFloat() * 100,
-                rand.nextFloat() * 100,
-                new Color(0, 0, 0), this));
-
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), 30, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), 30, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), 30, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), 30, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), 30, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), 30, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), 30, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), 30, new Color(255, 25, 5),this));
-        theWorldVector.add(new FuelCan(new Location(new Random().nextFloat()*800, new Random().nextFloat()*800), 30, new Color(255, 25, 5),this));
+        NPCCar npcCar1 = factory.makeNPCCarWithRandomData();
+        NPCCar npcCar2 = factory.makeNPCCarWithRandomData();
+        NPCCar npcCar3 = factory.makeNPCCarWithRandomData();
 
 
-        NPCCar npcCar1 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
-                25,25,0,100,100,1,0,200,0);
-        NPCCar npcCar2 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
-                25,25,0,100,100,1,0,200,0);
-        NPCCar npcCar3 = new NPCCar(new Location(new Random().nextInt(100),new Random().nextInt(600)), this, Services.generateRandomColor(),
-                25,25,0,100,100,1,0,200,0);
 
          followStr = new FollowThePlayerCarStrategy();
          moveToPylon = new MoveTowardsPylonStrategy();
@@ -156,23 +148,15 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         try {
             firstPylon = Services.findPylonWithIndexNumber(THE_FIRST_PYLON);
             locationToPlaceCar = firstPylon.getLocation();
-            car = new Car(locationToPlaceCar, this, new Color(240, 0, 0));
+            car = factory.makeCarWithLocation(locationToPlaceCar);
             theWorldVector.add(car);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
 
 
-        theWorldVector.add(new Bird(new Location(new Random().nextFloat() * GLOBAL_WIDTH,
-                new Random().nextFloat() * GLOBAL_HEIGHT),
-                new Random().nextFloat() * 30 + 20,
-                new Random().nextFloat() * 360,
-                new Random().nextFloat() * 1, new Color(255, 0, 255),this));
-        theWorldVector.add(new Bird(new Location(new Random().nextFloat() * GLOBAL_WIDTH,
-                new Random().nextFloat() * GLOBAL_HEIGHT),
-                new Random().nextFloat() * 30 + 20,
-                new Random().nextFloat() * 360,
-                new Random().nextFloat() * 1, new Color(255, 100, 0),this));
+        theWorldVector.add(factory.makeBirdWithRandomData());
+        theWorldVector.add(factory.makeBirdWithRandomData());
 
 
 
@@ -271,9 +255,9 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
     }
 
 
-    public void createNewPylon(){
+    public void createNewPylon(int seqNumberOfPylon){
         if(isItInPause() && lastMouseEvent != null){
-            theWorldVector.add(new Pylon(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), 50, new Color(64, 64, 64), this));
+            theWorldVector.add(new Pylon(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), 50, new Color(64, 64, 64), this, seqNumberOfPylon));
             notifyObserver();
             lastMouseEvent = null;
 
@@ -282,9 +266,9 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     }
 
-    public void createNewFuelCan(){
+    public void createNewFuelCan(int input){
         if(isItInPause() && lastMouseEvent != null){
-            theWorldVector.add(new FuelCan(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), 30, new Color(255, 25, 5),this));
+            theWorldVector.add(new FuelCan(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), input, new Color(255, 25, 5),this));
             notifyObserver();
             lastMouseEvent = null;
         }
@@ -346,6 +330,8 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
      */
 
     public void carCollideWithCar() {
+
+
         car.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS);
 
         Iterator iter = this.getIterator();
@@ -559,7 +545,6 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
                     ((NPCCar) mObj).setUpStrategy(moveToPylon);
                 }
             }
-
         }
         notifyObserver();
     }

@@ -197,6 +197,7 @@ public class NPCCar extends Car {
                 ((GameObject)otherObject).objectsCollidedWith.add(this);
             }
 
+            ((Car)otherObject).playSound();
             gw.carCollideWithCar();
             gw.switchStrategies();
         }

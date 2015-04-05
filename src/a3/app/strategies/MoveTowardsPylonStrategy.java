@@ -7,7 +7,7 @@ import a3.model.GameWorld;
 import a3.objects.Location;
 import a3.objects.NPCCar;
 import a3.objects.Pylon;
-import a3.objects.Services;
+import a3.app.utilities.Services;
 
 import static java.lang.Math.atan2;
 
@@ -37,6 +37,11 @@ public class MoveTowardsPylonStrategy implements IStrategy {
                     car.setLastHighestPylonReached(1);
                 }
 
+
+
+                /*  1. Retrieve all pylons in the game world
+                    2. Sort them
+                */
                 Pylon tmpPylon = null;
                 while (Services.findPylonWithIndexNumber(car.getLastHighestPylonReached()) == null) {
                     car.setLastHighestPylonReached(car.getLastHighestPylonReached() + 1);
