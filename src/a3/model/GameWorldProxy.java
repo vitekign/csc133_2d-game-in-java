@@ -75,11 +75,19 @@ public class GameWorldProxy implements  IGameWorld {
     public boolean isItInPause() {
         return realGameWorld.isItInPause();
     }
-
     @Override
     public void setLastMouseEvent(MouseEvent e) {
         realGameWorld.setLastMouseEvent(e);
     }
 
+    @Override
+    public int getTime() {
+        return realGameWorld.getTime();
+    }
+
+    @Override
+    public void resetTime(){
+        realGameWorld.resetTime();
+    }
 
 }

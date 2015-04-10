@@ -155,6 +155,7 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
                 objectsCollidedWith.add((GameObject)otherObject);
                 ((GameObject)otherObject).objectsCollidedWith.add(this);
             }
+            ((Car)otherObject).playSoundForFuelEating();
             gw.pickUpFuelCan(this);
         }
     }

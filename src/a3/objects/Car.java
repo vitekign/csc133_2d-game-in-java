@@ -1,5 +1,6 @@
 package a3.objects;
 
+import a3.app.utilities.Services;
 import a3.app.utilities.Sound;
 import a3.model.GameWorld;
 
@@ -8,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.Vector;
 
 /**
@@ -77,7 +80,8 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
      * GameWorld in order to update data.
      */
     protected GameWorld gw;
-    public Sound colideWithNPCSound;
+    public Sound collideWithNPCSound;
+    public Sound collideWithFuelCanSound;
 
     public Car(Location location, GameWorld gw, Color color){
         super(color);
@@ -110,7 +114,8 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
         gw.setNewFuelLevel(this.fuelLevel);
         gw.updateDamageLevel(this.damageLevel);
 
-        colideWithNPCSound = new Sound("hittingWall.wav");
+        collideWithNPCSound = new Sound("slurp.mp3");
+        collideWithFuelCanSound = new Sound("hittingWall.wav");
 
 
 
@@ -135,7 +140,11 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
 
 
     public void playSound(){
-        colideWithNPCSound.play();
+        collideWithNPCSound.play();
+    }
+
+    public void playSoundForFuelEating(){
+        collideWithFuelCanSound.play();
     }
 
     /**
@@ -359,12 +368,42 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
      * @param numberOfPylon
      * number of the pylon
      */
+    //TODO +++ Refactor, so it's working with index+1 agnostic algorithm
     public void collideWithPylon(int numberOfPylon) {
-        int temp = lastHighestPylonReached;
-        if(++temp == numberOfPylon && lastHighestPylonReached != Pylon.getCount()) {
-            ++lastHighestPylonReached;
-            gw.updateLastPylonReached(lastHighestPylonReached);
+
+        Vector<Pylon> allPylons = Services.getAllPylons();
+
+        allPylons.sort((Pylon o1, Pylon o2)->{
+                if(o1.getIndexNumber() < o2.getIndexNumber()){
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+
+
+
+        Pylon currentPylon = null;
+        for(Pylon pylon : allPylons){
+            if(pylon.getIndexNumber() > this.getLastHighestPylonReached()){
+                currentPylon = pylon;
+                break;
+            }
         }
+
+        if(currentPylon != null) {
+            if (numberOfPylon == currentPylon.getIndexNumber()) {
+                gw.updateLastPylonReached(numberOfPylon);
+                this.lastHighestPylonReached = numberOfPylon;
+            }
+        }
+
+
+//        int temp = lastHighestPylonReached;
+//        if(++temp == numberOfPylon && lastHighestPylonReached != Pylon.getCount()) {
+//            ++lastHighestPylonReached;
+//            gw.updateLastPylonReached(lastHighestPylonReached);
+//        }
     }
 
     /**
@@ -466,6 +505,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
                objectsCollidedWith.add((GameObject)otherObject);
                ((GameObject)otherObject).objectsCollidedWith.add(this);
            }
+           playSoundForFuelEating();
            gw.pickUpFuelCan((FuelCan)otherObject);
        }
         else if(otherObject instanceof NPCCar){

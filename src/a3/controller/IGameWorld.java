@@ -22,5 +22,7 @@ public interface IGameWorld {
     public void eraseFromTheDeleteObjectsCollections(GameObject obj);
     public boolean isItInPause();
     public void setLastMouseEvent(MouseEvent e);
+    public int getTime();
+    public void resetTime();
 
 }

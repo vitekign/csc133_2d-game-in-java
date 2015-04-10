@@ -70,12 +70,12 @@ public class ScoreView extends JPanel implements IObserver {
          */
 
         //TODO Refactor, so instead of system time it's using frames from the game world
-        long currentTime = System.currentTimeMillis();
-        if((currentTime - lastTime) > 1000){
-            this.currentTime.setText("Time: " + time);
-            lastTime = System.currentTimeMillis();
-            time++;
-        }
+//        long currentTime = System.currentTimeMillis();
+//        if((currentTime - lastTime) > 1000){
+//            this.currentTime.setText("Time: " + time);
+//            lastTime = System.currentTimeMillis();
+//            time++;
+//        }
 
 
 
@@ -88,6 +88,14 @@ public class ScoreView extends JPanel implements IObserver {
         remainingFuelLevel.setText("Player Fuel Remaining: " + (int)gw.getCurrentFuelLevel());
         playerDamageLevel.setText("Player Damage Level: " + gw.getDamageLevel());
         soundStatus.setText("Sound: " + (gw.isSound() ? "ON" : "OFF"));
+
+        if(gw.getTime()%50 == 0 && gw.getTime()!= 0){
+            System.out.println(gw.getTime());
+            gw.resetTime();
+
+            time++;
+        }
+        currentTime.setText("Time: " + time);
 
 
 

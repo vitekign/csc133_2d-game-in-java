@@ -14,6 +14,7 @@ import java.applet.AudioClip;
 import java.awt.*;
 import java.io.File;
 import java.util.Random;
+import java.util.Vector;
 
 /**
  * Created by Victor Ignatenkov on 2/22/15.
@@ -138,6 +139,23 @@ public class Services {
         }
 
         return clip;
+    }
+
+
+    /**
+     * This method find and return all Pylons in the game world.
+     * @return return all pylons in GW
+     */
+    public static Vector<Pylon> getAllPylons(){
+        Vector<Pylon> allPylons = new Vector<>();
+        Iterator iterForPylons = gw.getIterator();
+        while(iterForPylons.hasNext()){
+            GameObject temp = (GameObject)iterForPylons.getNext();
+            if(temp instanceof Pylon){
+                allPylons.addElement((Pylon)temp);
+            }
+        }
+        return allPylons;
     }
 
 

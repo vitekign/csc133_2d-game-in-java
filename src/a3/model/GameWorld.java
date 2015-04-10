@@ -6,11 +6,9 @@ package a3.model;
 import a3.app.strategies.FollowThePlayerCarStrategy;
 import a3.app.strategies.MoveTowardsPylonStrategy;
 import a3.app.utilities.Services;
-import a3.app.utilities.Sound;
 import a3.controller.IGameWorld;
 import a3.objects.*;
 
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -37,9 +35,10 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
      * Some basic constants
      */
 
-    //TODO it's not FRAMES_PER_SECOND
+    //TODO it's not MILISEC_PER_SECOND
     //There are actually 50 frames per second
-    public static final int FRAMES_PER_SECOND = 1000/50;
+    public static final int FRAMES_PER_SECOND = 50;
+    public static final int MILISEC_PER_SECOND = 1000/FRAMES_PER_SECOND;
 
 
     public static final int GLOBAL_WIDTH = 1000;
@@ -63,6 +62,8 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
 
+
+
     Car car;
 
     Vector<GameObject> theWorldVector;
@@ -75,6 +76,9 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     Timer timer;
     GameObjectsFactory factory;
+
+    private int timeCounter;
+
 
     public void initLayout() {
 
@@ -161,7 +165,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
         if(timer == null)
-            timer = new Timer(FRAMES_PER_SECOND, this);
+            timer = new Timer(MILISEC_PER_SECOND, this);
 
 
         System.out.println("The number of pylons is: " + Pylon.getCount());
@@ -193,15 +197,25 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
     @Override
     public void actionPerformed(ActionEvent e) {
         Iterator iter = this.getIterator();
+        timeCounter++;
+
         while(iter.hasNext()){
             GameObject obj = (GameObject)iter.getNext();
             if(obj instanceof Moveable){
-                ((Moveable)obj).move(FRAMES_PER_SECOND/10);
-                doCollisionChecking();
-                deleteUnnecessaryOjbects();
+                  ((Moveable)obj).move(MILISEC_PER_SECOND /10);
+                  doCollisionChecking();
+                  deleteUnnecessaryOjbects();
             }
         }
         notifyObserver();
+    }
+
+    public int getTime(){
+       return timeCounter;
+    }
+
+    public void resetTime(){
+        timeCounter = 0;
     }
 
     public void doCollisionChecking(){
@@ -349,6 +363,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         //[1-3]
         iter = this.getIterator();
 
+        //TODO Get rid of it, it was needed to decrease the life level in the NPC cars
         int checkCounter = 0;
         while(iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
@@ -460,7 +475,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         while(iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
             if(mObj instanceof Moveable){
-              ((Moveable) mObj).move(FRAMES_PER_SECOND);
+              ((Moveable) mObj).move(MILISEC_PER_SECOND);
             }
 
         }
@@ -480,7 +495,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     @Override
     public int getFramesPerSecond() {
-        return FRAMES_PER_SECOND;
+        return MILISEC_PER_SECOND;
     }
 
 
