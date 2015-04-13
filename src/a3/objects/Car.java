@@ -5,12 +5,10 @@ import a3.app.utilities.Sound;
 import a3.model.GameWorld;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Comparator;
-import java.util.LinkedList;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -114,23 +112,16 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
         gw.setNewFuelLevel(this.fuelLevel);
         gw.updateDamageLevel(this.damageLevel);
 
-        collideWithNPCSound = new Sound("slurp.mp3");
-        collideWithFuelCanSound = new Sound("hittingWall.wav");
+        collideWithNPCSound = new Sound("hittingWall.wav");
+        collideWithFuelCanSound = new Sound("slurp.wav");
 
 
 
         try {
-            String slash = File.separator;
 
-            String pathToResources = ".."+slash+".."+slash+"resources"+slash+"img"+slash;
+            String pathToResources = Services.getPathToImgResources();
             String imgName = "car.png";
-
-             imageRes= ImageIO.read(this.getClass().getResource(pathToResources+imgName));
-
-
-
-
-
+            imageRes= ImageIO.read(new File(pathToResources + imgName));
         }catch (IOException ex){
             System.out.println("An error happened: " + ex.getMessage());
         }
@@ -368,7 +359,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
      * @param numberOfPylon
      * number of the pylon
      */
-    //TODO +++ Refactor, so it's working with index+1 agnostic algorithm
+
     public void collideWithPylon(int numberOfPylon) {
 
         Vector<Pylon> allPylons = Services.getAllPylons();
@@ -397,13 +388,6 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
                 this.lastHighestPylonReached = numberOfPylon;
             }
         }
-
-
-//        int temp = lastHighestPylonReached;
-//        if(++temp == numberOfPylon && lastHighestPylonReached != Pylon.getCount()) {
-//            ++lastHighestPylonReached;
-//            gw.updateLastPylonReached(lastHighestPylonReached);
-//        }
     }
 
     /**
@@ -443,26 +427,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     @Override
     public void draw(Graphics g) {
 
-         Image image;
-
-
-
-        String slash = File.separator;
-        String pathToResources = "." + slash + "resources" +
-                slash + "img" + slash + "car.png";
-
-        Image img1 = Toolkit.getDefaultToolkit().getImage("." + slash + "resources" +
-                slash + "img" + slash + "car.png");
-
-        ImageIcon i = new ImageIcon(pathToResources);
-      //  image = i.getImage();
-
-
-
-        g.drawOval((int) getX(), (int) getY(), 1, 1);
-
-
-
+            g.drawOval((int) getX(), (int) getY(), 1, 1);
             g.drawImage( imageRes,  (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 45, 30, null);
 
 
@@ -500,12 +465,14 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
        }
         else if(otherObject instanceof FuelCan){
            System.out.println("Just collided with Fuel Can");
-           gw.gameObjectsToDelete.add((GameObject)otherObject);
+           gw.gameObjectsToDelete.add((GameObject) otherObject);
            if(!objectsCollidedWith.contains((GameObject)otherObject)){
                objectsCollidedWith.add((GameObject)otherObject);
                ((GameObject)otherObject).objectsCollidedWith.add(this);
            }
-           playSoundForFuelEating();
+           if(gw.isSound()) {
+               playSoundForFuelEating();
+           }
            gw.pickUpFuelCan((FuelCan)otherObject);
        }
         else if(otherObject instanceof NPCCar){
@@ -516,8 +483,16 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
                ((GameObject)otherObject).objectsCollidedWith.add(this);
            }
 
-           playSound();
-           gw.carCollideWithCar();
+           int chanceNewFuelCan = (int) ((new Random().nextFloat())*100);
+           if(chanceNewFuelCan > 80){
+               //create a new fuelCan
+               gw.createNewFuelCan(this.getLocation(), 10);
+           }
+
+           if(gw.isSound()) {
+               playSound();
+           }
+           gw.carCollideWithCar((NPCCar)otherObject);
            gw.switchStrategies();
        }
 

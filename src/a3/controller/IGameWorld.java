@@ -24,5 +24,5 @@ public interface IGameWorld {
     public void setLastMouseEvent(MouseEvent e);
     public int getTime();
     public void resetTime();
-
+    public int getTimer();
 }

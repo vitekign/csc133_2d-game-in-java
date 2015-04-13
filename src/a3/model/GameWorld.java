@@ -6,6 +6,7 @@ package a3.model;
 import a3.app.strategies.FollowThePlayerCarStrategy;
 import a3.app.strategies.MoveTowardsPylonStrategy;
 import a3.app.utilities.Services;
+import a3.app.utilities.Sound;
 import a3.controller.IGameWorld;
 import a3.objects.*;
 
@@ -35,10 +36,8 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
      * Some basic constants
      */
 
-    //TODO it's not MILISEC_PER_SECOND
-    //There are actually 50 frames per second
     public static final int FRAMES_PER_SECOND = 50;
-    public static final int MILISEC_PER_SECOND = 1000/FRAMES_PER_SECOND;
+    public static final int MILISEC_PER_FRAME = 1000/FRAMES_PER_SECOND;
 
 
     public static final int GLOBAL_WIDTH = 1000;
@@ -59,7 +58,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
     private boolean sound;
     private boolean isAfterThePause;
     private MouseEvent lastMouseEvent = null;
-
+    private static int time;
 
 
 
@@ -79,6 +78,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     private int timeCounter;
 
+    private  Sound backgroundMusic;
 
     public void initLayout() {
 
@@ -92,6 +92,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         factory = new GameObjectsFactory();
         factory.setTargetForGameWorld(this);
 
+        backgroundMusic = new Sound("troops.wav");
         /**
          * Initialize oll needed objects on the fly
          * and add them to the collection.
@@ -165,7 +166,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
         if(timer == null)
-            timer = new Timer(MILISEC_PER_SECOND, this);
+            timer = new Timer(MILISEC_PER_FRAME, this);
 
 
         System.out.println("The number of pylons is: " + Pylon.getCount());
@@ -176,6 +177,11 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
     public void startTimer(){
         if(timer.isRunning()){
             timer.stop();
+
+            if(isSound()){
+                backgroundMusic.stop();
+            }
+
         } else {
             gameObjectsToDelete.removeAllElements();
             lastMouseEvent = null;
@@ -189,9 +195,19 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
             }
             notifyObserver();
             timer.start();
+
+            if(isSound()){
+                backgroundMusic.loop();
+            }
         }
     }
 
+
+
+    public int getTimer(){
+
+        return time;
+    }
 
 
     @Override
@@ -202,11 +218,22 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         while(iter.hasNext()){
             GameObject obj = (GameObject)iter.getNext();
             if(obj instanceof Moveable){
-                  ((Moveable)obj).move(MILISEC_PER_SECOND /10);
+                  ((Moveable)obj).move(MILISEC_PER_FRAME /10);
                   doCollisionChecking();
                   deleteUnnecessaryOjbects();
             }
         }
+
+        //
+        if(this.getTime()%50 == 0 && this.getTime()!= 0){
+            resetTime();
+            time++;
+            if(time%10 == 0 && time != 0){
+                switchStrategies();
+            }
+        }
+
+
         notifyObserver();
     }
 
@@ -270,24 +297,59 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
     public void createNewPylon(int seqNumberOfPylon){
-        if(isItInPause() && lastMouseEvent != null){
-            theWorldVector.add(new Pylon(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), 50, new Color(64, 64, 64), this, seqNumberOfPylon));
-            notifyObserver();
-            lastMouseEvent = null;
 
+
+        Vector<Pylon> allPylons = Services.getAllPylons();
+        boolean isPylonInGW = false;
+        for(Pylon pylon : allPylons){
+            if(pylon.getIndexNumber() == seqNumberOfPylon)
+                isPylonInGW = true;
         }
 
+        if(isPylonInGW) {
+            JOptionPane.showMessageDialog(null, "Sorry, the pylon with this number already exists...");
+        }
+        else {
+
+            allPylons.sort( (Pylon p1, Pylon p2) -> {
+                if(p1.getIndexNumber() < p2.getIndexNumber()){
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+
+            if (isItInPause()) {
+                if(lastMouseEvent == null){
+                    JOptionPane.showMessageDialog(null, "Please click on the map and then press Add Pylon");
+                } else {
+                    theWorldVector.add(new Pylon(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), 50, new Color(64, 64, 64), this, seqNumberOfPylon));
+                    notifyObserver();
+                    lastMouseEvent = null;
+                }
+            }
+        }
 
     }
 
     public void createNewFuelCan(int input){
-        if(isItInPause() && lastMouseEvent != null){
-            theWorldVector.add(new FuelCan(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), input, new Color(255, 25, 5),this));
-            notifyObserver();
-            lastMouseEvent = null;
+        if(isItInPause() ){
+            if(lastMouseEvent != null){
+                theWorldVector.add(new FuelCan(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), input, new Color(255, 25, 5),this));
+                notifyObserver();
+                lastMouseEvent = null;
+            }
+            else {
+                JOptionPane.showMessageDialog(null, "Please click on the map and then press Add FuelCan");
+            }
         }
+
     }
 
+    public void createNewFuelCan(Location location, int fuelLevel){
+        theWorldVector.add(new FuelCan(location, fuelLevel, new Color(255, 25, 5),this));
+        notifyObserver();
+    }
     /**
      * Additional methods to manipulate world
      * objects and related game date
@@ -343,37 +405,14 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
      * another car
      */
 
-    public void carCollideWithCar() {
+    public void carCollideWithCar(NPCCar theOtherCar) {
 
 
         car.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS);
-
-        Iterator iter = this.getIterator();
-
-        int counter = 0;
-        while(iter.hasNext()) {
-            GameObject mObj = (GameObject) iter.getNext();
-            if(mObj instanceof NPCCar){
-              counter++;
-            }
+        if(theOtherCar instanceof NPCCar){
+            theOtherCar.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS/10);
         }
-        //3
-        int rand = new Random().nextInt(counter); // [0-2]
-        rand++;
-        //[1-3]
-        iter = this.getIterator();
 
-        //TODO Get rid of it, it was needed to decrease the life level in the NPC cars
-        int checkCounter = 0;
-        while(iter.hasNext()) {
-            GameObject mObj = (GameObject) iter.getNext();
-            if(mObj instanceof NPCCar){
-                checkCounter++;
-                if(checkCounter == rand) {
-                    ((NPCCar) mObj).increaseDamageLevel(10);
-                }
-            }
-        }
         notifyObserver();
     }
 
@@ -475,7 +514,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         while(iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
             if(mObj instanceof Moveable){
-              ((Moveable) mObj).move(MILISEC_PER_SECOND);
+              ((Moveable) mObj).move(MILISEC_PER_FRAME);
             }
 
         }
@@ -486,7 +525,9 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     public void turnOnSound(boolean val){
         sound = val;
+
         notifyObserver();
+
     }
 
     public boolean isSound() {
@@ -495,7 +536,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     @Override
     public int getFramesPerSecond() {
-        return MILISEC_PER_SECOND;
+        return MILISEC_PER_FRAME;
     }
 
 
@@ -538,10 +579,14 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
     public void switchSound() {
-        if(sound){
+        if(sound) {
             sound = false;
+            backgroundMusic.stop();
+
         } else {
             sound = true;
+            if(!isSound())
+                backgroundMusic.loop();
         }
         notifyObserver();
     }
@@ -691,6 +736,9 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     public void playPause() {
         startTimer();
+
+
+
     }
 
 

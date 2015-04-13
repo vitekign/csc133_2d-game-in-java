@@ -4,6 +4,7 @@ package a3.objects;
  * Created by Victor Ignatenkov on 2/14/15.
  */
 
+import a3.app.utilities.Services;
 import a3.model.GameWorld;
 
 import javax.imageio.ImageIO;
@@ -40,14 +41,11 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         this.size = size;
 
 
-
-        String slash = File.separator;
-
-        String pathToResources = ".."+slash+".."+slash+"resources"+slash+"img"+slash;
-        String imgName = "bird.png";
+        String pathToResources = Services.getPathToImgResources();
+        File file = new File(pathToResources + "bird.png");
 
         try {
-            imageRes = ImageIO.read(this.getClass().getResource(pathToResources + imgName));
+            imageRes = ImageIO.read(file);
         } catch (Exception e){
             System.out.println("The picture for Bird wasn't found");
         }

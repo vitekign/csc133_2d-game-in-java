@@ -219,6 +219,8 @@ public class Game extends JFrame{
         leftPanel.add(deleteGameObjectBtn);
         deleteGameObjectBtn.setAction(deleteObjectAction);
 
+
+
         JButton addPylonBtn = new ButtonSpaceKeyFocusAgnostic("Add Pylon");
         leftPanel.add(addPylonBtn);
         addPylonBtn.setAction(addPylonAction);
@@ -273,7 +275,8 @@ public class Game extends JFrame{
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("Q"),"quit");
         this.getRootPane().getActionMap().put("quit", quitAction);
 
-
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"deleteGameObjectBtn");
+        this.getRootPane().getActionMap().put("deleteGameObjectBtn", deleteObjectAction);
 
 
 

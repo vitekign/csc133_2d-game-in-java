@@ -4,6 +4,7 @@ package a3.objects;
  * Created by Victor Ignatenkov on 2/14/15.
  */
 
+import a3.app.utilities.Services;
 import a3.model.GameWorld;
 
 import javax.imageio.ImageIO;
@@ -43,12 +44,11 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
 
         try {
-            String slash = File.separator;
 
-            String pathToResources = ".."+slash+".."+slash+"resources"+slash+"img"+slash;
+            String pathToResources = Services.getPathToImgResources();
             String imgName = "fuelcan.png";
 
-            imageRes= ImageIO.read(this.getClass().getResource(pathToResources+imgName));
+            imageRes= ImageIO.read(new File(pathToResources+imgName));
 
         }catch (IOException ex){
             System.out.println("An error happened: " + ex.getMessage());
@@ -155,7 +155,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
                 objectsCollidedWith.add((GameObject)otherObject);
                 ((GameObject)otherObject).objectsCollidedWith.add(this);
             }
-            ((Car)otherObject).playSoundForFuelEating();
+            if(gw.isSound())
+                ((Car)otherObject).playSoundForFuelEating();
             gw.pickUpFuelCan(this);
         }
     }

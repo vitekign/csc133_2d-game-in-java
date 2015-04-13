@@ -8,6 +8,7 @@ package a3.objects;
 import a3.app.strategies.IStrategy;
 import a3.model.GameWorld;
 import java.awt.*;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -156,6 +157,7 @@ public class NPCCar extends Car {
      * Increase damage of the NPCCar object.
      * @param damage
      */
+    //TODO Delete NPCCars with fatal level of damage
     @Override
     public void increaseDamageLevel(float damage) {
         damageLevel += damage;
@@ -197,8 +199,15 @@ public class NPCCar extends Car {
                 ((GameObject)otherObject).objectsCollidedWith.add(this);
             }
 
-            ((Car)otherObject).playSound();
-            gw.carCollideWithCar();
+            int chanceNewFuelCan = (int) ((new Random().nextFloat())*100);
+            if(chanceNewFuelCan > 80){
+                //create a new fuelCan
+                gw.createNewFuelCan(this.getLocation(), 10);
+            }
+
+            if(gw.isSound())
+                ((Car)otherObject).playSound();
+            gw.carCollideWithCar((this));
             gw.switchStrategies();
         }
 

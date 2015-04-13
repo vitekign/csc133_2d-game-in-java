@@ -90,4 +90,9 @@ public class GameWorldProxy implements  IGameWorld {
         realGameWorld.resetTime();
     }
 
+    @Override
+    public int getTimer(){
+        return realGameWorld.getTimer();
+    }
+
 }

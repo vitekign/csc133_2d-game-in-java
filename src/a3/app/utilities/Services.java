@@ -143,7 +143,7 @@ public class Services {
 
 
     /**
-     * This method find and return all Pylons in the game world.
+     * Find and return all Pylons in the game world.
      * @return return all pylons in GW
      */
     public static Vector<Pylon> getAllPylons(){
@@ -158,6 +158,25 @@ public class Services {
         return allPylons;
     }
 
+
+    /**
+     * Get the image resources
+     * @return image resource folder
+     */
+    public static String getPathToImgResources(){
+
+        String slash = File.separator;
+        return "." +slash+"resources"+slash+ "img"+slash;
+    }
+
+    /**
+     * Get the sound resources
+     * @return sound resource folder
+     */
+    public static String getPathToSoundResources(){
+        String slash = File.separator;
+        return "." + slash +"resources" + slash + "sounds" + slash;
+    }
 
 
 }

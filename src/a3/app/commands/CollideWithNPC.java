@@ -29,7 +29,7 @@ public class CollideWithNPC extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
-            gw.carCollideWithCar();
+            gw.carCollideWithCar(null);
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }

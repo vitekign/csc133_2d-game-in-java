@@ -99,7 +99,7 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
                 objectsCollidedWith.add((GameObject)otherObject);
                 ((GameObject)otherObject).objectsCollidedWith.add(this);
             }
-            gw.carCollideWithCar();
+            gw.carCollideWithCar(null);
         }
     }
 

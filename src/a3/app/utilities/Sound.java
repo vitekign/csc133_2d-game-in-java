@@ -14,11 +14,7 @@ public class Sound {
 
     public Sound(String fileName) {
 
-        String slash = File.separator;
-
-        //TODO move resources one level up and refactor all corresponding code
-
-        String pathToResources = "."  + slash + "src" + slash +"resources" + slash + "sounds" + slash;
+        String pathToResources = Services.getPathToSoundResources();
 
         try {
             File file = new File(pathToResources + fileName);
@@ -34,6 +30,14 @@ public class Sound {
 
     public void play(){
         myClip.play();
+    }
+
+    public void loop(){
+        myClip.loop();
+    }
+
+    public void stop(){
+        myClip.stop();
     }
 
 }

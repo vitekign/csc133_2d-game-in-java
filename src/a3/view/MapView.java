@@ -3,6 +3,7 @@
  */
 
 package a3.view;
+import a3.app.utilities.Services;
 import a3.model.*;
 import a3.objects.GameObject;
 import a3.objects.IDrawable;
@@ -76,12 +77,11 @@ public class MapView extends JPanel implements IObserver, MouseListener {
 
             Image imageRes;
             imageRes = null;
-            String slash = File.separator;
 
-            String pathToResources = ".." + slash + ".." + slash + "resources" + slash + "img" + slash;
+            String pathToResources = Services.getPathToImgResources();
             String imgName = "asphalt.png";
             try {
-                imageRes = ImageIO.read(this.getClass().getResource(pathToResources + imgName));
+                imageRes = ImageIO.read(new File(pathToResources + imgName));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
