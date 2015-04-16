@@ -5,7 +5,8 @@ package a3.objects;
  */
 public interface ISteerable {
 
-    public final int ROTATION_UNIT = 5;
+    //TODO return rotation_unit back to 5
+    public final int ROTATION_UNIT = 10;
     public final int MAX_HEADING_DEFLECTION = 40;
 
     void changeCurrentHeadingToTheLeft();

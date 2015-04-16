@@ -2,6 +2,7 @@ package a3.app.commands;
 import a3.controller.Game;
 import a3.model.GameWorld;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -24,6 +25,7 @@ public class PlayPause extends AbstractAction {
 
     private PlayPause(){
         super("Pause");
+
     }
 
     private static PlayPause playPause = new PlayPause();
@@ -39,6 +41,8 @@ public class PlayPause extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
+
+
 
          if(playPauseSwitch == false){
              this.putValue(Action.NAME, "Play");

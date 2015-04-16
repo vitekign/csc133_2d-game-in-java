@@ -25,9 +25,12 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     private GameWorld gw;
 
     Image imageRes;
+    private int timer;
 
 
     private boolean isSelected;
+
+    final static int ADDITIONAL_WIDTH_LENGTH = 10;
 
 
     public FuelCan(Location location, float size, Color color, GameWorld gw){
@@ -40,7 +43,9 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         this.X = location.getX();
         this.Y = location.getY();
 
-        this.size = size;
+        this.size = size + ADDITIONAL_WIDTH_LENGTH;
+
+        timer = (int)size;
 
 
         try {
@@ -105,22 +110,32 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
 
 
+    public int getTimer(){
+        return timer;
+    }
+
+
     @Override
     public void draw(Graphics g) {
 
-        int width = (int)size;
-        int length = (int)size;
+        int width = (int)size + ADDITIONAL_WIDTH_LENGTH;
+        int length = (int)size + ADDITIONAL_WIDTH_LENGTH;
 
+
+        if(gw.getTime()%50 == 0 && !gw.isItInPause()){
+            timer--;
+            size = timer;
+        }
 
         if(isSelected){
-            g.setColor(this.getColor());
-            g.fillRect( (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int)size, (int)size);
+            g.setColor(new Color(13, 66,160));
+            g.fillRect( (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int)size, (int)size );
         } else {
-            g.drawImage(imageRes, (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2),  (int)size, (int)size, null);
+            g.drawImage(imageRes, (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2),  (int)size , (int)size , null);
         }
 
 
-        g.setColor(Color.red);
+        g.setColor(new Color(234, 32, 0));
         g.drawString(String.valueOf((int)getSize()), (int) getX(), (int) getY());
 
 
@@ -153,7 +168,12 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
             gw.gameObjectsToDelete.add((GameObject)this);
             if(!objectsCollidedWith.contains((GameObject)otherObject)){
                 objectsCollidedWith.add((GameObject)otherObject);
-                ((GameObject)otherObject).objectsCollidedWith.add(this);
+
+
+                if(!gw.gameObjectsToDelete.contains(this)) {
+                    ((GameObject) otherObject).objectsCollidedWith.add(this);
+                }
+
             }
             if(gw.isSound())
                 ((Car)otherObject).playSoundForFuelEating();

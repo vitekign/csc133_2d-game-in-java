@@ -2,6 +2,7 @@ package a3.objects;
 
 import a3.app.utilities.Services;
 import a3.app.utilities.Sound;
+import a3.controller.Game;
 import a3.model.GameWorld;
 
 import javax.imageio.ImageIO;
@@ -169,6 +170,8 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
             changeFuelLevel((float) -0.02);
         } else {
 
+
+           // if(gw.getTime()%5 == 0 && gw.getTime() != 0)
             heading += steeringDirection;
             float angle = (float) (90 - heading);
             float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
@@ -500,8 +503,11 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
            System.out.println("Just collided Oil Slick");
            //gw.gameObjectsToDelete.add((GameObject)otherObject);
            if(!objectsCollidedWith.contains((GameObject)otherObject)){
-               objectsCollidedWith.add((GameObject)otherObject);
-               ((GameObject)otherObject).objectsCollidedWith.add(this);
+               objectsCollidedWith.add((GameObject) otherObject);
+
+               if(!gw.gameObjectsToDelete.contains(otherObject)) {
+                   ((GameObject) otherObject).objectsCollidedWith.add((GameObject)otherObject);
+               }
            }
 
            gw.enterOilSlick();

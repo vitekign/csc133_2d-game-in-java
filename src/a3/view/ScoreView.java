@@ -17,6 +17,17 @@ import java.sql.Time;
  * of the current state of the game on the screen.
  * It's going to be stick to the top part of the window.
  */
+
+
+class scoreLabel extends JLabel{
+
+    public scoreLabel(String st){
+        super(st);
+        setForeground(new Color(200,200,200));
+    }
+}
+
+
 public class ScoreView extends JPanel implements IObserver {
 
     //**********************************************
@@ -37,25 +48,32 @@ public class ScoreView extends JPanel implements IObserver {
     long lastTime = 0;
 
     public ScoreView(){
-        setBorder(new LineBorder(Color.blue, 2));
-        setLayout(new FlowLayout(FlowLayout.LEFT,16,0));
+        setBorder(new LineBorder(new Color(0, 0, 0), 2));
+        this.setForeground(new Color(200, 200, 200));
+        this.setOpaque(true);
 
-        currentTime = new JLabel("Time: ");
+        setLayout(new FlowLayout(FlowLayout.LEFT, 16, 0));
+        this.setBackground(new Color(20, 20, 20));
+
+
+
+
+        currentTime = new scoreLabel("Time: ");
         add(currentTime);
 
-        livesLeft = new JLabel("Lives Left: ");
+        livesLeft = new scoreLabel("Lives Left: ");
         add(livesLeft);
 
-        highestPylon = new JLabel("Highest Player Pylon: ");
+        highestPylon = new scoreLabel("Highest Player Pylon: ");
         add(highestPylon);
 
-        remainingFuelLevel = new JLabel("Player Fuel Remaining: ");
+        remainingFuelLevel = new scoreLabel("Player Fuel Remaining: ");
         add(remainingFuelLevel);
 
-        playerDamageLevel = new JLabel("Player Damage Level: ");
+        playerDamageLevel = new scoreLabel("Player Damage Level: ");
         add(playerDamageLevel);
 
-        soundStatus = new JLabel("Sound: ");
+        soundStatus = new scoreLabel("Sound: ");
         add(soundStatus);
 
     }

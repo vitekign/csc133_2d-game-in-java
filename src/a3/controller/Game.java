@@ -5,6 +5,9 @@ import a3.model.GameWorld;
 import a3.view.MapView;
 import a3.view.ScoreView;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -24,6 +27,10 @@ class ButtonSpaceKeyFocusAgnostic extends JButton{
         super(str);
         this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
 
+        this.setBackground(new Color(43, 43, 43));
+        this.setOpaque(true);
+        this.setBorderPainted(false);
+        this.setForeground(Color.WHITE);
 
     }
 
@@ -158,24 +165,45 @@ public class Game extends JFrame{
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(new Color(22, 22, 22));
 
-        leftPanel.setBorder(new TitledBorder(" Options: "));
+        Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+        TitledBorder title;
+        title = BorderFactory.createTitledBorder(
+                loweredetched, "options");
+        title.setTitleJustification(TitledBorder.CENTER);
+
+        leftPanel.setBorder(title);
+
+       ((TitledBorder)leftPanel.getBorder()).setTitleColor(new Color(65, 65, 65));
+
+
         leftPanel.setLayout(new GridLayout(20, 1));
+        ((GridLayout)leftPanel.getLayout()).setVgap(10);
 
        // leftPanel.setBorder(new LineBorder(green, 2));
         this.add(leftPanel, BorderLayout.WEST);
 
         JButton playBtn = new ButtonSpaceKeyFocusAgnostic("Play");
+
+        playBtn.setFont(new Font("SansSerif", Font.BOLD, 20));
+
         leftPanel.add(playBtn);
         colWithNPCAction.setTarget(gw);
         playBtn.setAction(playPause);
+
+
         colWithNPCAction.putValue(Action.NAME, "Play");
 
 
+
+
+        /*
         JButton collideWithNPC = new ButtonSpaceKeyFocusAgnostic("Collide With NPC");
         leftPanel.add(collideWithNPC);
         colWithNPCAction.setTarget(gw);
         collideWithNPC.setAction(colWithNPCAction);
         colWithNPCAction.putValue(Action.NAME, "Collide With NPC");
+
+
 
         JButton collideWithPylon = new ButtonSpaceKeyFocusAgnostic("");
         leftPanel.add(collideWithPylon);
@@ -213,21 +241,23 @@ public class Game extends JFrame{
         leftPanel.add(switchStrategy);
         switchStrategy.setAction(switchStrategiesAction);
         switchStrategiesAction.putValue(Action.NAME, "Switch Strategy");
-
+        */
 
         JButton deleteGameObjectBtn = new ButtonSpaceKeyFocusAgnostic("Delete");
         leftPanel.add(deleteGameObjectBtn);
         deleteGameObjectBtn.setAction(deleteObjectAction);
-
+        deleteGameObjectBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
 
 
         JButton addPylonBtn = new ButtonSpaceKeyFocusAgnostic("Add Pylon");
         leftPanel.add(addPylonBtn);
         addPylonBtn.setAction(addPylonAction);
+        addPylonBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
 
         JButton addFuelCanBtn = new ButtonSpaceKeyFocusAgnostic("Add FuelCan");
         leftPanel.add(addFuelCanBtn);
         addFuelCanBtn.setAction(addFuelCanAction);
+        addFuelCanBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
 
 
 
@@ -237,6 +267,8 @@ public class Game extends JFrame{
         quitTheGame.setAction(quitAction);
         leftPanel.add(quitTheGame);
         quitAction.putValue(Action.NAME, "Quit");
+        quitTheGame.setFont(new Font("SansSerif", Font.BOLD, 18 ));
+
 
 
 

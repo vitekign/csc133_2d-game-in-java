@@ -87,7 +87,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
          */
         theWorldVector = new Vector<>();
         gameObjectsToDelete = new Vector<>();
-        turnOnSound(false);
+        //turnOnSound(false);
 
         factory = new GameObjectsFactory();
         factory.setTargetForGameWorld(this);
@@ -175,14 +175,13 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
     public void startTimer(){
+
+        //Logic for STOP
         if(timer.isRunning()){
             timer.stop();
-
-            if(isSound()){
-                backgroundMusic.stop();
-            }
-
+            stopBGMusic();
         } else {
+            //Logic for PLAY
             gameObjectsToDelete.removeAllElements();
             lastMouseEvent = null;
 
@@ -196,9 +195,10 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
             notifyObserver();
             timer.start();
 
-            if(isSound()){
-                backgroundMusic.loop();
+            if(sound == true) {
+                startBGMusic();
             }
+
         }
     }
 
@@ -249,6 +249,14 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         Iterator iter = this.getIterator();
         while(iter.hasNext()){
             ICollider currObject = (ICollider)iter.getNext();
+
+            //Check if the FuelCan's timer equals to zero
+            if(currObject instanceof FuelCan){
+                if (((FuelCan)currObject).getTimer() <= 0){
+                    gameObjectsToDelete.add((GameObject)currObject);
+                }
+            }
+
             Iterator iter2 = this.getIterator();
             while (iter2.hasNext()) {
                 ICollider otherObject = (ICollider) iter2.getNext();
@@ -275,6 +283,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
                         }
                     }
                 }
+
             }
         }
     }
@@ -310,7 +319,6 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
             JOptionPane.showMessageDialog(null, "Sorry, the pylon with this number already exists...");
         }
         else {
-
             allPylons.sort( (Pylon p1, Pylon p2) -> {
                 if(p1.getIndexNumber() < p2.getIndexNumber()){
                     return -1;
@@ -470,7 +478,6 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     public void enterOilSlick() {
         car.enterAnOilSlick();
-
         notifyObserver();
     }
 
@@ -578,18 +585,35 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
 
+    public void startBGMusic(){
+        if(!isItInPause())
+            backgroundMusic.loop();
+    }
+
+    public void stopBGMusic(){
+        backgroundMusic.stop();
+    }
+
+    public void setSound(boolean value){
+        sound = value;
+        notifyObserver();
+    }
+
     public void switchSound() {
         if(sound) {
-            sound = false;
-            backgroundMusic.stop();
+            setSound(false);
+            stopBGMusic();
 
         } else {
-            sound = true;
-            if(!isSound())
-                backgroundMusic.loop();
+            setSound(true);
+            startBGMusic();
         }
         notifyObserver();
     }
+
+
+
+
 
     public void switchStrategies(){
         Iterator iter = this.getIterator();
@@ -736,8 +760,6 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     public void playPause() {
         startTimer();
-
-
 
     }
 

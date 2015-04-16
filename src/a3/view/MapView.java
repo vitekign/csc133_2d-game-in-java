@@ -79,7 +79,7 @@ public class MapView extends JPanel implements IObserver, MouseListener {
             imageRes = null;
 
             String pathToResources = Services.getPathToImgResources();
-            String imgName = "asphalt.png";
+            String imgName = "asphalt_light.jpg";
             try {
                 imageRes = ImageIO.read(new File(pathToResources + imgName));
             } catch (Exception e) {
