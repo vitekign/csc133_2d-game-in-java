@@ -26,6 +26,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
     private float size;
     private GameWorld gw;
     Image imageRes;
+    public static int zIndex;
 
     public Bird(Location location, float size, float heading, float speed, Color color, GameWorld gw){
         super(color);
@@ -41,6 +42,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         this.size = size;
 
 
+
         String pathToResources = Services.getPathToImgResources();
         File file = new File(pathToResources + "bird.png");
 
@@ -50,6 +52,11 @@ public class Bird extends Moveable implements IDrawable, ICollider {
             System.out.println("The picture for Bird wasn't found");
         }
 
+    }
+
+
+    public int getZIndex(){
+        return Bird.zIndex;
     }
 
 

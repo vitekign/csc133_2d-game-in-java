@@ -63,6 +63,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
 
 
+
     Car car;
 
     Vector<GameObject> theWorldVector;
@@ -93,6 +94,9 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         factory.setTargetForGameWorld(this);
 
         backgroundMusic = new Sound("troops.wav");
+        if(isSound()){
+            backgroundMusic.loop();
+        }
         /**
          * Initialize oll needed objects on the fly
          * and add them to the collection.
@@ -355,7 +359,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
     }
 
     public void createNewFuelCan(Location location, int fuelLevel){
-        theWorldVector.add(new FuelCan(location, fuelLevel, new Color(255, 25, 5),this));
+        theWorldVector.add(new FuelCan(location, fuelLevel, new Color(255, 25, 5), this));
         notifyObserver();
     }
     /**
@@ -407,6 +411,19 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
         notifyObserver();
     }
+
+    /**
+     * Create new oil slick with location
+     * @param loc
+     */
+    public void addOilSlickWithLocation(Location loc) {
+        OilSlick oilSlick = new OilSlick(loc, rand.nextFloat() * 50,
+                rand.nextFloat() * 50, Services.generateRandomColor(), this);
+        theWorldVector.addElement(oilSlick);
+
+        notifyObserver();
+    }
+
 
     /**
      * Pretend that the car has collided with

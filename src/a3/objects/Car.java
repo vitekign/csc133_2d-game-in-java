@@ -30,10 +30,14 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     protected float speed;
     protected float damageLevel;
 
+    public static int zIndex;
 
     Image imageRes;
 
 
+    public int getZIndex(){
+        return Car.zIndex;
+    }
 
     public float getWidth() {
         return width;
@@ -153,48 +157,51 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     public void move(int framesPerSecond) {
         //TODO find out what to do with framesPerSecond
 
-        if(isCarInOilSlick()){  float angle = (float) (90 - heading);
-            float deltaY = (float) (Math.sin(Math.toRadians(angle + 180))*speed * framesPerSecond/5);
-            float deltaX = (float) (Math.cos(Math.toRadians(angle + 180))*speed * framesPerSecond/5);
-            Location temp = new Location(this.getLocation().getX() + deltaX,
-                    this.getLocation().getY() + deltaY);
-
-            this.X = temp.getX();
-            this.Y = temp.getY();
 
 
-            /**
-             * Decrease the amount of fuel
-             */
-            //TODO Find out by which amount to decrease the amount of fuel
-            changeFuelLevel((float) -0.02);
-        } else {
+            if (isCarInOilSlick()) {
+                float angle = (float) (90 - heading);
+                float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
+                float deltaX = (float) (Math.cos(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
+                Location temp = new Location(this.getLocation().getX() + deltaX,
+                        this.getLocation().getY() + deltaY);
+
+                this.X = temp.getX();
+                this.Y = temp.getY();
+                /**
+                 * Decrease the amount of fuel
+                 */
+                //TODO Find out by which amount to decrease the amount of fuel
+                changeFuelLevel((float) -0.02);
+            } else {
 
 
-           // if(gw.getTime()%5 == 0 && gw.getTime() != 0)
-            heading += steeringDirection;
-            float angle = (float) (90 - heading);
-            float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
-            float deltaX = (float) (Math.cos(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
-            Location temp = new Location(this.getLocation().getX() + deltaX,
-                    this.getLocation().getY() + deltaY);
+                if(gw.getTime()%5 == 0 && gw.getTime() != 0)
+                    heading += steeringDirection;
+                float angle = (float) (90 - heading);
+                float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
+                float deltaX = (float) (Math.cos(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
+                Location temp = new Location(this.getLocation().getX() + deltaX,
+                        this.getLocation().getY() + deltaY);
 
-            this.X = temp.getX();
-            this.Y = temp.getY();
+                this.X = temp.getX();
+                this.Y = temp.getY();
 
 
-            /**
-             * Decrease the amount of fuel
-             */
-            //TODO Find out by which amount to decrease the amount of fuel
-            changeFuelLevel((float) -0.02);
+                /**
+                 * Decrease the amount of fuel
+                 */
+                //TODO Find out by which amount to decrease the amount of fuel
+                changeFuelLevel((float) -0.02);
 
-            /**
-             *  Reset steering direction after applying it to the direction
-             *  of the car.
-             */
-            steeringDirection = 0;
-        }
+                /**
+                 *  Reset steering direction after applying it to the direction
+                 *  of the car.
+                 */
+
+                //steeringDirection = 0;
+            }
+
 
     }
 
@@ -222,7 +229,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
      * amount of speed to accelerate car
      */
     public void accelerate(float additionalSpeed){
-        if (isCarInOilSlick()) return;
+        //if (isCarInOilSlick()) return;
 
         if(speed != maximumSpeed && fuelLevel != 0){
             if(speed == 0){
@@ -433,8 +440,6 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
             g.drawOval((int) getX(), (int) getY(), 1, 1);
             g.drawImage( imageRes,  (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 45, 30, null);
 
-
-
     }
 
 
@@ -486,10 +491,10 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
                ((GameObject)otherObject).objectsCollidedWith.add(this);
            }
 
-           int chanceNewFuelCan = (int) ((new Random().nextFloat())*100);
-           if(chanceNewFuelCan > 80){
+           int chanceNewOilSlick = (int) ((new Random().nextFloat())*100);
+           if(chanceNewOilSlick > 80){
                //create a new fuelCan
-               gw.createNewFuelCan(this.getLocation(), 10);
+               gw.addOilSlickWithLocation(this.getLocation());
            }
 
            if(gw.isSound()) {

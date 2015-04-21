@@ -27,10 +27,12 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     Image imageRes;
     private int timer;
 
+    public static int zIndex;
+
 
     private boolean isSelected;
 
-    final static int ADDITIONAL_WIDTH_LENGTH = 10;
+    final static int ADDITIONAL_WIDTH_LENGTH = 20;
 
 
     public FuelCan(Location location, float size, Color color, GameWorld gw){
@@ -43,7 +45,7 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         this.X = location.getX();
         this.Y = location.getY();
 
-        this.size = size + ADDITIONAL_WIDTH_LENGTH;
+        this.size = size;
 
         timer = (int)size;
 
@@ -79,6 +81,9 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         return size;
     }
 
+    public int getZIndex(){
+        return FuelCan.zIndex;
+    }
 
     /**
      * Confirms to ISelectable
@@ -131,7 +136,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
             g.setColor(new Color(13, 66,160));
             g.fillRect( (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int)size, (int)size );
         } else {
-            g.drawImage(imageRes, (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2),  (int)size , (int)size , null);
+            g.drawImage(imageRes, (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2),
+                    (int)size + ADDITIONAL_WIDTH_LENGTH , (int)size+ADDITIONAL_WIDTH_LENGTH , null);
         }
 
 

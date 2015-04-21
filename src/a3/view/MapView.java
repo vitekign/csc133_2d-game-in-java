@@ -33,10 +33,24 @@ public class MapView extends JPanel implements IObserver, MouseListener {
     public boolean drawBackFlag = false;
 
     GameWorldProxy gw;
-    public MapView(
 
-    ){
+    private Image imageRes;;
+    public MapView(){
         this.addMouseListener(this);
+
+
+
+        imageRes = null;
+
+        String pathToResources = Services.getPathToImgResources();
+        String imgName = "asphalt_light.jpg";
+        try {
+            imageRes = ImageIO.read(new File(pathToResources + imgName));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+
     }
 
     public void update(GameWorldProxy gw, Object arg){
@@ -75,16 +89,6 @@ public class MapView extends JPanel implements IObserver, MouseListener {
 
          //   System.out.println("I'm inside paintCopmonent");
 
-            Image imageRes;
-            imageRes = null;
-
-            String pathToResources = Services.getPathToImgResources();
-            String imgName = "asphalt_light.jpg";
-            try {
-                imageRes = ImageIO.read(new File(pathToResources + imgName));
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
 
             int ratio = 200;
             for (int i = 0; i < 20; i++) {
@@ -92,11 +96,6 @@ public class MapView extends JPanel implements IObserver, MouseListener {
                     g.drawImage(imageRes, ratio * i, ratio * j, ratio, ratio, null);
                 }
             }
-
-
-
-
-
 
 
 
@@ -109,13 +108,27 @@ public class MapView extends JPanel implements IObserver, MouseListener {
 //        g2d.scale(1,-1);
 
 
-        Iterator iter = gw.getIterator();
-        while(iter.hasNext()) {
-            GameObject mObj = (GameObject) iter.getNext();
-            ((IDrawable)mObj).draw(g2d);
-        }
-
-
+        /**
+         * Draw in the right order according the the zIndex
+         */
+        int i = 0;
+        int maxZIndex = 0;
+         while(true) {
+          Iterator iter = gw.getIterator();
+          while (iter.hasNext()) {
+              GameObject mObj = (GameObject) iter.getNext();
+              if (mObj.getZIndex() > maxZIndex)
+                  maxZIndex = mObj.getZIndex();
+              if (mObj.getZIndex() == i) {
+                  ((IDrawable) mObj).draw(g2d);
+              }
+          }
+          if (i == maxZIndex) {
+              break;
+          } else {
+              i++;
+          }
+      }
 
     }
 

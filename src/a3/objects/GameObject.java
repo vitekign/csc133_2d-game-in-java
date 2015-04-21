@@ -28,6 +28,15 @@ public class GameObject {
 
     protected Color color;
 
+
+
+    public int getZIndex(){
+        return 0 ;
+    }
+
+
+
+
     /**
      * Default ability of all object to have their color changed.
      */

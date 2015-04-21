@@ -24,6 +24,8 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
     private boolean isSelected;
 
+    public static int zIndex;
+
     public Pylon(Location location, float radius, Color color, GameWorld gw){
             super(color);
 
@@ -51,6 +53,20 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
         sequenceNumber = seqNumberOfPylon;
                 count++;
+
+
+    }
+
+    public int getZIndex(){
+        return Pylon.zIndex;
+    }
+
+    public static int getzIndex() {
+        return zIndex;
+    }
+
+    public static void setzIndex(int zIndex) {
+        Pylon.zIndex = zIndex;
     }
 
     @Override
@@ -133,22 +149,24 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
     @Override
     public void draw(Graphics g) {
 
-        if(isSelected){
-            g.setColor(Color.gray);
-            g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
-            g.setColor(Color.white);
-            g.fillOval((int) getX(), (int) getY(), 1, 1);
-            g.drawString(String.valueOf(getIndexNumber()), (int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
-            g.setColor(Color.black);
-        } else {
-            g.setColor(Color.black);
-            g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
-            g.setColor(Color.white);
-            g.fillOval((int) getX(), (int) getY(), 1, 1);
-            g.drawString(String.valueOf(getIndexNumber()), (int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
-            g.setColor(Color.black);
-        }
+    if(isSelected){
+        g.setColor(Color.gray);
+        g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
+        g.setColor(Color.white);
+        g.fillOval((int) getX(), (int) getY(), 1, 1);
+        g.setColor(Color.black);
+        g.drawString(String.valueOf(getIndexNumber()), (int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
+
+    } else {
+        g.setColor(new Color(14, 40, 3));
+        g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
+        g.setColor(Color.white);
+        g.fillOval((int) getX(), (int) getY(), 1, 1);
+        g.setColor(Color.black);
+        g.drawString(String.valueOf(getIndexNumber()), (int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
+
     }
+}
 
 
     /****************************************/

@@ -18,8 +18,20 @@ public class GameObjectsFactory {
     Random rand;
 
 
+
+
     public void setTargetForGameWorld(GameWorld gw){
         this.gw = gw;
+        orderOjbectsWithZIndex();
+    }
+
+    public void orderOjbectsWithZIndex(){
+        Pylon.zIndex    = 1;
+        OilSlick.zIndex = 0;
+        FuelCan.zIndex  = 2;
+        NPCCar.zIndex   = 3;
+        Bird.zIndex     = 5;
+        Car.zIndex      = 4;
     }
 
     public Pylon makePylonWithLocation(Location location){
@@ -57,6 +69,9 @@ public class GameObjectsFactory {
     public Car makeCarWithLocation(Location location){
         return new Car(location, gw, new Color(240, 0, 0));
     }
+
+
+
 
 }
 

@@ -22,6 +22,9 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
 
     private GameWorld gw;
 
+    public static int zIndex;
+
+
     public OilSlick(Location location, float width, float length, Color color, GameWorld gw){
         super(color);
 
@@ -36,6 +39,10 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
         this.length = length;
     }
 
+
+    public int getZIndex(){
+        return OilSlick.zIndex;
+    }
 
     /**
      * @return
@@ -66,8 +73,7 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
     @Override
     public void draw(Graphics g) {
 
-
-
+        g.setColor(Color.black);
         g.fillOval((int)getX()-(int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
         g.setColor(Color.black);
     }

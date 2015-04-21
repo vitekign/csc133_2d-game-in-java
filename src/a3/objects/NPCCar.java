@@ -18,6 +18,9 @@ import java.util.Vector;
 public class NPCCar extends Car {
 
 
+    public static int zIndex;
+
+
     @Override
     public void draw(Graphics g) {
 
@@ -50,6 +53,13 @@ public class NPCCar extends Car {
     public void setUpStrategy(IStrategy str){
         strategy = str;
     }
+
+
+
+    public int getZIndex(){
+        return NPCCar.zIndex;
+    }
+
 
 
     /**
@@ -199,10 +209,10 @@ public class NPCCar extends Car {
                 ((GameObject)otherObject).objectsCollidedWith.add(this);
             }
 
-            int chanceNewFuelCan = (int) ((new Random().nextFloat())*100);
-            if(chanceNewFuelCan > 80){
+            int chanceNewOilSlick = (int) ((new Random().nextFloat())*100);
+            if(chanceNewOilSlick > 80){
                 //create a new fuelCan
-                gw.createNewFuelCan(this.getLocation(), 10);
+                gw.addOilSlickWithLocation(this.getLocation());
             }
 
             if(gw.isSound())
