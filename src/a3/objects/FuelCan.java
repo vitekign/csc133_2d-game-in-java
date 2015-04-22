@@ -51,7 +51,6 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
 
         try {
-
             String pathToResources = Services.getPathToImgResources();
             String imgName = "fuelcan.png";
 
@@ -106,8 +105,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         int xLoc = (int)getX();
         int yLoc = (int)getY();
 
-        if((px >= xLoc - (this.getSize()/2)) && (px <= xLoc + (this.getSize()/2))
-                && (py >= yLoc - (this.getSize()/2))&& (py <= yLoc + (this.getSize()/2)))
+        if((px >= xLoc - (this.getDistanceOfReference())) && (px <= xLoc + (this.getDistanceOfReference()))
+                && (py >= yLoc - (this.getDistanceOfReference()))&& (py <= yLoc + (this.getDistanceOfReference())))
             return true;
         else
             return false;
@@ -134,7 +133,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
         if(isSelected){
             g.setColor(new Color(13, 66,160));
-            g.fillRect( (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), (int)size, (int)size );
+            g.fillRect( (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2),
+                    (int)size + ADDITIONAL_WIDTH_LENGTH , (int)size+ADDITIONAL_WIDTH_LENGTH );
         } else {
             g.drawImage(imageRes, (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2),
                     (int)size + ADDITIONAL_WIDTH_LENGTH , (int)size+ADDITIONAL_WIDTH_LENGTH , null);
@@ -153,6 +153,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     /*
      * ICollider Implementation
      */
+
+
     @Override
     public boolean collidesWith(ICollider obj) {
         float distX = this.getX() - ((GameObject)obj).getX();
@@ -167,6 +169,10 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         }
     }
 
+    /**
+     * Handle collision of the Car with other Game Objects.
+     * @param otherObject
+     */
     @Override
     public void handleCollision(ICollider otherObject) {
         if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
@@ -174,11 +180,6 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
             gw.gameObjectsToDelete.add((GameObject)this);
             if(!objectsCollidedWith.contains((GameObject)otherObject)){
                 objectsCollidedWith.add((GameObject)otherObject);
-
-
-                if(!gw.gameObjectsToDelete.contains(this)) {
-                    ((GameObject) otherObject).objectsCollidedWith.add(this);
-                }
 
             }
             if(gw.isSound())
@@ -189,6 +190,6 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
     @Override
     public float getDistanceOfReference() {
-        return size/2;
+        return (size+ADDITIONAL_WIDTH_LENGTH)/2;
     }
 }

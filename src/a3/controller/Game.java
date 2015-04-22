@@ -81,13 +81,13 @@ public class Game extends JFrame{
          */
 
         QuitTheGame quitAction = QuitTheGame.getInstance();
-        TriggerTick tickAction = TriggerTick.getInstance();
-        CollideWithBird colWithBirdAction = CollideWithBird.getInstance();
-        CollideWithPylon colWithPylonAction = CollideWithPylon.getInstance();
+//        TriggerTick tickAction = TriggerTick.getInstance();
+//        CollideWithBird colWithBirdAction = CollideWithBird.getInstance();
+//        CollideWithPylon colWithPylonAction = CollideWithPylon.getInstance();
         CollideWithNPC colWithNPCAction = CollideWithNPC.getInstance();
         PickUpFuelCan pickUpFuelCanAction = PickUpFuelCan.getInstance();
-        EnterOilSlick enterOilSlickAction = EnterOilSlick.getInstance();
-        LeaveOilSlick leaveOilSlickAction = LeaveOilSlick.getInstance();
+//        EnterOilSlick enterOilSlickAction = EnterOilSlick.getInstance();
+//        LeaveOilSlick leaveOilSlickAction = LeaveOilSlick.getInstance();
 
         PlayPause playPause = PlayPause.getInstance();
         playPause.setTarget(gw);
@@ -243,6 +243,11 @@ public class Game extends JFrame{
         switchStrategiesAction.putValue(Action.NAME, "Switch Strategy");
         */
 
+
+
+        pickUpFuelCanAction.setTarget(gw);
+        pickUpFuelCanAction.putValue(Action.NAME, "Pick Up FuelCan");
+
         JButton deleteGameObjectBtn = new ButtonSpaceKeyFocusAgnostic("Delete");
         leftPanel.add(deleteGameObjectBtn);
         deleteGameObjectBtn.setAction(deleteObjectAction);
@@ -259,18 +264,11 @@ public class Game extends JFrame{
         addFuelCanBtn.setAction(addFuelCanAction);
         addFuelCanBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
 
-
-
-
-
         ButtonSpaceKeyFocusAgnostic quitTheGame = new ButtonSpaceKeyFocusAgnostic("");
         quitTheGame.setAction(quitAction);
         leftPanel.add(quitTheGame);
         quitAction.putValue(Action.NAME, "Quit");
         quitTheGame.setFont(new Font("SansSerif", Font.BOLD, 18 ));
-
-
-
 
 
 
@@ -365,6 +363,19 @@ public class Game extends JFrame{
         JMenuItem pickUpFuelItem = new JMenuItem("fuel pickup");
         pickUpFuelItem.setAction(pickUpFuelCanAction);
         commandMenu.add(pickUpFuelItem);
+
+
+        JMenuItem deleteGameObjectMenuItem = new JMenuItem();
+        deleteGameObjectMenuItem.setAction(deleteObjectAction);
+        commandMenu.add(deleteGameObjectMenuItem);
+
+        JMenuItem addPylonMenuItem = new JMenuItem();
+        addPylonMenuItem.setAction(addPylonAction);
+        commandMenu.add(addPylonMenuItem);
+
+        JMenuItem addFuelCanMenuItem = new JMenuItem();
+        addFuelCanMenuItem.setAction(addFuelCanAction);
+        commandMenu.add(addFuelCanMenuItem);
 
         JMenuItem addOilSlickItem = new JMenuItem("add oil slick");
         commandMenu.add(addOilSlickItem);

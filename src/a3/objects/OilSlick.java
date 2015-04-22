@@ -19,9 +19,7 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
 
     private float width;
     private float length;
-
     private GameWorld gw;
-
     public static int zIndex;
 
 
@@ -37,6 +35,8 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
         this.Y = location.getY();
         this.width = width;
         this.length = length;
+
+        color = Color.black;
     }
 
 
@@ -73,14 +73,17 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
     @Override
     public void draw(Graphics g) {
 
-        g.setColor(Color.black);
+        g.setColor(color);
         g.fillOval((int)getX()-(int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
         g.setColor(Color.black);
     }
 
 
-    /*
-     * Confirms to ICollider
+    /**
+     * The logic which detects the collision
+     * with other object in the Game World
+     * @param obj the other object
+     * @return true if collision has happened
      */
     @Override
     public boolean collidesWith(ICollider obj) {
@@ -96,16 +99,16 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
         }
     }
 
+    /**
+     * Handle collision of the Oil Slick with other Game Objects.
+     * @param otherObject
+     */
     @Override
     public void handleCollision(ICollider otherObject) {
         if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
-            System.out.println("Just collided Oil Slick");
-            //gw.gameObjectsToDelete.add((GameObject)this);
             if(!objectsCollidedWith.contains((GameObject)otherObject)){
                 objectsCollidedWith.add((GameObject)otherObject);
-                ((GameObject)otherObject).objectsCollidedWith.add(this);
             }
-            gw.enterOilSlick();
         }
     }
 

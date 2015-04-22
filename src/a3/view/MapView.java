@@ -34,14 +34,13 @@ public class MapView extends JPanel implements IObserver, MouseListener {
 
     GameWorldProxy gw;
 
-    private Image imageRes;;
+    private Image imageRes;
     public MapView(){
         this.addMouseListener(this);
 
-
-
         imageRes = null;
 
+        //Retrieve an image for background
         String pathToResources = Services.getPathToImgResources();
         String imgName = "asphalt_light.jpg";
         try {
@@ -59,37 +58,22 @@ public class MapView extends JPanel implements IObserver, MouseListener {
          * the data in the Observable ) to the console and to the
          * screen through JTextAre
          */
+        //gw = game world proxy
         this.gw = gw;
-
 
         Iterator iter = gw.getIterator();
 
-
-
         while(iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
-            //System.out.println(mObj.toString());
 
         }
-
-
         repaint();
-
-
     }
 
     @Override
     protected void paintComponent(Graphics g) {
+        //Draw background with an image
         super.paintComponent(g);
-
-
-       // setBackground(new Color(200, 200, 200));
-        //TODO Refactor background image drawing, now it redraws the background each time it's being updated
-
-
-         //   System.out.println("I'm inside paintCopmonent");
-
-
             int ratio = 200;
             for (int i = 0; i < 20; i++) {
                 for (int j = 0; j < 20; j++) {
@@ -97,16 +81,7 @@ public class MapView extends JPanel implements IObserver, MouseListener {
                 }
             }
 
-
-
-       // g.drawString(String.valueOf(gw.getCurrentClockTime()), 200, 200);
-
-
         Graphics2D g2d = (Graphics2D)g;
-//        g2d.translate(0, this.getHeight());
-//        g2d.rotate(Math.toRadians(0));
-//        g2d.scale(1,-1);
-
 
         /**
          * Draw in the right order according the the zIndex
@@ -133,6 +108,10 @@ public class MapView extends JPanel implements IObserver, MouseListener {
     }
 
 
+    /**
+     * Logic for detecting if an object has been selected.
+     * @param e
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
 

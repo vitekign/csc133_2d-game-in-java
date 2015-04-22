@@ -199,7 +199,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
                  *  of the car.
                  */
 
-                //steeringDirection = 0;
+               // steeringDirection = 0;
             }
 
 
@@ -434,6 +434,10 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
         return GameWorld.DAMAGE_FOR_COLLIDING_WITH_CARS /2;
     }
 
+    /**
+     * Draw the Car
+     * @param g supply the Graphics
+     */
     @Override
     public void draw(Graphics g) {
 
@@ -443,7 +447,12 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     }
 
 
-
+    /**
+     * The logic which detects the collision
+     * with other object in the Game World
+     * @param obj the other object
+     * @return true if collision has happened
+     */
     @Override
     public boolean collidesWith(ICollider obj) {
 
@@ -460,74 +469,63 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     }
 
 
+    /**
+     * Handle collision of the Car with other Game Objects.
+     * @param otherObject
+     */
     @Override
     public void handleCollision(ICollider otherObject) {
+        /********* BIRD ***********/
        if(otherObject instanceof Bird){
-           System.out.println("Just collided with bird");
-           //gw.gameObjectsToDelete.add((GameObject)otherObject);
            if(!objectsCollidedWith.contains((GameObject)otherObject)){
                objectsCollidedWith.add((GameObject)otherObject);
-               ((GameObject)otherObject).objectsCollidedWith.add(this);
            }
            gw.birdFlyOver();
        }
+       /********* FUEL CAN ***********/
         else if(otherObject instanceof FuelCan){
-           System.out.println("Just collided with Fuel Can");
            gw.gameObjectsToDelete.add((GameObject) otherObject);
            if(!objectsCollidedWith.contains((GameObject)otherObject)){
                objectsCollidedWith.add((GameObject)otherObject);
-               ((GameObject)otherObject).objectsCollidedWith.add(this);
+
            }
-           if(gw.isSound()) {
-               playSoundForFuelEating();
-           }
-           gw.pickUpFuelCan((FuelCan)otherObject);
        }
+       /********* NPC CAR ***********/
         else if(otherObject instanceof NPCCar){
-           System.out.println("Just collided with NPC");
-           //gw.gameObjectsToDelete.add((GameObject)otherObject);
            if(!objectsCollidedWith.contains((GameObject)otherObject)){
                objectsCollidedWith.add((GameObject)otherObject);
-               ((GameObject)otherObject).objectsCollidedWith.add(this);
            }
-
            int chanceNewOilSlick = (int) ((new Random().nextFloat())*100);
            if(chanceNewOilSlick > 80){
-               //create a new fuelCan
+               //create a new oil slick
                gw.addOilSlickWithLocation(this.getLocation());
            }
-
            if(gw.isSound()) {
                playSound();
            }
            gw.carCollideWithCar((NPCCar)otherObject);
            gw.switchStrategies();
        }
-
+       /********* OIL SLICK ***********/
        else if(otherObject instanceof OilSlick){
-           System.out.println("Just collided Oil Slick");
-           //gw.gameObjectsToDelete.add((GameObject)otherObject);
            if(!objectsCollidedWith.contains((GameObject)otherObject)){
                objectsCollidedWith.add((GameObject) otherObject);
-
-               if(!gw.gameObjectsToDelete.contains(otherObject)) {
-                   ((GameObject) otherObject).objectsCollidedWith.add((GameObject)otherObject);
-               }
            }
 
            gw.enterOilSlick();
        }
 
+       /********* PYLON ***********/
        else if(otherObject instanceof Pylon){
-           System.out.println("Just collided Pylon" + ((Pylon) otherObject).getIndexNumber());
-           //gw.gameObjectsToDelete.add((GameObject)otherObject);
            if(!objectsCollidedWith.contains((GameObject)otherObject)){
                objectsCollidedWith.add((GameObject)otherObject);
-               ((GameObject)otherObject).objectsCollidedWith.add(this);
            }
-
            gw.carCollideWithPylon( ((Pylon) otherObject).getIndexNumber());
        }
+    }
+
+    public void setLastHighestPylonReachedToZero(){
+        lastHighestPylonReached = 0;
     }
 
     @Override

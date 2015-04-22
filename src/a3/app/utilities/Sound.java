@@ -1,12 +1,17 @@
-package a3.app.utilities;
+/**
+ * Created by Victor Ignatenkov on 4/5/15.
+ */
 
+package a3.app.utilities;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.io.File;
 import java.net.MalformedURLException;
 
+
 /**
- * Created by Victor Ignatenkov on 4/5/15.
+ * Sound - allows to create a sound object with an
+ * actual sound located in the resource folder.
  */
 public class Sound {
 
@@ -28,14 +33,23 @@ public class Sound {
         }
     }
 
+    /**
+     * Play the sound
+     */
     public void play(){
         myClip.play();
     }
 
+    /**
+     * Loop the sound
+     */
     public void loop(){
         myClip.loop();
     }
 
+    /**
+     * Stop the sound
+     */
     public void stop(){
         myClip.stop();
     }

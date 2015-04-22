@@ -31,23 +31,24 @@ public class MoveTowardsPylonStrategy implements IStrategy {
      * Car
      * @param gw
      * GameWorld
+     *
+     *   1. Retrieve all pylons of the world
+     *   2. Sort'em
+     *   3. Go from the left most one to the the right,
+     *   until the most right one is hit, in which
+     *   case return the the left most one.
      */
+
+    //TODO  Move sort out of here. It needs to be sorted only after deleting/creating new pylons.
     @Override
     public void performStrategy(NPCCar car, GameWorld gw) {
 
 
             if(Services.findTheNumberOfPylons() != 0) {
-//                int lastHighestPylonReached = car.getLastHighestPylonReached();
-//
-//                if (lastHighestPylonReached >= (Pylon.getCount() + 1)) {
-//                    car.setLastHighestPylonReached(1);
-//                }
-
-
 
              /* **********************************************
               * **********************************************
-              *     New Algorithm, Index Number Agnostic    **
+              *         Index Number Agnostic               **
               * **********************************************
               * **********************************************/
 
@@ -66,7 +67,6 @@ public class MoveTowardsPylonStrategy implements IStrategy {
                     }
                 });
 
-
                 int lastIndex = 1;
 
                 Pylon nextPylonToFollow = null;
@@ -79,13 +79,6 @@ public class MoveTowardsPylonStrategy implements IStrategy {
                         break;
                     }
                 }
-
-
-                    /**
-                     System.out.println("The last highest pylon:  " + car.getLastHighestPylonReached());
-                     System.out.println("The last highest pylon:  " + tmpPylon.getIndexNumber());
-                     **/
-
                     if(Services.findTheNumberOfPylons() != 0 && nextPylonToFollow == null){
                         nextPylonToFollow = allPylons.firstElement();
                     }
@@ -96,21 +89,12 @@ public class MoveTowardsPylonStrategy implements IStrategy {
                     float adj = pylonLocation.getX() - npcLocation.getX();
                     float op = pylonLocation.getY() - npcLocation.getY();
 
-                    /**
-                     System.out.println("Adj is :  " + adj);
-                     System.out.println("Op is : " + op);
-                     **/
 
                     float angleToAdd;
 
                     angleToAdd = (float) Math.toDegrees(atan2(op, adj));
 
                     car.setHeading(angleToAdd);
-
-                    /**
-                     System.out.println("angleToAdd is: " + angleToAdd);
-                     System.out.println("the heading is: " + car.getHeading());
-                     **/
 
                     float deltaY = (float) (Math.sin(Math.toRadians(car.getHeading())) * car.getSpeed() * 10);
                     float deltaX = (float) (Math.cos(Math.toRadians(car.getHeading())) * car.getSpeed() * 10);
@@ -127,30 +111,6 @@ public class MoveTowardsPylonStrategy implements IStrategy {
                     }
                 }
             }
-
-
-
-
-//                lastHighestPylonReached = nextPylonToFollow.getIndexNumber();
-//
-//
-//                if (lastHighestPylonReached >= (Pylon.getCount() + 1)) {
-//                    car.setLastHighestPylonReached(1);
-//                }
-//
-
-
-                /* **********************************************
-                 * **********************************************
-                 *                   END                       **
-                 * **********************************************
-                 * **********************************************/
-
-
-
-
-
-
 
     }
 

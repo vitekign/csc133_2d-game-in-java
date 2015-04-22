@@ -8,7 +8,6 @@ package a3.objects;
 import a3.app.strategies.IStrategy;
 import a3.model.GameWorld;
 import java.awt.*;
-import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -25,6 +24,7 @@ public class NPCCar extends Car {
     public void draw(Graphics g) {
 
 
+        g.setColor(color);
         g.drawRect((int)getX() - (int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
         g.setColor(Color.white);
         g.drawOval((int)getX(), (int)getY(), 1,1);
@@ -97,6 +97,7 @@ public class NPCCar extends Car {
         this.maximumDamageLevel = maximumDamageLevel;
         this.lastHighestPylonReached = lastHighestPylonReached;
         inOilSlick = false;
+
 
 
         this.X = location.getX();
@@ -185,6 +186,12 @@ public class NPCCar extends Car {
         return (width + length) / 2;
     }
 
+    /**
+     * The logic which detects the collision
+     * with other object in the Game World
+     * @param obj the other object
+     * @return true if collision has happened
+     */
     @Override
     public boolean collidesWith(ICollider obj) {
         float distX = this.getX() - ((GameObject)obj).getX();
@@ -199,27 +206,17 @@ public class NPCCar extends Car {
         }
     }
 
+    /**
+     * Handle collision of the NPCCar with other Game Objects.
+     * @param otherObject
+     */
     @Override
     public void handleCollision(ICollider otherObject) {
         if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
-            System.out.println("Just collided with NPC");
-            //gw.gameObjectsToDelete.add((GameObject)otherObject);
             if(!objectsCollidedWith.contains((GameObject)otherObject)){
                 objectsCollidedWith.add((GameObject)otherObject);
-                ((GameObject)otherObject).objectsCollidedWith.add(this);
-            }
 
-            int chanceNewOilSlick = (int) ((new Random().nextFloat())*100);
-            if(chanceNewOilSlick > 80){
-                //create a new fuelCan
-                gw.addOilSlickWithLocation(this.getLocation());
             }
-
-            if(gw.isSound())
-                ((Car)otherObject).playSound();
-            gw.carCollideWithCar((this));
-            gw.switchStrategies();
         }
-
     }
 }

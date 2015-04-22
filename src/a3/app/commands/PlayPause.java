@@ -21,6 +21,7 @@ public class PlayPause extends AbstractAction {
     DeleteObject deleteObjectAction = DeleteObject.getInstance();
     AddPylon addPylonAction = AddPylon.getInstance();
     AddFuelCan addFuelCanAction = AddFuelCan.getInstance();
+    PickUpFuelCan pickUpFuelCanActin = PickUpFuelCan.getInstance();
 
 
     private PlayPause(){
@@ -35,7 +36,7 @@ public class PlayPause extends AbstractAction {
     }
 
     /**
-     * Call the corresponding method which is from the GameWorld
+     * Enable and Disable buttons
      * @param e
      */
     @Override
@@ -51,6 +52,10 @@ public class PlayPause extends AbstractAction {
              deleteObjectAction.setEnabled(true);
              addPylonAction.setEnabled(true);
              addFuelCanAction.setEnabled(true);
+             pickUpFuelCanActin.setEnabled(false);
+
+
+
 
          } else {
              this.putValue(Action.NAME, "Pause");
@@ -60,6 +65,8 @@ public class PlayPause extends AbstractAction {
              deleteObjectAction.setEnabled(false);
              addPylonAction.setEnabled(false);
              addFuelCanAction.setEnabled(false);
+             pickUpFuelCanActin.setEnabled(true);
+
          }
 
             gw.playPause();

@@ -154,24 +154,30 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
         g.setColor(Color.white);
         g.fillOval((int) getX(), (int) getY(), 1, 1);
+        g.setColor(Color.white);
+        g.drawString(String.valueOf(getIndexNumber()), (int) getX(), (int) getY());
         g.setColor(Color.black);
-        g.drawString(String.valueOf(getIndexNumber()), (int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
+
 
     } else {
         g.setColor(new Color(14, 40, 3));
         g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
         g.setColor(Color.white);
         g.fillOval((int) getX(), (int) getY(), 1, 1);
+        g.setColor(Color.white);
+        g.drawString(String.valueOf(getIndexNumber()), (int) getX(), (int) getY());
         g.setColor(Color.black);
-        g.drawString(String.valueOf(getIndexNumber()), (int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
-
     }
 }
 
 
-    /****************************************/
-    /* Confirms to ICollider                */
-    /****************************************/
+
+    /**
+     * The logic which detects the collision
+     * with other object in the Game World
+     * @param obj the other object
+     * @return true if collision has happened
+     */
     @Override
     public boolean collidesWith(ICollider obj) {
         float distX = this.getX() - ((GameObject)obj).getX();
@@ -186,16 +192,16 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         }
     }
 
+    /* Handle collision of the Pylon with other Game Objects.
+       * @param otherObject
+    */
     @Override
     public void handleCollision(ICollider otherObject) {
         if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
-            System.out.println("Just collided Pylon" + this.getIndexNumber());
-           // gw.gameObjectsToDelete.add((GameObject)this);
             if(!objectsCollidedWith.contains((GameObject)otherObject)){
                 objectsCollidedWith.add((GameObject)otherObject);
-                ((GameObject)otherObject).objectsCollidedWith.add(this);
+
             }
-            gw.carCollideWithPylon(this.getIndexNumber());
         }
     }
 
@@ -204,5 +210,5 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         return radius;
     }
 
-    /****************************************/
+
 }

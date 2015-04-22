@@ -60,13 +60,10 @@ public class Bird extends Moveable implements IDrawable, ICollider {
     }
 
 
-
     @Override
     public void changeColor(Color color) {
 
     }
-
-
 
     @Override
     public String toString() {
@@ -76,8 +73,10 @@ public class Bird extends Moveable implements IDrawable, ICollider {
     }
 
 
-
-
+    /**
+     * Logic for drawing the bird.
+     * @param g
+     */
     @Override
     public void draw(Graphics g) {
 
@@ -85,17 +84,15 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         int length = (int)size;
 
         g.setColor(this.getColor());
-
-
-
             g.drawImage( imageRes,  (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2), 20, 20, null);
-
-       // g.drawOval((int)getX()-(int)width/2, (int)getY()-(int)length/2,width, length);
         g.setColor(Color.black);
     }
 
 
-
+    /**
+     * Logic for moving the bird.
+     * @param framesPerSecond
+     */
     @Override
     public void move(int framesPerSecond){
         framesPerSecond *=3;
@@ -122,10 +119,12 @@ public class Bird extends Moveable implements IDrawable, ICollider {
     }
 
 
-    /*
-     * ICollider Implementation
+    /**
+     * The logic which detects the collision
+     * with other object in the Game World
+     * @param obj the other object
+     * @return true if collision has happened
      */
-
     @Override
     public boolean collidesWith(ICollider obj) {
 
@@ -142,21 +141,19 @@ public class Bird extends Moveable implements IDrawable, ICollider {
     }
 
 
+    /**
+     * Handle collision of the Bird with other Game Objects.
+     * @param otherObject
+     */
     @Override
     public void handleCollision(ICollider otherObject) {
         if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
-            System.out.println("Just collided with bird");
-            //gw.gameObjectsToDelete.add((GameObject)otherObject);
             if(!objectsCollidedWith.contains((GameObject)otherObject)){
                 objectsCollidedWith.add((GameObject)otherObject);
-                ((GameObject)otherObject).objectsCollidedWith.add(this);
-            }
 
-            gw.birdFlyOver();
+            }
         }
     }
-
-
 
 
     @Override

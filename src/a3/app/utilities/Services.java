@@ -121,25 +121,6 @@ public class Services {
         return tempNumOfPylons;
     }
 
-    public static Clip retrieveSoundFromResources(String soundName) {
-
-        String slash = File.separator;
-        String pathToResources = ".." + slash + ".." + slash + "resources" + slash + "sounds" + slash;
-
-        AudioInputStream inputStream = null;
-
-        Clip clip = null;
-        try {
-            inputStream = AudioSystem.getAudioInputStream(gw.getClass().getResource(pathToResources + soundName));
-            clip = AudioSystem.getClip();
-            clip.open(inputStream);
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        return clip;
-    }
 
 
     /**

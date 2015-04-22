@@ -4,6 +4,8 @@
 
 package a3.app.commands;
 import a3.model.GameWorld;
+import a3.objects.FuelCan;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
@@ -31,7 +33,7 @@ public class PickUpFuelCan extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
-           // gw.pickUpFuelCan(((FuelCan) otherObject).getSize());
+            gw.pickUpFuelCan();
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }

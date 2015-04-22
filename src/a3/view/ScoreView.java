@@ -87,19 +87,6 @@ public class ScoreView extends JPanel implements IObserver {
          * information is going to be updated with update() method.
          */
 
-        //TODO Refactor, so instead of system time it's using frames from the game world
-//        long currentTime = System.currentTimeMillis();
-//        if((currentTime - lastTime) > 1000){
-//            this.currentTime.setText("Time: " + time);
-//            lastTime = System.currentTimeMillis();
-//            time++;
-//        }
-
-
-
-
-
-
         livesLeft.setText("Lives Left: " + gw.getLivesRemaining());
         highestPylon.setText("Highest Player Pylon: " + gw.getLastPylonReached());
         //TODO find out if getCurrentFuelLevel have dependencies relying on float
