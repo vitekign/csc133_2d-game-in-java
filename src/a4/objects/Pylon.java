@@ -7,6 +7,7 @@ package a4.objects;
 import a4.model.GameWorld;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.Vector;
 
 /**
@@ -26,18 +27,28 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
     public static int zIndex;
 
+    public void initObject(){
+        objectsCollidedWith = new Vector<>();
+
+        myRotationMatrix = new AffineTransform();
+        myTranslationMatrix = new AffineTransform();
+        myScaleMatrix = new AffineTransform();
+
+    }
+
     public Pylon(Location location, float radius, Color color, GameWorld gw){
             super(color);
-
             this.gw = gw;
 
-            objectsCollidedWith = new Vector<>();
+
 
             this.X = location.getX();
             this.Y = location.getY();
             this.radius = radius;
 
         sequenceNumber = count++;
+
+        initObject();
     }
 
     public Pylon(Location location, float radius, Color color, GameWorld gw, int seqNumberOfPylon){
@@ -45,7 +56,6 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
         this.gw = gw;
 
-        objectsCollidedWith = new Vector<>();
 
         this.X = location.getX();
         this.Y = location.getY();
@@ -54,6 +64,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         sequenceNumber = seqNumberOfPylon;
                 count++;
 
+        initObject();
 
     }
 
@@ -147,27 +158,45 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
 
     @Override
-    public void draw(Graphics2D g) {
+    public void draw(Graphics2D g2d) {
+
+        AffineTransform saveAt = g2d.getTransform();
+        myTranslationMatrix.translate((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
+        g2d.transform(myTranslationMatrix);
+
 
     if(isSelected){
-        g.setColor(Color.gray);
-        g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
-        g.setColor(Color.white);
-        g.fillOval((int) getX(), (int) getY(), 1, 1);
-        g.setColor(Color.white);
-        g.drawString(String.valueOf(getIndexNumber()), (int) getX(), (int) getY());
-        g.setColor(Color.black);
+        g2d.setColor(Color.gray);
+        g2d.fillOval(0, 0, (int) radius, (int) radius);
+        g2d.setColor(Color.white);
+        g2d.fillOval(0, 0, 1, 1);
+        g2d.setColor(Color.white);
+        g2d.drawString(String.valueOf(getIndexNumber()), (int) getX(), (int) getY());
+        g2d.setColor(Color.black);
 
 
     } else {
-        g.setColor(new Color(14, 40, 3));
-        g.fillOval((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2, (int) radius, (int) radius);
-        g.setColor(Color.white);
-        g.fillOval((int) getX(), (int) getY(), 1, 1);
-        g.setColor(Color.white);
-        g.drawString(String.valueOf(getIndexNumber()), (int) getX(), (int) getY());
-        g.setColor(Color.black);
+        g2d.setColor(new Color(14, 40, 3));
+        g2d.fillOval(0, 0, (int) radius, (int) radius);
+        g2d.setColor(Color.white);
+        g2d.fillOval(0, 0, 1, 1);
+        g2d.setColor(Color.white);
+
+
+
+        AffineTransform addTranslate = new AffineTransform();
+        addTranslate.translate(20,20);
+
+       // myTranslationMatrix.concatenate(addTranslate);
+        myScaleMatrix.scale(1, -1);
+        g2d.transform(addTranslate);
+        g2d.transform(myScaleMatrix);
+
+        g2d.drawString(String.valueOf(getIndexNumber()), 0, 0);
+        g2d.setColor(Color.black);
     }
+        setToIdentity();
+        g2d.setTransform(saveAt);
 }
 
 

@@ -84,9 +84,27 @@ public class MapView extends JPanel implements IObserver, MouseListener {
                 }
             }
 
+
+        AffineTransform worldToND, ndToScreen, theVTM;
+
+        int winWidth, winHeight, winLeft, winBottom;
+        winWidth = 1000;
+        winHeight = 800;
+        winLeft = 0;
+        winBottom = 0;
+
+
         Graphics2D g2d = (Graphics2D)g;
-        g2d.translate(0, this.getHeight());
-        g2d.scale(1,-1);
+        worldToND = buildWorldToNDXform(winWidth, winHeight, winLeft, winBottom);
+        ndToScreen = buildNDToScreenXForm(getWidth(), getHeight());
+        theVTM = (AffineTransform) ndToScreen.clone();
+        theVTM.concatenate(worldToND);
+
+        g2d.transform(theVTM);
+       // g2d.setClip(0,0,500,500);
+
+//        g2d.translate(0, this.getHeight());
+//        g2d.scale(1,-1);
 
 
         /**
@@ -111,6 +129,47 @@ public class MapView extends JPanel implements IObserver, MouseListener {
           }
       }
     }
+
+    private AffineTransform buildWorldToNDXform(int winWidth, int winHeight, int winLeft, int winBottom) {
+
+        AffineTransform  myTranslationMatrix = new AffineTransform();
+        AffineTransform  myScaleMatrix = new AffineTransform();
+
+        myTranslationMatrix.translate(0, 0);//-winLeft, -winBottom
+        myScaleMatrix.scale((double)1/winWidth, (double)1/winHeight); //(1 / winWidth, 1 / winHeight)
+
+
+        //public void concatenate(AffineTransform Tx)
+        //Cx'(p) = Cx(Tx(p))
+        //first transforming p by Tx and then transforming the result by the original transform Cx
+
+        AffineTransform temp = new AffineTransform();
+        temp.setTransform(myScaleMatrix);
+        temp.concatenate(myTranslationMatrix);
+
+
+        return temp;
+    }
+
+
+
+    private AffineTransform buildNDToScreenXForm(int width, int height) {
+
+        AffineTransform  myTranslationMatrix = new AffineTransform();
+        AffineTransform  myScaleMatrix = new AffineTransform();
+
+        myScaleMatrix.scale((width), -(double)height);  //width, -height
+        myTranslationMatrix.translate(0, this.getHeight());
+
+        AffineTransform temp = new AffineTransform();
+
+        temp.setTransform(myTranslationMatrix);
+        temp.concatenate(myScaleMatrix);
+
+        return temp;
+
+    }
+
 
 
     /**
