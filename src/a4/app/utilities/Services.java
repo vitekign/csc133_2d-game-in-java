@@ -8,7 +8,12 @@ import a4.objects.Pylon;
 
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Vector;
 
@@ -27,7 +32,7 @@ public class Services {
 
 
     private static GameWorld gw;
-
+    private static AffineTransform theVTM;
 
     private Services(){
     }
@@ -155,5 +160,50 @@ public class Services {
         return "." + slash +"resources" + slash + "sounds" + slash;
     }
 
+    /**
+     * Give to the Services a reference
+     * of the VTM in the game.
+     * @param vtm
+     */
+    public static void supplyServicesWithVTM( AffineTransform vtm)
+    {
+        theVTM = vtm;
+    }
+
+    public static AffineTransform getTheVTM(){
+        return theVTM;
+    }
+
+
+    /**
+     * Get an inverse of the VTM matrix in the Game
+     * @return
+     */
+    //public static Optional<AffineTransform> getInverseOfVTM(){
+    public static AffineTransform getInverseOfVTM(){
+        AffineTransform inverseVTM;
+        try {
+            inverseVTM = theVTM.createInverse();
+            return  inverseVTM;
+        } catch (NoninvertibleTransformException e){
+            System.out.println("Cannot inverse the matrix: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    public static Point2D applyInverseAndGetPoint( MouseEvent lastMouseEvent){
+
+        AffineTransform inverseOfVTM = getInverseOfVTM();
+        AffineTransform theVTM = Services.getTheVTM();
+
+        Point2D mouseScreenLocation = new Point();
+        mouseScreenLocation.setLocation(lastMouseEvent.getX(), lastMouseEvent.getY());
+
+      //  mouseScreenLocation = theVTM.transform(mouseScreenLocation, null);
+        mouseScreenLocation = inverseOfVTM.transform(mouseScreenLocation,null);
+
+        return mouseScreenLocation;
+    }
 
 }

@@ -8,22 +8,40 @@ import a4.model.*;
 import a4.objects.GameObject;
 import a4.objects.IDrawable;
 import a4.objects.ISelectable;
+import a4.objects.character_car.AffineObject;
+import a4.objects.character_car.HierCar;
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.Optional;
 
 
 /**
  * MapView is used to show the map of the current
  * state of the game. In this version, the date change
  * is shown in the Console and also in the textArea on the screen.
+ *
+ *
+ *
  */
-public class MapView extends JPanel implements IObserver, MouseListener {
+
+
+
+public class MapView extends JPanel implements IObserver, MouseListener,
+        MouseWheelListener{
+
+    HierCar myCar;
+
 
 
 
@@ -38,8 +56,21 @@ public class MapView extends JPanel implements IObserver, MouseListener {
     GameWorldProxy gw;
 
     private Image imageRes;
+    private AffineTransform theVTM ;
+
+
+    int winWidth, winHeight, winLeft, winBottom;
+
+
     public MapView(){
+
+
+        myCar = new HierCar();
+
+        this.addMouseWheelListener(this);
         this.addMouseListener(this);
+
+
 
         imageRes = null;
 
@@ -51,6 +82,15 @@ public class MapView extends JPanel implements IObserver, MouseListener {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
+
+        theVTM = new AffineTransform();
+
+
+        winWidth = this.getWidth();
+        winHeight = this.getHeight();
+        winLeft = 0;
+        winBottom = 0;
 
 
     }
@@ -85,26 +125,27 @@ public class MapView extends JPanel implements IObserver, MouseListener {
             }
 
 
-        AffineTransform worldToND, ndToScreen, theVTM;
+        AffineTransform worldToND, ndToScreen;
 
-        int winWidth, winHeight, winLeft, winBottom;
-        winWidth = 1000;
-        winHeight = 800;
-        winLeft = 0;
-        winBottom = 0;
-
+        if(winWidth == 0){
+             winWidth = getWidth();
+             winHeight = getHeight();
+        }
+      ///  winWidth = getWidth();
+       // winHeight = getHeight();
+      //  winLeft = 0;
+       // winBottom = 0;
 
         Graphics2D g2d = (Graphics2D)g;
         worldToND = buildWorldToNDXform(winWidth, winHeight, winLeft, winBottom);
-        ndToScreen = buildNDToScreenXForm(getWidth(), getHeight());
+        ndToScreen = buildNDToScreenXForm(this.getWidth(), this.getHeight());
         theVTM = (AffineTransform) ndToScreen.clone();
         theVTM.concatenate(worldToND);
 
+        Services.supplyServicesWithVTM(theVTM);
         g2d.transform(theVTM);
        // g2d.setClip(0,0,500,500);
 
-//        g2d.translate(0, this.getHeight());
-//        g2d.scale(1,-1);
 
 
         /**
@@ -128,14 +169,47 @@ public class MapView extends JPanel implements IObserver, MouseListener {
               i++;
           }
       }
+
+        ((AffineObject)myCar).draw(g2d); 
+
+
+
+        /**
+         * Do zoom here !!!
+         */
     }
+
+    public void zoomIn(){
+
+        double h = winHeight - winBottom;
+        double w = winWidth - winLeft;
+        winLeft += w*0.05;
+        winWidth -= w*0.05;
+        winBottom += h*0.05;
+        winHeight -= h*0.05;
+        this.repaint();
+    }
+    public void zoomOut(){
+
+        double h = winHeight - winBottom;
+        double w = winWidth - winLeft;
+        winLeft -= w*0.05;
+        winWidth += w*0.05;
+        winBottom -= h*0.05;
+        winHeight += h*0.05;
+        this.repaint();
+    }
+
+
+
+
 
     private AffineTransform buildWorldToNDXform(int winWidth, int winHeight, int winLeft, int winBottom) {
 
         AffineTransform  myTranslationMatrix = new AffineTransform();
         AffineTransform  myScaleMatrix = new AffineTransform();
 
-        myTranslationMatrix.translate(0, 0);//-winLeft, -winBottom
+        myTranslationMatrix.translate(-winLeft, -winBottom);//-winLeft, -winBottom
         myScaleMatrix.scale((double)1/winWidth, (double)1/winHeight); //(1 / winWidth, 1 / winHeight)
 
 
@@ -159,7 +233,7 @@ public class MapView extends JPanel implements IObserver, MouseListener {
         AffineTransform  myScaleMatrix = new AffineTransform();
 
         myScaleMatrix.scale((width), -(double)height);  //width, -height
-        myTranslationMatrix.translate(0, this.getHeight());
+        myTranslationMatrix.translate(0, height);
 
         AffineTransform temp = new AffineTransform();
 
@@ -184,13 +258,16 @@ public class MapView extends JPanel implements IObserver, MouseListener {
         Point p = e.getPoint();
         GameObject temp = null;
 
+        Point2D mouseWorldLoc =  Services.applyInverseAndGetPoint(e);
+
         if(gw.isItInPause()) {
             Iterator iter = gw.getIterator();
             while (iter.hasNext()) {
                 temp = (GameObject) iter.getNext();
                 if (temp instanceof ISelectable) {
 
-                    if (((ISelectable) temp).contains(p)) {
+                    if (((ISelectable) temp).contains(mouseWorldLoc)) {
+
                         ((ISelectable) temp).setSelected(true);
                         gw.addToTheDeleteObjectsCollection(temp);
                     } else {
@@ -223,5 +300,21 @@ public class MapView extends JPanel implements IObserver, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent event) {
+
+        System.out.println("The MouseWheelEvent has been detected");
+        if (event.isShiftDown()) {
+
+            System.err.println("Horizontal " + event.getWheelRotation());
+        } else {
+            System.err.println("Vertical " + event.getWheelRotation());
+            if(event.getWheelRotation() > 0)
+                zoomIn();
+            else
+                zoomOut();
+        }
     }
 }

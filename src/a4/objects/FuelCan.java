@@ -10,6 +10,7 @@ import a4.model.GameWorld;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
@@ -43,8 +44,10 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
         objectsCollidedWith = new Vector<>();
 
+
         this.X = location.getX();
         this.Y = location.getY();
+
 
         this.size = size;
 
@@ -106,7 +109,7 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     }
 
     @Override
-    public boolean contains(Point p) {
+    public boolean contains(Point2D p) {
 
         int px = (int) p.getX();
         int py = (int) p.getY();
@@ -135,7 +138,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         int length = (int)size + ADDITIONAL_WIDTH_LENGTH;
 
 
-        myTranslationMatrix.translate((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2));
+       myTranslationMatrix.translate((int) getX() +  (width / 2), (int) getY() +  (length / 2));
+       // myTranslationMatrix.translate((int) getX(), (int) getY());
         myRotationMatrix.rotate(Math.toRadians(180));
 
         AffineTransform saveAt = g2d.getTransform();

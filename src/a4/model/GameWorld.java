@@ -15,6 +15,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.Random;
 import java.util.Vector;
 
@@ -342,7 +344,10 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
                 if(lastMouseEvent == null){
                     JOptionPane.showMessageDialog(null, "Please click on the map and then press Add Pylon");
                 } else {
-                    theWorldVector.add(factory.makePylonWithLocationAndSequenceNumber(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), seqNumberOfPylon));
+
+                    Point2D mouseWorldLoc =  Services.applyInverseAndGetPoint(lastMouseEvent);
+
+                    theWorldVector.add(factory.makePylonWithLocationAndSequenceNumber(new Location((int)mouseWorldLoc.getX(), (int)mouseWorldLoc.getY()), seqNumberOfPylon));
                     notifyObserver();
                     lastMouseEvent = null;
                 }
@@ -357,8 +362,12 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
      */
     public void createNewFuelCan(int input){
         if(isItInPause() ){
+
             if(lastMouseEvent != null){
-                theWorldVector.add(factory.makeFuelCanWithLocation(new Location(lastMouseEvent.getX(), lastMouseEvent.getY()), input));
+
+                Point2D mouseWorldLoc =  Services.applyInverseAndGetPoint(lastMouseEvent);
+
+                theWorldVector.add(factory.makeFuelCanWithLocation(new Location((int) mouseWorldLoc.getX(), (int) mouseWorldLoc.getY()), input));
                 notifyObserver();
                 lastMouseEvent = null;
             }

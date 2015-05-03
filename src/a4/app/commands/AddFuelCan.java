@@ -37,6 +37,7 @@ public class AddFuelCan extends AbstractAction {
             } catch (Exception ex) {
                 if(ex.getMessage() != "null") {
                     JOptionPane.showMessageDialog(null, "Please enter a number");
+                    System.out.println("Something's up: " + ex.getMessage());
                 }
             }
         } else {

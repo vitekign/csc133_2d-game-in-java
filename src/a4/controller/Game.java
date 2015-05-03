@@ -398,7 +398,7 @@ public class Game extends JFrame{
          * Set up the main JPanel.
          */
 
-        setResizable(false);
+        setResizable(true);
         setSize(gw.GLOBAL_WIDTH, gw.GLOBAL_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
        // setBackground(Color.GRAY);

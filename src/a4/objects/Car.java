@@ -3,6 +3,7 @@ package a4.objects;
 import a4.app.utilities.Services;
 import a4.app.utilities.Sound;
 import a4.model.GameWorld;
+import a4.objects.character_car.HierCar;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -33,6 +34,9 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     public static int zIndex;
 
     Image imageRes;
+
+
+    HierCar hierCar;
 
 
     public int getZIndex(){
@@ -91,6 +95,8 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
 
         objectsCollidedWith = new Vector<>();
 
+
+        hierCar = new HierCar();
         /**
          * If further versions of the game require
          * creating multiple versions of cars, then

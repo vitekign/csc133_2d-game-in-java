@@ -8,6 +8,7 @@ import a4.model.GameWorld;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.Vector;
 
 /**
@@ -140,7 +141,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
     }
 
     @Override
-    public boolean contains(Point p) {
+    public boolean contains(Point2D p) {
         int px = (int) p.getX();
         int py = (int) p.getY();
         int xLoc = (int)getX();
