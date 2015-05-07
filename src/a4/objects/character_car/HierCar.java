@@ -19,24 +19,31 @@ public class HierCar extends AffineObject {
         myScale = new AffineTransform();
 
         myBody = new Body(30, 60);
+
+        myFrontAxle = new FrontAxle(40, 9);
+        myFrontAxle.translate(0,20);
+        myRearAxle = new RearAxle(40,9);
+        myRearAxle.translate(0,-20);
+
     }
 
     @Override
     public void draw(Graphics2D g2d) {
         AffineTransform saveAt = g2d.getTransform();
 
+        translate(100, 100);
+        rotate(-45);
+        scale(1, 1);
 
-       // translate(400, 400);
-
-       // g2d.translate(400, 400);
-        //g2d.rotate(Math.toRadians(-180));
-
-        myTranslation.translate(400, 400);
-       // myRotation.rotate(Math.toRadians(0));
         g2d.transform(myTranslation);
         g2d.transform(myRotation);
+        g2d.transform(myScale);
 
+
+        myBody.translate(0, 0);
         myBody.draw(g2d);
+        myFrontAxle.draw(g2d);
+        myRearAxle.draw(g2d);
 
         setToIdentity();
         g2d.setTransform(saveAt);

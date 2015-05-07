@@ -52,8 +52,8 @@ public class Body extends AffineObject{
 
         g2d.drawPolygon(xPoints, yPoints, 6);
 
-        g2d.setColor(Color.WHITE);
-        g2d.fillOval(0,0,1,1);
+        g2d.setColor(Color.BLACK);
+        g2d.fillOval(-3,-3,6,6);
 
     }
 
