@@ -11,10 +11,7 @@ import a4.objects.ISelectable;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -28,8 +25,10 @@ import java.io.File;
 
 //TODO Character Car isn't drawn on the top of other game objects.
 
+
+
 public class MapView extends JPanel implements IObserver, MouseListener,
-        MouseWheelListener{
+        MouseWheelListener, MouseMotionListener{
     /**
      * Create a textArea to show the current
      * state of the game on the screen.
@@ -43,7 +42,9 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     private AffineTransform theVTM ;
 
 
-    int winWidth, winHeight, winLeft, winBottom;
+    double winWidth, winHeight, winLeft, winBottom;
+
+    MouseEvent lastMouseEvent = null;
 
 
     public MapView(){
@@ -53,6 +54,7 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
         this.addMouseWheelListener(this);
         this.addMouseListener(this);
+        this.addMouseMotionListener(this);
 
 
 
@@ -121,7 +123,7 @@ public class MapView extends JPanel implements IObserver, MouseListener,
        // winBottom = 0;
 
         Graphics2D g2d = (Graphics2D)g;
-        worldToND = buildWorldToNDXform(winWidth, winHeight, winLeft, winBottom);
+        worldToND = buildWorldToNDXform((int)winWidth, (int)winHeight, (int)winLeft, (int)winBottom);
         ndToScreen = buildNDToScreenXForm(this.getWidth(), this.getHeight());
         theVTM = (AffineTransform) ndToScreen.clone();
         theVTM.concatenate(worldToND);
@@ -162,36 +164,6 @@ public class MapView extends JPanel implements IObserver, MouseListener,
          */
     }
 
-    public void zoomIn(){
-
-        double h = winHeight - winBottom;
-        double w = winWidth - winLeft;
-
-        if(h>500 && w > 500) {
-
-            winLeft += w * 0.05;
-            winWidth -= w * 0.1;
-            winBottom += h * 0.05;
-            winHeight -= h * 0.1;
-
-            this.repaint();
-        }
-    }
-    public void zoomOut(){
-
-        double h = winHeight - winBottom;
-        double w = winWidth - winLeft;
-
-
-        if(h < 2000 && w < 2000) {
-            winLeft -= w * 0.05;
-            winWidth += w * 0.1;
-            winBottom -= h * 0.05;
-            winHeight += h * 0.1;
-
-            this.repaint();
-        }
-    }
 
 
 
@@ -282,7 +254,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        lastMouseEvent = null;
+        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
     }
 
     @Override
@@ -295,10 +268,50 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
     }
 
+    public void zoomIn(){
+
+        double h = winHeight - winBottom;
+        double w = winWidth - winLeft;
+
+         if(h>10 && w > 10) {
+
+             double hor = 4;
+             double ver = 4;
+
+             winLeft += hor;
+             winWidth -= (hor * 2 );
+             winBottom += ver;
+             winHeight -= (ver*2);
+
+        this.repaint();
+         }
+    }
+    public void zoomOut(){
+
+        double h = winHeight - winBottom;
+        double w = winWidth - winLeft;
+
+
+         if(h < 2000 && w < 2000) {
+
+             double hor = 4;
+             double ver = 4;
+
+             winLeft -= hor;
+             winWidth += (hor * 2 );
+             winBottom -= ver;
+             winHeight += (ver*2);
+
+        this.repaint();
+          }
+    }
+
+
+
     @Override
     public void mouseWheelMoved(MouseWheelEvent event) {
 
-        System.out.println("The MouseWheelEvent has been detected");
+
         if (event.isShiftDown()) {
 
             System.err.println("Horizontal " + event.getWheelRotation());
@@ -310,4 +323,37 @@ public class MapView extends JPanel implements IObserver, MouseListener,
                 zoomOut();
         }
     }
+
+
+    /*********************************************/
+    /*      Confirm To MouseMotionListener       */
+    /*********************************************/
+    @Override
+    public void mouseDragged(MouseEvent currrentMouseEvent) {
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        if(lastMouseEvent == null) {
+            lastMouseEvent = currrentMouseEvent;
+        } else {
+            double difX = currrentMouseEvent.getX() - lastMouseEvent.getX();
+            double difY = currrentMouseEvent.getY() - lastMouseEvent.getY();
+
+            winLeft -= difX;
+            winBottom +=difY;
+
+
+
+            lastMouseEvent = currrentMouseEvent;
+        }
+
+
+
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
+    }
+    /*---------------------------------------------*/
 }
