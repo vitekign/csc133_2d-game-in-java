@@ -8,10 +8,6 @@ import a4.model.*;
 import a4.objects.GameObject;
 import a4.objects.IDrawable;
 import a4.objects.ISelectable;
-import a4.objects.character_car.AffineObject;
-import a4.objects.character_car.HierCar;
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -20,32 +16,20 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.File;
-import java.util.Optional;
 
 
 /**
  * MapView is used to show the map of the current
  * state of the game. In this version, the date change
  * is shown in the Console and also in the textArea on the screen.
- *
- *
- *
  */
 
-
+//TODO Character Car isn't drawn on the top of other game objects.
 
 public class MapView extends JPanel implements IObserver, MouseListener,
         MouseWheelListener{
-
-    HierCar myCar;
-
-
-
-
-
     /**
      * Create a textArea to show the current
      * state of the game on the screen.
@@ -65,7 +49,7 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     public MapView(){
 
 
-        myCar = new HierCar();
+
 
         this.addMouseWheelListener(this);
         this.addMouseListener(this);
@@ -170,7 +154,6 @@ public class MapView extends JPanel implements IObserver, MouseListener,
           }
       }
 
-        ((AffineObject)myCar).draw(g2d);
 
 
 

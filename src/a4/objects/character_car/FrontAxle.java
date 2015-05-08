@@ -15,6 +15,7 @@ public class FrontAxle extends AffineObject {
     private int width;
     private int height;
 
+    private int steeringDirection;
 
     public FrontAxle(int width, int height){
         this.width = width;
@@ -30,8 +31,6 @@ public class FrontAxle extends AffineObject {
 
         leftTire.translate(-25, 0);
         rightTire.translate(25, 0);
-
-
     }
 
     @Override
@@ -46,5 +45,14 @@ public class FrontAxle extends AffineObject {
         shaft.draw(g2d);
 
         g2d.setTransform(saveAt);
+    }
+
+    public void updateSteeringDirection(float steeringDirection) {
+
+        this.steeringDirection = ((int)steeringDirection);
+
+        leftTire.rotate(-steeringDirection);
+        rightTire.rotate(-steeringDirection);
+
     }
 }

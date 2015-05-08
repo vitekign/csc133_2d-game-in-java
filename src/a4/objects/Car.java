@@ -3,7 +3,9 @@ package a4.objects;
 import a4.app.utilities.Services;
 import a4.app.utilities.Sound;
 import a4.model.GameWorld;
-import a4.objects.character_car.HierCar;
+import a4.objects.character_car.Body;
+import a4.objects.character_car.FrontAxle;
+import a4.objects.character_car.RearAxle;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -36,7 +38,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     Image imageRes;
 
 
-    HierCar hierCar;
+
 
 
     public int getZIndex(){
@@ -90,13 +92,18 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     public Sound collideWithNPCSound;
     public Sound collideWithFuelCanSound;
 
+    Body myBody;
+    FrontAxle myFrontAxle;
+    RearAxle myRearAxle;
+
+
     public Car(Location location, GameWorld gw, Color color){
         super(color);
 
         objectsCollidedWith = new Vector<>();
 
 
-        hierCar = new HierCar();
+
         /**
          * If further versions of the game require
          * creating multiple versions of cars, then
@@ -111,6 +118,16 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
         speed               = 0;
         damageLevel         = 0;
         maximumDamageLevel  = 100;
+
+
+
+        myBody = new Body(30, 60);
+
+        myFrontAxle = new FrontAxle(40, 9);
+        myFrontAxle.translate(0,20);
+        myRearAxle = new RearAxle(40,9);
+        myRearAxle.translate(0,-20);
+
 
         inOilSlick = false;
         lastHighestPylonReached = 1;
@@ -297,6 +314,8 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
             return;
         }
         steeringDirection += deflection;
+
+        myFrontAxle.updateSteeringDirection((float) deflection);
     }
 
 
@@ -453,16 +472,41 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     public void draw(Graphics2D g2d) {
 
         AffineTransform saveAt = g2d.getTransform();
-        myTranslationMatrix.translate( (int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2));
-        myRotationMatrix.rotate(Math.toRadians(180));
+        myTranslationMatrix.translate((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2));
+        myRotationMatrix.rotate(Math.toRadians(90));
         myRotationMatrix.rotate(Math.toRadians(90 - heading));
 
         g2d.transform(myTranslationMatrix);
         g2d.transform(myRotationMatrix);
 
 
-        g2d.drawOval(0,0, 1, 1);
-        g2d.drawImage( imageRes, 0,0, 45, 30, null);
+        /**
+         * New stuff
+         */
+        /**
+         translate(100, 100);
+         rotate(-45);
+         scale(1, 1);
+         /* *
+         *
+         */
+        /**
+        g2d.transform(myTranslationMatrix);
+        g2d.transform(myRotationMatrix);
+        g2d.transform(myScaleMatrix);
+        */
+
+        myBody.translate(0, 0);
+        myBody.draw(g2d);
+        myFrontAxle.draw(g2d);
+        myRearAxle.draw(g2d);
+        /*****************************/
+
+
+
+
+        g2d.drawOval(0, 0, 1, 1);
+       // g2d.drawImage( imageRes, 0,0, 45, 30, null);
 
 
 
