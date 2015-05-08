@@ -166,27 +166,31 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
         double h = winHeight - winBottom;
         double w = winWidth - winLeft;
-        winLeft += 0.1;
-        winWidth -= 0.2;
-        winBottom += 0.1;
-        winHeight -= 0.2;
-        this.repaint();
+
+        if(h>500 && w > 500) {
+
+            winLeft += w * 0.05;
+            winWidth -= w * 0.1;
+            winBottom += h * 0.05;
+            winHeight -= h * 0.1;
+
+            this.repaint();
+        }
     }
     public void zoomOut(){
 
         double h = winHeight - winBottom;
         double w = winWidth - winLeft;
 
-        winLeft -= 0.1;
-        winWidth += 0.1;
-        winBottom -= 0.1;
-        winHeight += 0.1;
 
-//        winLeft -= w*0.05;
-//        winWidth += w*0.05;
-//        winBottom -= h*0.05;
-//        winHeight += h*0.05;
-        this.repaint();
+        if(h < 2000 && w < 2000) {
+            winLeft -= w * 0.05;
+            winWidth += w * 0.1;
+            winBottom -= h * 0.05;
+            winHeight += h * 0.1;
+
+            this.repaint();
+        }
     }
 
 
