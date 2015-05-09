@@ -79,6 +79,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         winBottom = 0;
 
 
+
+
     }
 
     public void update(GameWorldProxy gw, Object arg){
@@ -101,6 +103,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
     @Override
     protected void paintComponent(Graphics g) {
+
+
         //Draw background with an image
         super.paintComponent(g);
             int ratio = 200;
@@ -270,12 +274,16 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
     public void zoomIn(){
 
+
+        double Ratio = ((double)this.getWidth() / (double)this.getHeight());
+        System.out.println(Ratio * 4);
+
         double h = winHeight - winBottom;
         double w = winWidth - winLeft;
 
          if(h>10 && w > 10) {
 
-             double hor = 4;
+             double hor = 4 * Ratio;
              double ver = 4;
 
              winLeft += hor;
@@ -288,13 +296,17 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     }
     public void zoomOut(){
 
+        double Ratio = ((double)this.getWidth() / (double)this.getHeight());
+
+
+
         double h = winHeight - winBottom;
         double w = winWidth - winLeft;
 
 
          if(h < 2000 && w < 2000) {
 
-             double hor = 4;
+             double hor = 4 * Ratio;
              double ver = 4;
 
              winLeft -= hor;

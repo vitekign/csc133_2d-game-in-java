@@ -38,6 +38,7 @@ public class GameObjectsFactory {
         NPCCar.zIndex   = 3;
         Bird.zIndex     = 5;
         Car.zIndex      = 4;
+        ShockWave.zIndex= 6;
     }
 
     /**

@@ -15,7 +15,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.Random;
 import java.util.Vector;
@@ -74,7 +73,13 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
     Sound lostLife = new Sound("losingLife.wav");
 
+
+
+    ShockWave myShockWave;
+
     public void initLayout() {
+
+
 
         /**
          * Collection with all game objects
@@ -86,9 +91,13 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
         factory = new GameObjectsFactory();
         factory.setTargetForGameWorld(this);
 
-//        if(isSound()){
-//            backgroundMusic.loop();
-//        }
+
+
+
+
+
+
+
         /**
          * Initialize oll needed objects on the fly
          * and add them to the collection.
@@ -224,6 +233,7 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
             if(obj instanceof Moveable){
                   ((Moveable)obj).move(MILISEC_PER_FRAME /10);
                   doCollisionChecking();
+                  doShockWaveChecking();
                   deleteUnnecessaryOjbects();
             }
         }
@@ -238,6 +248,28 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
 
         notifyObserver();
     }
+
+
+    public void doShockWaveChecking(){
+        Iterator iter = this.getIterator();
+        while(iter.hasNext()) {
+
+            GameObject currObject = (GameObject) iter.getNext();
+            if(currObject instanceof ShockWave){
+                if(Math.abs(currObject.getX()) > 1000 ||
+                        Math.abs(currObject.getY())> 1000){
+                    gameObjectsToDelete.addElement(currObject);
+                }
+            }
+        }
+    }
+
+    public void createNewShockWave(Location location){
+        myShockWave = new ShockWave(location, 60,40, Color.BLACK, this);
+        theWorldVector.add(myShockWave);
+    }
+
+
 
     /**
      * Get time counter.

@@ -550,6 +550,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
                objectsCollidedWith.add((GameObject)otherObject);
            }
            gw.birdFlyOver();
+           gw.createNewShockWave(this.getLocation());
        }
        /********* FUEL CAN ***********/
         else if(otherObject instanceof FuelCan){
@@ -573,6 +574,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
                playSound();
            }
            gw.carCollideWithCar((NPCCar)otherObject);
+           gw.createNewShockWave(this.getLocation());
            gw.switchStrategies();
        }
        /********* OIL SLICK ***********/
