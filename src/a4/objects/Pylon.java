@@ -16,11 +16,16 @@ import java.util.Vector;
  *
  * Not allowed to change color once they're created
  */
+
+
 public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
     private float radius;
     final private int sequenceNumber;
     static private int count = 1;
+
+
+    private AffineTransform tr;
 
     private GameWorld gw;
 
@@ -30,11 +35,23 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
     public void initObject(){
         objectsCollidedWith = new Vector<>();
+    }
 
-        myRotationMatrix = new AffineTransform();
-        myTranslationMatrix = new AffineTransform();
-        myScaleMatrix = new AffineTransform();
 
+
+    @Override
+    public Location getLocation() {
+        return new Location((float)myTranslationMatrix.getTranslateX(), (float)myTranslationMatrix.getTranslateY());
+    }
+
+    @Override
+    public float getX() {
+        return (float)myTranslationMatrix.getTranslateX();
+    }
+
+    @Override
+    public float getY() {
+        return (float)myTranslationMatrix.getTranslateY();
     }
 
     public Pylon(Location location, float radius, Color color, GameWorld gw){
@@ -43,13 +60,25 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
 
 
-            this.X = location.getX();
-            this.Y = location.getY();
+        initObject();
+         //   this.X = location.getX();
+          //  this.Y = location.getY();
             this.radius = radius;
+
+
+
+
+
+
+
+
+        tr = new AffineTransform();
+        myTranslationMatrix.translate(location.getX(), (int) location.getY() );
+
 
         sequenceNumber = count++;
 
-        initObject();
+
     }
 
     public Pylon(Location location, float radius, Color color, GameWorld gw, int seqNumberOfPylon){
@@ -57,15 +86,23 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
         this.gw = gw;
 
+        initObject();
+        //this.X = location.getX();
+       // this.Y = location.getY();
 
-        this.X = location.getX();
-        this.Y = location.getY();
+
+
+
+        tr = new AffineTransform();
+        //tr.translate(location.getX() - (int) radius / 2, (int) location.getY() - (int) radius / 2);
+        myTranslationMatrix.translate(location.getX(), (int) location.getY());
+
         this.radius = radius;
 
         sequenceNumber = seqNumberOfPylon;
                 count++;
 
-        initObject();
+
 
     }
 
@@ -162,25 +199,33 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
     public void draw(Graphics2D g2d) {
 
         AffineTransform saveAt = g2d.getTransform();
-        myTranslationMatrix.translate((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
+        //myTranslationMatrix.translate((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
         g2d.transform(myTranslationMatrix);
 
 
     if(isSelected){
         g2d.setColor(Color.gray);
-        g2d.fillOval(0, 0, (int) radius, (int) radius);
+        g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
         g2d.setColor(Color.white);
-        g2d.fillOval(0, 0, 1, 1);
+        g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
         g2d.setColor(Color.white);
-        g2d.drawString(String.valueOf(getIndexNumber()), (int) getX(), (int) getY());
-        g2d.setColor(Color.black);
+
+        AffineTransform addTranslate = new AffineTransform();
+        addTranslate.translate(20, 20);
+
+        myScaleMatrix.scale(1, -1);
+        g2d.transform(addTranslate);
+        g2d.transform(myScaleMatrix);
+
+        g2d.drawString(String.valueOf(getIndexNumber()), (int) -(radius/2), (int) (radius/2));
 
 
+        scale(1,-1);
     } else {
         g2d.setColor(new Color(14, 40, 3));
-        g2d.fillOval(0, 0, (int) radius, (int) radius);
+        g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
         g2d.setColor(Color.white);
-        g2d.fillOval(0, 0, 1, 1);
+        g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
         g2d.setColor(Color.white);
 
 
@@ -188,15 +233,19 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         AffineTransform addTranslate = new AffineTransform();
         addTranslate.translate(20,20);
 
-       // myTranslationMatrix.concatenate(addTranslate);
+
         myScaleMatrix.scale(1, -1);
         g2d.transform(addTranslate);
         g2d.transform(myScaleMatrix);
 
-        g2d.drawString(String.valueOf(getIndexNumber()), 0, 0);
+        g2d.drawString(String.valueOf(getIndexNumber()), (int) -(radius / 2), (int) (radius / 2));
         g2d.setColor(Color.black);
+
+        scale(1, -1);
+
     }
-        setToIdentity();
+      //  setToIdentity();
+
         g2d.setTransform(saveAt);
 }
 

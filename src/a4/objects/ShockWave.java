@@ -54,33 +54,35 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
         myTranslationMatrix = new AffineTransform();
         myScaleMatrix = new AffineTransform();
 
-        /*
 
-        Random r = new Random();
+
+        Random rand = new Random();
         controlPoint[0] = new Point2D.Double(0,0);
-        controlPoint[1] = new Point2D.Double(r.nextInt(20),r.nextInt(20));
-        controlPoint[2] = new Point2D.Double(-r.nextInt(20),-r.nextInt(20));
-        controlPoint[3] = new Point2D.Double(0,20);
-*/
+        controlPoint[1] = new Point2D.Double(rand.nextInt(100),rand.nextInt(100));
+        controlPoint[2] = new Point2D.Double(-rand.nextInt(100),-rand.nextInt(100));
+        controlPoint[3] = new Point2D.Double(0,150);
 
+/*
         controlPoint[0] = new Point2D.Double(0,0);
         controlPoint[1] = new Point2D.Double(50,0);
         controlPoint[2] = new Point2D.Double(50,150);
         controlPoint[3] = new Point2D.Double(0,150);
-
+*/
     }
 
 
 
-    private void drawBezierCurve (Point2D.Double[] controlPointVector, int level, Graphics2D g) {
+    private void drawBezierCurve (Point2D.Double[] controlPointVector, int level, Graphics2D g2d) {
         Point2D.Double[] LeftSubVector = new Point2D.Double[4];
         Point2D.Double[] RightSubVector = new Point2D.Double[4];
-        if ( straightEnough (controlPointVector) || (level>15) )
-            g.drawLine((int)controlPointVector[0].getX(),(int) controlPointVector[0].getY(),(int) controlPointVector[3].getX(), (int)controlPointVector[3].getY());
-        else {
-            subdivideCurve (controlPointVector, LeftSubVector, RightSubVector) ;
-            drawBezierCurve (LeftSubVector,level+1, g) ;
-            drawBezierCurve (RightSubVector,level+1, g) ;
+        if ( straightEnough (controlPointVector) || (level>15) ) {
+            g2d.setColor(Color.BLACK);
+            g2d.drawLine((int) controlPointVector[0].getX(), (int) controlPointVector[0].getY(), (int) controlPointVector[3].getX(), (int) controlPointVector[3].getY());
+
+        }  else {
+            subdivideCurve(controlPointVector, LeftSubVector, RightSubVector) ;
+            drawBezierCurve(LeftSubVector, level + 1, g2d) ;
+            drawBezierCurve (RightSubVector,level+1, g2d) ;
         }
     }
 
@@ -131,7 +133,7 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
         g2d.transform(myTranslationMatrix);
         g2d.transform(myRotationMatrix);
 
-        g2d.setColor(this.getColor());
+
 
 /*
         g2d.drawRect(0, 0,
@@ -140,12 +142,17 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
 
 */
 
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(this.getColor());
         drawBezierCurve(this.controlPoint, 0, g2d);
-        g2d.setColor(Color.RED);
+        g2d.setColor(Color.GREEN);
         g2d.drawLine((int) controlPoint[0].getX(), (int) controlPoint[0].getY(), (int) controlPoint[1].getX(), (int) controlPoint[1].getY());
+        g2d.setColor(Color.RED);
         g2d.drawLine((int) controlPoint[1].getX(), (int) controlPoint[1].getY(), (int) controlPoint[2].getX(), (int) controlPoint[2].getY());
+        g2d.setColor(Color.BLUE);
         g2d.drawLine((int) controlPoint[2].getX(), (int) controlPoint[2].getY(), (int) controlPoint[3].getX(), (int) controlPoint[3].getY());
+        g2d.setColor(Color.ORANGE);
+        g2d.drawLine((int) controlPoint[0].getX(), (int) controlPoint[0].getY(), (int) controlPoint[3].getX(), (int) controlPoint[3].getY());
+
 
         setToIdentity();
         g2d.setTransform(saveAt);
@@ -164,7 +171,6 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
 
              Location temp = new Location(this.getX()+deltaX,
                 this.getY()+deltaY);
-
 
         this.setX(temp.getX());
         this.setY(temp.getY());

@@ -33,8 +33,6 @@ public class MapView extends JPanel implements IObserver, MouseListener,
      * Create a textArea to show the current
      * state of the game on the screen.
      */
-    JTextArea textArea;
-    public boolean drawBackFlag = false;
 
     GameWorldProxy gw;
 
@@ -42,16 +40,19 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     private AffineTransform theVTM ;
 
 
-    double winWidth, winHeight, winLeft, winBottom;
+   // protected double winWidth, winHeight, winLeft, winBottom;
 
     MouseEvent lastMouseEvent = null;
 
 
+    private double winRight = 845;
+    private double winTop = 709;
+    private double winLeft = 0;
+    private double winBottom = 0;
+
+
+
     public MapView(){
-
-
-
-
         this.addMouseWheelListener(this);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
@@ -71,17 +72,17 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
 
         theVTM = new AffineTransform();
-
-
-        winWidth = this.getWidth();
-        winHeight = this.getHeight();
-        winLeft = 0;
-        winBottom = 0;
-
-
-
-
     }
+
+    public double getWinHeight(){
+        return winTop - winBottom;
+    }
+
+    public double getWinWidth(){
+        return winRight - winLeft;
+    }
+
+
 
     public void update(GameWorldProxy gw, Object arg){
         /**
@@ -117,18 +118,10 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
         AffineTransform worldToND, ndToScreen;
 
-        if(winWidth == 0){
-             winWidth = getWidth();
-             winHeight = getHeight();
-        }
-      ///  winWidth = getWidth();
-       // winHeight = getHeight();
-      //  winLeft = 0;
-       // winBottom = 0;
 
         Graphics2D g2d = (Graphics2D)g;
-        worldToND = buildWorldToNDXform((int)winWidth, (int)winHeight, (int)winLeft, (int)winBottom);
-        ndToScreen = buildNDToScreenXForm(this.getWidth(), this.getHeight());
+        worldToND = buildWorldToNDXform(winRight - winLeft, winTop - winBottom, winLeft, winBottom);
+        ndToScreen = buildNDToScreenXForm(this.getSize().getWidth(), this.getSize().getHeight());
         theVTM = (AffineTransform) ndToScreen.clone();
         theVTM.concatenate(worldToND);
 
@@ -159,13 +152,6 @@ public class MapView extends JPanel implements IObserver, MouseListener,
               i++;
           }
       }
-
-
-
-
-        /**
-         * Do zoom here !!!
-         */
     }
 
 
@@ -173,14 +159,13 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
 
 
-    private AffineTransform buildWorldToNDXform(int winWidth, int winHeight, int winLeft, int winBottom) {
+    private AffineTransform buildWorldToNDXform(double winWidth, double winHeight, double winLeft, double winBottom) {
 
         AffineTransform  myTranslationMatrix = new AffineTransform();
         AffineTransform  myScaleMatrix = new AffineTransform();
 
         myTranslationMatrix.translate(-winLeft, -winBottom);//-winLeft, -winBottom
         myScaleMatrix.scale((double)1/winWidth, (double)1/winHeight); //(1 / winWidth, 1 / winHeight)
-
 
         //public void concatenate(AffineTransform Tx)
         //Cx'(p) = Cx(Tx(p))
@@ -196,12 +181,12 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
 
 
-    private AffineTransform buildNDToScreenXForm(int width, int height) {
+    private AffineTransform buildNDToScreenXForm(double width, double height) {
 
         AffineTransform  myTranslationMatrix = new AffineTransform();
         AffineTransform  myScaleMatrix = new AffineTransform();
 
-        myScaleMatrix.scale((width), -(double)height);  //width, -height
+        myScaleMatrix.scale(width, -height);  //width, -height
         myTranslationMatrix.translate(0, height);
 
         AffineTransform temp = new AffineTransform();
@@ -274,61 +259,34 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
     public void zoomIn(){
 
+        double tempHeight = getWinHeight();
+        double tempWidth = getWinWidth();
 
-        double Ratio = ((double)this.getWidth() / (double)this.getHeight());
-        System.out.println(Ratio * 4);
-
-        double h = winHeight - winBottom;
-        double w = winWidth - winLeft;
-
-         if(h>10 && w > 10) {
-
-             double hor = 4 * Ratio;
-             double ver = 4;
-
-             winLeft += hor;
-             winWidth -= (hor * 2 );
-             winBottom += ver;
-             winHeight -= (ver*2);
-
+        winLeft += tempWidth*0.05;
+        winRight -= tempWidth*0.05;
+        winTop -= tempHeight*0.05;
+        winBottom += tempHeight*0.05;
         this.repaint();
-         }
     }
     public void zoomOut(){
 
-        double Ratio = ((double)this.getWidth() / (double)this.getHeight());
+        double tempHeight = getWinHeight();
+        double tempWidth = getWinWidth();
 
-
-
-        double h = winHeight - winBottom;
-        double w = winWidth - winLeft;
-
-
-         if(h < 2000 && w < 2000) {
-
-             double hor = 4 * Ratio;
-             double ver = 4;
-
-             winLeft -= hor;
-             winWidth += (hor * 2 );
-             winBottom -= ver;
-             winHeight += (ver*2);
-
+        winLeft -= tempWidth*0.05;
+        winRight += tempWidth*0.05;
+        winTop += tempHeight*0.05;
+        winBottom -= tempHeight*0.05;
         this.repaint();
-          }
     }
 
 
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent event) {
-
-
         if (event.isShiftDown()) {
-
-            System.err.println("Horizontal " + event.getWheelRotation());
         } else {
-            System.err.println("Vertical " + event.getWheelRotation());
+
             if(event.getWheelRotation() > 0)
                 zoomIn();
             else
@@ -350,9 +308,16 @@ public class MapView extends JPanel implements IObserver, MouseListener,
             double difX = currrentMouseEvent.getX() - lastMouseEvent.getX();
             double difY = currrentMouseEvent.getY() - lastMouseEvent.getY();
 
-            winLeft -= difX;
-            winBottom +=difY;
+            double winRatioX =  (winRight - winLeft)/ this.getWidth();
+            double winRationY = (winTop - winBottom)/this.getHeight();
 
+
+
+            winLeft -= difX * winRatioX;
+            winRight -=difX * winRatioX;
+
+            winBottom +=difY * winRationY;
+            winTop += difY * winRationY;
 
 
             lastMouseEvent = currrentMouseEvent;

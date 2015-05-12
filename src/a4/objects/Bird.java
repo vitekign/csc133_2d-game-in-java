@@ -29,6 +29,9 @@ public class Bird extends Moveable implements IDrawable, ICollider {
     Image imageRes;
 
     public static int zIndex;
+    private int scaleX;
+    private int scaleY;
+
 
     public Bird(Location location, float size, float heading, float speed, Color color, GameWorld gw){
         super(color);
@@ -43,6 +46,8 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         this.speed = speed;
         this.size = size;
 
+        scaleX = 3;
+        scaleY = 3;
 
 
         String pathToResources = Services.getPathToImgResources();
@@ -54,9 +59,6 @@ public class Bird extends Moveable implements IDrawable, ICollider {
             System.out.println("The picture for Bird wasn't found");
         }
 
-        myRotationMatrix = new AffineTransform();
-        myTranslationMatrix = new AffineTransform();
-        myScaleMatrix = new AffineTransform();
 
     }
 
@@ -89,14 +91,21 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         int width = (int)size;
         int length = (int)size;
 
+        myTranslationMatrix = new AffineTransform();
+        myRotationMatrix = new AffineTransform();
+        myScaleMatrix = new AffineTransform();
+
 
         AffineTransform saveAt = g2d.getTransform();
         myTranslationMatrix.translate((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2));
-        myRotationMatrix.rotate(Math.toRadians(145));
+        myRotationMatrix.rotate(Math.toRadians(90));
         myRotationMatrix.rotate(Math.toRadians(90 - heading));
+        scale(scaleX, scaleY);
+
 
         g2d.transform(myTranslationMatrix);
         g2d.transform(myRotationMatrix);
+        g2d.transform(myScaleMatrix);
 
         g2d.setColor(this.getColor());
         g2d.drawImage(imageRes, 0, 0, 20, 20, null);
@@ -124,16 +133,22 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         this.X = temp.getX();
         this.Y = temp.getY();
 
+
         //TODO find out how to make the change of the angle better
         if((getX() >= 1000) || (getX() < 0)){
            // speed = -speed;
+          //  scaleY *= -1;
+          //  scaleX *= -1;
             this.setHeading(this.getHeading() + 180);
-
         }
 
         if((getY() >= 1000) || (getY() < 0)){
-           // speed = -speed;
-            this.setHeading(this.getHeading() + 180);
+
+            //scaleY *= -1;
+          //  scaleY *= -1;
+            //this.setHeading(this.getHeading() + 180);
+
+            rotate(180);
         }
     }
 

@@ -195,7 +195,6 @@ public class Services {
     public static Point2D applyInverseAndGetPoint( MouseEvent lastMouseEvent){
 
         AffineTransform inverseOfVTM = getInverseOfVTM();
-        AffineTransform theVTM = Services.getTheVTM();
 
         Point2D mouseScreenLocation = new Point();
         mouseScreenLocation.setLocation(lastMouseEvent.getX(), lastMouseEvent.getY());

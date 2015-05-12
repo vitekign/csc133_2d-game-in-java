@@ -21,10 +21,20 @@ public class GameObject {
     protected float Y;
 
 
+
+
+
     /**
      *  Define Affine properties with corresponding setters.
      */
-    public AffineTransform myTranslationMatrix, myRotationMatrix, myScaleMatrix;
+
+
+
+    protected AffineTransform myTranslationMatrix;
+    protected AffineTransform myRotationMatrix;
+    protected AffineTransform myScaleMatrix;
+
+
 
     public void rotate(double degrees){
         myRotationMatrix.rotate(Math.toRadians(degrees));
@@ -70,6 +80,16 @@ public class GameObject {
      */
     GameObject(Color color){
         this.color = color;
+
+
+        myTranslationMatrix = new AffineTransform();
+        myRotationMatrix = new AffineTransform();
+        myScaleMatrix = new AffineTransform();
+
+
+
+
+
     }
 
 
