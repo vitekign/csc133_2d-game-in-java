@@ -4,12 +4,15 @@ package a4.objects;
  * Created by Victor Ignatenkov on 2/14/15.
  */
 
+import a4.app.utilities.Services;
 import a4.model.GameWorld;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.Vector;
 
 /**
@@ -25,6 +28,8 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
     final private int sequenceNumber;
     static private int count = 1;
 
+    Image imageRes;
+    Image imagePressed;
 
     private AffineTransform tr;
 
@@ -75,9 +80,26 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
         tr = new AffineTransform();
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
-        scale(2,2);
+        scale(1,1);
 
         sequenceNumber = count++;
+
+
+        String pathToResources = Services.getPathToImgResources();
+        File file = new File(pathToResources + "pylon.png");
+
+        try {
+            imageRes = ImageIO.read(file);
+        } catch (Exception e){
+            System.out.println("The picture for Bird wasn't found");
+        }
+
+        File fileImagePressed = new File(pathToResources + "pylon_pressed.png");
+        try {
+            imagePressed = ImageIO.read(fileImagePressed);
+        } catch (Exception e){
+            System.out.println("The picture for Bird wasn't found");
+        }
 
 
     }
@@ -246,25 +268,29 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
     if(isSelected){
         g2d.setColor(Color.gray);
-        g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
+        g2d.drawImage(imagePressed, (int) -(radius/2), (int) -(radius/2), (int)radius, (int)radius, null);
+        //g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
         g2d.setColor(Color.white);
         g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
         g2d.setColor(Color.white);
 
         AffineTransform addTranslate = new AffineTransform();
-        addTranslate.translate(20, 20);
+        addTranslate.translate(15, 15);
 
         myScaleMatrix.scale(1, -1);
         g2d.transform(addTranslate);
         g2d.transform(myScaleMatrix);
 
-        g2d.drawString(String.valueOf(getIndexNumber()), (int) -(radius/2), (int) (radius/2));
+        g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
+        g2d.setColor(new Color(219, 219, 219));
+        g2d.drawString(String.valueOf(getIndexNumber()), (int) -(radius / 2), (int) (radius / 2));
 
 
         scale(1,-1);
     } else {
         g2d.setColor(new Color(14, 40, 3));
-        g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
+        g2d.drawImage(imageRes, (int) -(radius/2), (int) -(radius/2), (int)radius, (int)radius, null);
+        //g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
         g2d.setColor(Color.white);
         g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
         g2d.setColor(Color.white);
@@ -272,13 +298,15 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
 
         AffineTransform addTranslate = new AffineTransform();
-        addTranslate.translate(20,20);
+        addTranslate.translate(15,15);
 
 
         myScaleMatrix.scale(1, -1);
         g2d.transform(addTranslate);
         g2d.transform(myScaleMatrix);
 
+        g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
+        g2d.setColor(new Color(164, 164, 164));
         g2d.drawString(String.valueOf(getIndexNumber()), (int) -(radius / 2), (int) (radius / 2));
         g2d.setColor(Color.black);
 

@@ -10,6 +10,7 @@ import a4.model.GameWorld;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
@@ -66,8 +67,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         this.Y = location.getY();
 */
         translate(location.getX(), location.getY());
-        myRotationMatrix.rotate(Math.toRadians(180));
-
+        myRotationMatrix.rotate(Math.toRadians(225));
+        myScaleMatrix.scale(1.2,1.2);
 
         this.size = size;
 
@@ -124,14 +125,60 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     @Override
     public boolean contains(Point2D p) {
 
-        int px = (int) p.getX();
-        int py = (int) p.getY();
+        //new stuff
+
         int xLoc = (int)getX();
         int yLoc = (int)getY();
 
+
+
+        //get inverse
+        //public void concatenate(AffineTransform Tx)
+        //Cx'(p) = Cx(Tx(p))
+        //first transforming p by Tx and then transforming the result by the original transform Cx
+
+        AffineTransform temp = new AffineTransform();
+        temp.setTransform(myTranslationMatrix);
+        temp.concatenate(myScaleMatrix);
+        temp.concatenate(myRotationMatrix);
+        //apply the inverse to the point
+        AffineTransform inverseVTM = null;
+        try {
+            inverseVTM = temp.createInverse();
+        } catch (NoninvertibleTransformException e){
+            System.out.println("Cannot inverse the matrix: " + e.getMessage());
+        }
+
+        Point2D mouseScreenLocation = new Point();
+        mouseScreenLocation.setLocation(p.getX(), p.getY());
+
+        //  mouseScreenLocation = theVTM.transform(mouseScreenLocation, null);
+        mouseScreenLocation = inverseVTM.transform(mouseScreenLocation,null);
+
+
+        int px = (int) Math.abs(mouseScreenLocation.getX());
+        int py = (int) Math.abs(mouseScreenLocation.getY());
+
+
+        //------------
+
+
+
+
+
+        /*
+
         if((px >= xLoc - (this.getDistanceOfReference())) && (px <= xLoc + (this.getDistanceOfReference()))
                 && (py >= yLoc - (this.getDistanceOfReference()))&& (py <= yLoc + (this.getDistanceOfReference())))
+                */
+        if((Math.abs(px) < this.getDistanceOfReference() && Math.abs(py) < this.getDistanceOfReference())){
+
+            System.out.println("Mouse x location is: " + px);
+            System.out.println("Mouse y location is: " + py);
+            System.out.println("");
             return true;
+        }
+
         else
             return false;
     }
@@ -155,10 +202,12 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
        // myTranslationMatrix.translate((int) getX(), (int) getY());
        // myRotationMatrix.rotate(Math.toRadians(180));
 
+
         AffineTransform saveAt = g2d.getTransform();
 
         g2d.transform(myTranslationMatrix);
         g2d.transform(myRotationMatrix);
+        g2d.transform(myScaleMatrix);
 
 
         if(gw.getTime()%50 == 0 && !gw.isItInPause()){
@@ -177,14 +226,15 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
                     (int) size + ADDITIONAL_WIDTH_LENGTH, (int) size + ADDITIONAL_WIDTH_LENGTH, null);
         }
 
-        g2d.setColor(Color.white);
-        g2d.fillOval(0, 0, 5, 5);
+      //  g2d.setColor(Color.white);
+       // g2d.fillOval(0, 0, 5, 5);
 
 
-        g2d.setColor(new Color(234, 32, 0));
+        g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
+        g2d.setColor(new Color(255, 255, 255));
         myScaleMatrix.scale(-1, 1);
         g2d.transform(myScaleMatrix);
-        g2d.drawString(String.valueOf((int) getSize()), 0, 0);
+        g2d.drawString(String.valueOf((int) getSize()), -8, 7);
 
         myScaleMatrix.scale(-1, 1);
 
