@@ -37,6 +37,21 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     final static int ADDITIONAL_WIDTH_LENGTH = 20;
 
 
+    @Override
+    public Location getLocation() {
+        return new Location((float)getX(), (float)getY());
+    }
+
+    @Override
+    public double getX() {
+        return  myTranslationMatrix.getTranslateX();
+    }
+
+    @Override
+    public double getY() {
+        return  myTranslationMatrix.getTranslateY();
+    }
+
     public FuelCan(Location location, float size, Color color, GameWorld gw){
         super(color);
 
@@ -45,8 +60,13 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         objectsCollidedWith = new Vector<>();
 
 
+        /*
+
         this.X = location.getX();
         this.Y = location.getY();
+*/
+        translate(location.getX(), location.getY());
+        myRotationMatrix.rotate(Math.toRadians(180));
 
 
         this.size = size;
@@ -63,13 +83,6 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         }catch (IOException ex){
             System.out.println("An error happened: " + ex.getMessage());
         }
-
-
-
-
-        myRotationMatrix = new AffineTransform();
-        myTranslationMatrix = new AffineTransform();
-        myScaleMatrix = new AffineTransform();
 
 
 
@@ -138,9 +151,9 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         int length = (int)size + ADDITIONAL_WIDTH_LENGTH;
 
 
-       myTranslationMatrix.translate((int) getX() +  (width / 2), (int) getY() +  (length / 2));
+       //myTranslationMatrix.translate((int) getX() +  (width / 2), (int) getY() +  (length / 2));
        // myTranslationMatrix.translate((int) getX(), (int) getY());
-        myRotationMatrix.rotate(Math.toRadians(180));
+       // myRotationMatrix.rotate(Math.toRadians(180));
 
         AffineTransform saveAt = g2d.getTransform();
 
@@ -155,10 +168,12 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
         if(isSelected){
             g2d.setColor(new Color(13, 66, 160));
-            g2d.fillRect(0,0,
+            g2d.fillRect((int) -(size + ADDITIONAL_WIDTH_LENGTH)/2,
+                    (int) -(size + ADDITIONAL_WIDTH_LENGTH)/2,
                     (int) size + ADDITIONAL_WIDTH_LENGTH, (int) size + ADDITIONAL_WIDTH_LENGTH);
         } else {
-            g2d.drawImage(imageRes, 0,0,
+            g2d.drawImage(imageRes,  (int) -(size + ADDITIONAL_WIDTH_LENGTH)/2,
+                    (int) -(size + ADDITIONAL_WIDTH_LENGTH)/2,
                     (int) size + ADDITIONAL_WIDTH_LENGTH, (int) size + ADDITIONAL_WIDTH_LENGTH, null);
         }
 
@@ -171,11 +186,12 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         g2d.transform(myScaleMatrix);
         g2d.drawString(String.valueOf((int) getSize()), 0, 0);
 
+        myScaleMatrix.scale(-1, 1);
 
 
 
 
-        setToIdentity();
+       // setToIdentity();
         g2d.setTransform(saveAt);
     }
 
@@ -187,8 +203,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
     @Override
     public boolean collidesWith(ICollider obj) {
-        float distX = this.getX() - ((GameObject)obj).getX();
-        float distY = this.getY() - ((GameObject)obj).getY();
+        double distX = this.getX() - ((GameObject) obj).getX();
+        double distY = this.getY() - ((GameObject)obj).getY();
         float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
 
         if((this.getDistanceOfReference() + obj.getDistanceOfReference() >

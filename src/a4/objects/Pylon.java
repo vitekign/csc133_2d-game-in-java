@@ -8,6 +8,7 @@ import a4.model.GameWorld;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.Vector;
 
@@ -45,13 +46,13 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
     }
 
     @Override
-    public float getX() {
-        return (float)myTranslationMatrix.getTranslateX();
+    public double getX() {
+        return myTranslationMatrix.getTranslateX();
     }
 
     @Override
-    public float getY() {
-        return (float)myTranslationMatrix.getTranslateY();
+    public double getY() {
+        return myTranslationMatrix.getTranslateY();
     }
 
     public Pylon(Location location, float radius, Color color, GameWorld gw){
@@ -73,8 +74,8 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
 
         tr = new AffineTransform();
-        myTranslationMatrix.translate(location.getX(), (int) location.getY() );
-
+        myTranslationMatrix.translate(location.getX(), (int) location.getY());
+        scale(2,2);
 
         sequenceNumber = count++;
 
@@ -101,6 +102,8 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
         sequenceNumber = seqNumberOfPylon;
                 count++;
+
+
 
 
 
@@ -179,17 +182,55 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
     @Override
     public boolean contains(Point2D p) {
-        int px = (int) p.getX();
-        int py = (int) p.getY();
+
+
         int xLoc = (int)getX();
         int yLoc = (int)getY();
 
+
+
+        //get inverse
+        //public void concatenate(AffineTransform Tx)
+        //Cx'(p) = Cx(Tx(p))
+        //first transforming p by Tx and then transforming the result by the original transform Cx
+
+        AffineTransform temp = new AffineTransform();
+        temp.setTransform(myTranslationMatrix);
+        temp.concatenate(myScaleMatrix);
+        //apply the inverse to the point
+        AffineTransform inverseVTM = null;
+        try {
+            inverseVTM = temp.createInverse();
+        } catch (NoninvertibleTransformException e){
+            System.out.println("Cannot inverse the matrix: " + e.getMessage());
+        }
+
+        Point2D mouseScreenLocation = new Point();
+        mouseScreenLocation.setLocation(p.getX(), p.getY());
+
+        //  mouseScreenLocation = theVTM.transform(mouseScreenLocation, null);
+        mouseScreenLocation = inverseVTM.transform(mouseScreenLocation,null);
+
+
+        int px = (int) Math.abs(mouseScreenLocation.getX());
+        int py = (int) Math.abs(mouseScreenLocation.getY());
+
+
+
+        int radiusMouseInput = (int) Math.sqrt((px*px)+(py*py));
+
+/*
         if((px >= xLoc - (this.getDistanceOfReference()/2)) && (px <= xLoc + (this.getDistanceOfReference()/2))
-                && (py >= yLoc - (this.getDistanceOfReference()/2))&& (py <= yLoc + (this.getDistanceOfReference()/2)))
+                && (py >= yLoc - (this.getDistanceOfReference()/2))&& (py <= yLoc + (this.getDistanceOfReference()/2))) {
+*/
+        if(radiusMouseInput <= this.getDistanceOfReference()/2){
             return true;
-        else
+        }
+        else{
             return false;
-    }
+        }
+        }
+
     /****************************************/
 
 
@@ -201,7 +242,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         AffineTransform saveAt = g2d.getTransform();
         //myTranslationMatrix.translate((int) getX() - (int) radius / 2, (int) getY() - (int) radius / 2);
         g2d.transform(myTranslationMatrix);
-
+        g2d.transform(myScaleMatrix);
 
     if(isSelected){
         g2d.setColor(Color.gray);
@@ -259,8 +300,8 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
      */
     @Override
     public boolean collidesWith(ICollider obj) {
-        float distX = this.getX() - ((GameObject)obj).getX();
-        float distY = this.getY() - ((GameObject)obj).getY();
+        double distX = this.getX() - ((GameObject)obj).getX();
+        double distY = this.getY() - ((GameObject)obj).getY();
         float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
 
         if((this.getDistanceOfReference() + obj.getDistanceOfReference() >

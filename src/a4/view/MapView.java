@@ -284,13 +284,15 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent event) {
-        if (event.isShiftDown()) {
-        } else {
+        if(!gw.isItInPause()) {
+            if (event.isShiftDown()) {
+            } else {
 
-            if(event.getWheelRotation() > 0)
-                zoomIn();
-            else
-                zoomOut();
+                if (event.getWheelRotation() > 0)
+                    zoomIn();
+                else
+                    zoomOut();
+            }
         }
     }
 
@@ -300,32 +302,31 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     /*********************************************/
     @Override
     public void mouseDragged(MouseEvent currrentMouseEvent) {
-        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        if(lastMouseEvent == null) {
-            lastMouseEvent = currrentMouseEvent;
-        } else {
-            double difX = currrentMouseEvent.getX() - lastMouseEvent.getX();
-            double difY = currrentMouseEvent.getY() - lastMouseEvent.getY();
+        if(!gw.isItInPause()) {
 
-            double winRatioX =  (winRight - winLeft)/ this.getWidth();
-            double winRationY = (winTop - winBottom)/this.getHeight();
+            this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+            if (lastMouseEvent == null) {
+                lastMouseEvent = currrentMouseEvent;
+            } else {
+                double difX = currrentMouseEvent.getX() - lastMouseEvent.getX();
+                double difY = currrentMouseEvent.getY() - lastMouseEvent.getY();
 
-
-            winLeft -= difX * winRatioX;
-            winRight -=difX * winRatioX;
-
-            winBottom +=difY * winRationY;
-            winTop += difY * winRationY;
+                double winRatioX = (winRight - winLeft) / this.getWidth();
+                double winRationY = (winTop - winBottom) / this.getHeight();
 
 
-            lastMouseEvent = currrentMouseEvent;
+                winLeft -= difX * winRatioX;
+                winRight -= difX * winRatioX;
+
+                winBottom += difY * winRationY;
+                winTop += difY * winRationY;
+
+
+                lastMouseEvent = currrentMouseEvent;
+            }
         }
-
-
-
-
     }
 
     @Override

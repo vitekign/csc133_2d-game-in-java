@@ -87,8 +87,8 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
      */
     @Override
     public boolean collidesWith(ICollider obj) {
-        float distX = this.getX() - ((GameObject)obj).getX();
-        float distY = this.getY() - ((GameObject)obj).getY();
+        double distX = this.getX() - ((GameObject)obj).getX();
+        double distY = this.getY() - ((GameObject)obj).getY();
         float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
 
         if((this.getDistanceOfReference() + obj.getDistanceOfReference() >

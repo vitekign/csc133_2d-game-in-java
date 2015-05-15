@@ -169,8 +169,8 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
         float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);
         float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed);
 
-             Location temp = new Location(this.getX()+deltaX,
-                this.getY()+deltaY);
+             Location temp = new Location((float)this.getX()+deltaX,
+                     (float) this.getY()+deltaY);
 
         this.setX(temp.getX());
         this.setY(temp.getY());

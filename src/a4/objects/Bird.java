@@ -46,8 +46,8 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         this.speed = speed;
         this.size = size;
 
-        scaleX = 3;
-        scaleY = 3;
+        scaleX = 2;
+        scaleY = 2;
 
 
         String pathToResources = Services.getPathToImgResources();
@@ -58,6 +58,14 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         } catch (Exception e){
             System.out.println("The picture for Bird wasn't found");
         }
+
+
+
+        myTranslationMatrix.translate(location.getX(), location.getY());
+
+        myRotationMatrix.rotate(Math.toRadians(90));
+        myRotationMatrix.rotate(Math.toRadians(90 - heading));
+        scale(scaleX, scaleY);
 
 
     }
@@ -91,16 +99,12 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         int width = (int)size;
         int length = (int)size;
 
-        myTranslationMatrix = new AffineTransform();
-        myRotationMatrix = new AffineTransform();
-        myScaleMatrix = new AffineTransform();
+
 
 
         AffineTransform saveAt = g2d.getTransform();
-        myTranslationMatrix.translate((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2));
-        myRotationMatrix.rotate(Math.toRadians(90));
-        myRotationMatrix.rotate(Math.toRadians(90 - heading));
-        scale(scaleX, scaleY);
+        //    myTranslationMatrix.translate((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2));
+
 
 
         g2d.transform(myTranslationMatrix);
@@ -112,7 +116,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         g2d.setColor(Color.black);
 
 
-        setToIdentity();
+       // setToIdentity();
         g2d.setTransform(saveAt);
     }
 
@@ -127,6 +131,11 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         float angle =  (90 - heading);
         float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed * framesPerSecond);
         float deltaX = (float) (Math.cos(Math.toRadians(angle))*speed * framesPerSecond);
+
+
+        translate(deltaX, deltaY);
+
+
         Location temp = new Location(this.getLocation().getX() + deltaX,
                 this.getLocation().getY() + deltaY);
 
@@ -140,6 +149,8 @@ public class Bird extends Moveable implements IDrawable, ICollider {
           //  scaleY *= -1;
           //  scaleX *= -1;
             this.setHeading(this.getHeading() + 180);
+            rotate(180);
+            //rotate(180);
         }
 
         if((getY() >= 1000) || (getY() < 0)){
@@ -148,7 +159,9 @@ public class Bird extends Moveable implements IDrawable, ICollider {
           //  scaleY *= -1;
             //this.setHeading(this.getHeading() + 180);
 
-            rotate(180);
+            this.setHeading(this.getHeading() + 180);
+             rotate(180);
+          //  rotate(180);
         }
     }
 
@@ -162,8 +175,8 @@ public class Bird extends Moveable implements IDrawable, ICollider {
     @Override
     public boolean collidesWith(ICollider obj) {
 
-        float distX = this.getX() - ((GameObject)obj).getX();
-        float distY = this.getY() - ((GameObject)obj).getY();
+        double distX = this.getX() - ((GameObject)obj).getX();
+        double distY = this.getY() - ((GameObject)obj).getY();
         float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
 
         if((this.getDistanceOfReference() + obj.getDistanceOfReference() >

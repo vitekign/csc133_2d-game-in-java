@@ -130,11 +130,11 @@ public class GameObject {
                 + color.getBlue() + "]";
     }
 
-    public float getX() {
+    public double getX() {
         return X;
     }
 
-    public float getY() {
+    public double getY() {
         return Y;
     }
 
