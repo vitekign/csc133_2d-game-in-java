@@ -101,28 +101,40 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
     public Pylon(Location location, float radius, Color color, GameWorld gw, int seqNumberOfPylon){
         super(color);
-
         this.gw = gw;
 
+
+
         initObject();
-        //this.X = location.getX();
-       // this.Y = location.getY();
-
-
+        //   this.X = location.getX();
+        //  this.Y = location.getY();
+        this.radius = radius;
 
 
         tr = new AffineTransform();
-        //tr.translate(location.getX() - (int) radius / 2, (int) location.getY() - (int) radius / 2);
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
+        scale(1,1);
 
-        this.radius = radius;
+
+        String pathToResources = Services.getPathToImgResources();
+        File file = new File(pathToResources + "pylon.png");
+
+        try {
+            imageRes = ImageIO.read(file);
+        } catch (Exception e){
+            System.out.println("The picture for Bird wasn't found");
+        }
+
+        File fileImagePressed = new File(pathToResources + "pylon_pressed.png");
+        try {
+            imagePressed = ImageIO.read(fileImagePressed);
+        } catch (Exception e){
+            System.out.println("The picture for Bird wasn't found");
+        }
+
 
         sequenceNumber = seqNumberOfPylon;
                 count++;
-
-
-
-
 
     }
 

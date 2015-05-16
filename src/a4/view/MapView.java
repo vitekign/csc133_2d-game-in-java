@@ -23,9 +23,6 @@ import java.io.File;
  * is shown in the Console and also in the textArea on the screen.
  */
 
-//TODO Character Car isn't drawn on the top of other game objects.
-
-
 
 public class MapView extends JPanel implements IObserver, MouseListener,
         MouseWheelListener, MouseMotionListener{

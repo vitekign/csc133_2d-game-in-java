@@ -29,6 +29,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     private GameWorld gw;
 
     Image imageRes;
+    Image imageResClicked;
+
     private int timer;
 
     public static int zIndex;
@@ -85,6 +87,16 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
             String imgName = "fuelcan.png";
 
             imageRes= ImageIO.read(new File(pathToResources+imgName));
+
+        }catch (IOException ex){
+            System.out.println("An error happened: " + ex.getMessage());
+        }
+
+        try {
+            String pathToResources = Services.getPathToImgResources();
+            String imgName = "fuelcan_clicked.png";
+
+            imageResClicked= ImageIO.read(new File(pathToResources+imgName));
 
         }catch (IOException ex){
             System.out.println("An error happened: " + ex.getMessage());
@@ -222,9 +234,9 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
         if(isSelected){
             g2d.setColor(new Color(13, 66, 160));
-            g2d.fillRect((int) -(size + ADDITIONAL_WIDTH_LENGTH)/2,
+            g2d.drawImage(imageResClicked,  (int) -(size + ADDITIONAL_WIDTH_LENGTH)/2,
                     (int) -(size + ADDITIONAL_WIDTH_LENGTH)/2,
-                    (int) size + ADDITIONAL_WIDTH_LENGTH, (int) size + ADDITIONAL_WIDTH_LENGTH);
+                    (int) size + ADDITIONAL_WIDTH_LENGTH, (int) size + ADDITIONAL_WIDTH_LENGTH, null);
         } else {
             g2d.drawImage(imageRes,  (int) -(size + ADDITIONAL_WIDTH_LENGTH)/2,
                     (int) -(size + ADDITIONAL_WIDTH_LENGTH)/2,
