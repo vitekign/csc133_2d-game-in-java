@@ -8,6 +8,7 @@ package a4.objects;
 import a4.app.strategies.IStrategy;
 import a4.model.GameWorld;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.Vector;
 
 /**
@@ -21,14 +22,22 @@ public class NPCCar extends Car {
 
 
     @Override
-    public void draw(Graphics2D g) {
+    public void draw(Graphics2D g2d) {
 
 
-        g.setColor(color);
-        g.drawRect((int)getX() - (int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
-        g.setColor(Color.white);
-        g.drawOval((int)getX(), (int)getY(), 1,1);
-        g.setColor(Color.black);
+        AffineTransform saveAt = g2d.getTransform();
+
+        g2d.transform(myTranslationMatrix);
+
+        g2d.setColor(color);
+        g2d.drawRect(-(int) (width / 2),  -(int) (length / 2), (int) width, (int) length);
+        g2d.setColor(Color.white);
+        g2d.drawOval(0, 0, 1, 1);
+        g2d.setColor(Color.black);
+
+
+        //setToIdentity();
+        g2d.setTransform(saveAt);
     }
 
 
@@ -99,13 +108,35 @@ public class NPCCar extends Car {
         inOilSlick = false;
 
 
-
-        this.X = location.getX();
-        this.Y = location.getY();
+        myTranslationMatrix.translate(location.getX(), location.getY());
 
         this.gw = gw;
     }
 
+
+    public void setY(float y) {
+        myTranslationMatrix.translate(0,y);
+    }
+
+    public void setX(float x) {
+        myTranslationMatrix.translate(x,0);
+    }
+
+
+    @Override
+    public double getX() {
+        return myTranslationMatrix.getTranslateX();
+    }
+
+    @Override
+    public double getY() {
+        return myTranslationMatrix.getTranslateY();
+    }
+
+    @Override
+    public Location getLocation() {
+       return new Location((float)getX(), (float)getY());
+    }
 
     /**
      * The move command is implemented by using a

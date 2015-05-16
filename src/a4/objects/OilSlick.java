@@ -4,9 +4,13 @@ package a4.objects;
  * Created by Victor Ignatenkov on 2/14/15.
  */
 
+import a4.app.utilities.Services;
 import a4.model.GameWorld;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.io.File;
 import java.util.Vector;
 
 /**
@@ -22,6 +26,7 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
     private GameWorld gw;
     public static int zIndex;
 
+    Image imageRes;
 
     public OilSlick(Location location, float width, float length, Color color, GameWorld gw){
         super(color);
@@ -31,13 +36,30 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
         objectsCollidedWith = new Vector<>();
 
 
-        this.X = location.getX();
-        this.Y = location.getY();
+
         this.width = width;
         this.length = length;
 
         color = Color.black;
+
+        myTranslationMatrix.translate(location.getX(), (int) location.getY());
+
+
+
+        String pathToResources = Services.getPathToImgResources();
+        File file = new File(pathToResources + "oilSlick.png");
+
+        try {
+            imageRes = ImageIO.read(file);
+        } catch (Exception e){
+            System.out.println("The picture for Oil Slick wasn't found");
+        }
+
+        scale(1,-1);
     }
+
+
+
 
 
     public int getZIndex(){
@@ -62,6 +84,9 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
     }
 
 
+
+
+
     @Override
     public String toString() {
         return "OilSlick:" +
@@ -72,12 +97,35 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
 
     @Override
     public void draw(Graphics2D g) {
+        AffineTransform saveAt = g.getTransform();
+
+        g.transform(myTranslationMatrix);
+        g.transform(myScaleMatrix);
 
         g.setColor(color);
-        g.fillOval((int)getX()-(int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
+        g.drawImage(imageRes,-50, -50, (int)100, (int)100, null);
+        // g.drawImage(imageRes,(int)getX()-(int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length, null);
+        //g.fillOval((int)getX()-(int)(width/2), (int)getY()-(int)(length/2), (int)width, (int)length);
         g.setColor(Color.black);
+
+        g.setTransform(saveAt);
     }
 
+
+    @Override
+    public double getX() {
+       return myTranslationMatrix.getTranslateX();
+    }
+
+    @Override
+    public double getY() {
+       return myTranslationMatrix.getTranslateY();
+    }
+
+    @Override
+    public Location getLocation() {
+       return new Location((float)getX(), (float)getY());
+    }
 
     /**
      * The logic which detects the collision
@@ -114,6 +162,7 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
 
     @Override
     public float getDistanceOfReference() {
-        return (width + length)/2;
+        //return (width + length)/2;
+        return 50;
     }
 }

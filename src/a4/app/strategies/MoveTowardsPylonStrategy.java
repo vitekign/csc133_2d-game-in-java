@@ -96,8 +96,8 @@ public class MoveTowardsPylonStrategy implements IStrategy {
                     float deltaX = (float) (Math.cos(Math.toRadians(car.getHeading())) * car.getSpeed() * 10);
                     Location temp = new Location(car.getLocation().getX() + deltaX, car.getLocation().getY() + deltaY);
 
-                    car.setX(temp.getX());
-                    car.setY(temp.getY());
+                    car.setX(deltaX);
+                    car.setY(deltaY);
 
                     car.setHeading(90 - angleToAdd);
 

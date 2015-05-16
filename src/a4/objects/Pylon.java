@@ -72,12 +72,6 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
             this.radius = radius;
 
 
-
-
-
-
-
-
         tr = new AffineTransform();
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
         scale(1,1);
@@ -100,6 +94,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         } catch (Exception e){
             System.out.println("The picture for Bird wasn't found");
         }
+
 
 
     }

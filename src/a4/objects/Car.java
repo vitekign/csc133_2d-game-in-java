@@ -154,7 +154,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
             imageRes= ImageIO.read(new File(pathToResources + imgName));
         }catch (IOException ex){
             System.out.println("An error happened: " + ex.getMessage());
-        }
+        }http://bigbangtv.ru/video/s3e13.php
 
 
         myRotationMatrix = new AffineTransform();
@@ -497,9 +497,9 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
         */
 
         myBody.translate(0, 0);
-        myBody.draw(g2d);
         myFrontAxle.draw(g2d);
         myRearAxle.draw(g2d);
+        myBody.draw(g2d);
         /*****************************/
 
 

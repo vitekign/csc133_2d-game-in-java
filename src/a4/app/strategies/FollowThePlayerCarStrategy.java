@@ -52,8 +52,8 @@ public class FollowThePlayerCarStrategy implements IStrategy {
 
             car.setHeading(90 - angleToAdd);
 
-            car.setX(temp.getX());
-            car.setY(temp.getY());
+            car.setX(deltaX);
+            car.setY(deltaY);
 
 
         }

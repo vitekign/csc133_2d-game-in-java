@@ -14,6 +14,7 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -67,8 +68,12 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         this.Y = location.getY();
 */
         translate(location.getX(), location.getY());
-        myRotationMatrix.rotate(Math.toRadians(225));
-        myScaleMatrix.scale(1.2,1.2);
+        myRotationMatrix.rotate(Math.toRadians(180));
+
+        myScaleMatrix.scale(-1.1,1.1);
+
+        double addAngle = (new Random().nextDouble() * 44) - 22;
+        rotate(addAngle);
 
         this.size = size;
 
@@ -139,8 +144,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
         AffineTransform temp = new AffineTransform();
         temp.setTransform(myTranslationMatrix);
-        temp.concatenate(myScaleMatrix);
         temp.concatenate(myRotationMatrix);
+        temp.concatenate(myScaleMatrix);
         //apply the inverse to the point
         AffineTransform inverseVTM = null;
         try {
@@ -234,7 +239,7 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         g2d.setColor(new Color(255, 255, 255));
         myScaleMatrix.scale(-1, 1);
         g2d.transform(myScaleMatrix);
-        g2d.drawString(String.valueOf((int) getSize()), -8, 7);
+        g2d.drawString(String.valueOf((int) getSize()), -8, 3);
 
         myScaleMatrix.scale(-1, 1);
 

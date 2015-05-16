@@ -43,18 +43,16 @@ public class Body extends AffineObject{
     public void  draw(Graphics2D g2d) {
 
 
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(new Color(43, 43, 43));
 
 
         int[] xPoints = {leftSide, rightSide, rightSide, narrowRight, narrowLeft, leftSide};
         int[] yPoints = {bottom, bottom, upToNarrow, top , top, upToNarrow};
 
 
-        g2d.drawPolygon(xPoints, yPoints, 6);
+        g2d.fillPolygon(xPoints, yPoints, 6);
 
         g2d.setColor(Color.BLACK);
-        g2d.fillOval(-3,-3,6,6);
-
     }
 
 
