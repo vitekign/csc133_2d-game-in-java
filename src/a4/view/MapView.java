@@ -254,26 +254,42 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
     }
 
-    public void zoomIn(){
+    public void zoomIn(MouseEvent event){
 
         double tempHeight = getWinHeight();
         double tempWidth = getWinWidth();
 
-        winLeft += tempWidth*0.05;
-        winRight -= tempWidth*0.05;
-        winTop -= tempHeight*0.05;
-        winBottom += tempHeight*0.05;
+        System.out.println("x: " + event.getX() + " y: " + event.getY());
+
+        double xRatio = (double)event.getX() / 845;
+        double yRatio = (double)event.getY() / 709;
+
+        System.out.println("xRatio: " + xRatio + " yRation: " + yRatio);
+
+
+
+        winLeft += tempWidth*(0.05 * ( xRatio));
+        winRight -= tempWidth*(0.05 * (1 - xRatio));
+        winTop -= tempHeight*(0.05 * (yRatio));
+        winBottom += tempHeight*(0.05 * (1 - yRatio));
+
         this.repaint();
     }
-    public void zoomOut(){
+    public void zoomOut(MouseEvent event){
 
         double tempHeight = getWinHeight();
         double tempWidth = getWinWidth();
 
-        winLeft -= tempWidth*0.05;
-        winRight += tempWidth*0.05;
-        winTop += tempHeight*0.05;
-        winBottom -= tempHeight*0.05;
+
+        double xRatio = (double)event.getX() / 845;
+        double yRatio = (double)event.getY() / 709;
+
+
+        winLeft -= tempWidth*(0.05 * ( xRatio));
+        winRight += tempWidth*(0.05 * (1 - xRatio));
+        winTop += tempHeight*(0.05 * (yRatio));
+        winBottom -= tempHeight*(0.05 * (1 - yRatio));
+
         this.repaint();
     }
 
@@ -286,9 +302,9 @@ public class MapView extends JPanel implements IObserver, MouseListener,
             } else {
 
                 if (event.getWheelRotation() > 0)
-                    zoomIn();
+                    zoomIn(event);
                 else
-                    zoomOut();
+                    zoomOut(event);
             }
         }
     }

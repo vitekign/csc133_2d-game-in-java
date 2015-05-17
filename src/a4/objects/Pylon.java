@@ -278,7 +278,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         g2d.drawImage(imagePressed, (int) -(radius/2), (int) -(radius/2), (int)radius, (int)radius, null);
         //g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
         g2d.setColor(Color.white);
-        g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
+       // g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
         g2d.setColor(Color.white);
 
         AffineTransform addTranslate = new AffineTransform();
@@ -299,7 +299,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         g2d.drawImage(imageRes, (int) -(radius/2), (int) -(radius/2), (int)radius, (int)radius, null);
         //g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
         g2d.setColor(Color.white);
-        g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
+      //  g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
         g2d.setColor(Color.white);
 
 
