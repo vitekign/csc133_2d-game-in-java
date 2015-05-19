@@ -1,3 +1,7 @@
+/**
+ * Created by Victor Ignatenkov on 5/8/15.
+ */
+
 package a4.objects;
 import a4.app.utilities.Services;
 import a4.model.GameWorld;
@@ -9,10 +13,10 @@ import java.awt.geom.Point2D;
 import java.util.Random;
 import java.util.Vector;
 
-/**
- * Created by Victor Ignatenkov on 5/8/15.
- */
 
+/**
+ * ShockWave - bezier curve.
+ */
 public class ShockWave extends Moveable implements IDrawable,ICollider {
 
 
@@ -23,10 +27,15 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
     private int height;
 
     Point2D.Double[] controlPoint = new Point2D.Double[4];
+
+
     /**
-     * Default ability of all objects to have their color changed.
      *
+     * @param location location of bezier curve
+     * @param heading heading of bezier curve
+     * @param speed speed of bezier curve
      * @param color
+     * @param gw
      */
     public ShockWave(Location location, float heading, float speed, Color color, GameWorld gw) {
         super(color);
@@ -38,12 +47,12 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
 
         this.gw = gw;
 
+        //random heading, speed and color.
         this.heading = new Random().nextFloat()*360;
         this.speed = (new Random().nextFloat()*3)+2;
         this.color = Services.generateRandomColor();
 
-
-
+        //size of the curve
         length = (int) (50 + new Random().nextFloat()*10);
         height = (int) (50 + new Random().nextFloat()*10);
 
@@ -54,29 +63,26 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
         myTranslationMatrix = new AffineTransform();
         myScaleMatrix = new AffineTransform();
 
-
-
+        //define 4 random points
         Random rand = new Random();
         controlPoint[0] = new Point2D.Double(0,0);
         controlPoint[1] = new Point2D.Double(rand.nextInt(100),rand.nextInt(100));
         controlPoint[2] = new Point2D.Double(-rand.nextInt(100),-rand.nextInt(100));
         controlPoint[3] = new Point2D.Double(0,150);
-
-/*
-        controlPoint[0] = new Point2D.Double(0,0);
-        controlPoint[1] = new Point2D.Double(50,0);
-        controlPoint[2] = new Point2D.Double(50,150);
-        controlPoint[3] = new Point2D.Double(0,150);
-*/
     }
 
-
-
+    /**
+     * Logic of the bezier curve algorithm.
+     * @param controlPointVector
+     * @param level
+     * @param g2d
+     */
     private void drawBezierCurve (Point2D.Double[] controlPointVector, int level, Graphics2D g2d) {
         Point2D.Double[] LeftSubVector = new Point2D.Double[4];
         Point2D.Double[] RightSubVector = new Point2D.Double[4];
         if ( straightEnough (controlPointVector) || (level>15) ) {
             g2d.setColor(Color.BLACK);
+            //draw one tiny line of the curve
             g2d.drawLine((int) controlPointVector[0].getX(), (int) controlPointVector[0].getY(), (int) controlPointVector[3].getX(), (int) controlPointVector[3].getY());
 
         }  else {
@@ -86,6 +92,12 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
         }
     }
 
+    /**
+     * Auxiliary function for bezier curve.
+     * @param Q
+     * @param R
+     * @param S
+     */
     private void subdivideCurve (Point2D.Double[] Q,Point2D.Double[] R, Point2D.Double[] S ) {
         Point2D.Double T = caclBezierPoints(Q[1], Q[2]);
         R[0]=Q[0];
@@ -98,6 +110,11 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
         S[0]=R[3];
     }
 
+    /**
+     * Auxiliary function for bezier curve.
+     * @param controlPointVector
+     * @return
+     */
     private boolean straightEnough (Point2D.Double[] controlPointVector) {
         // find length around control polygon
         double d1 = lengthOf(controlPointVector[0],controlPointVector[1]) + lengthOf(controlPointVector[1], controlPointVector[2]) + lengthOf(controlPointVector[2], controlPointVector[3]);
@@ -109,38 +126,44 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
             return false ;
     }
 
+    /**
+     * Auxiliary function for bezier curve.
+     * @param firstPoint
+     * @param secondPoint
+     * @return
+     */
     private double lengthOf(Point2D.Double firstPoint, Point2D.Double secondPoint) {
         double distX = firstPoint.getX() - secondPoint.getX();
         double distY = firstPoint.getY() - secondPoint.getY();
         return Math.sqrt((distX*distX)+(distY*distY));
     }
 
+    /**
+     * Auxiliary function for bezier curve.
+     * @param p1
+     * @param p2
+     * @return
+     */
     private Point2D.Double caclBezierPoints(Point2D.Double p1, Point2D.Double p2){
         return new Point2D.Double(( p1.getX() / 2.0f + p2.getX() / 2.0f ),
                 ( p1.getY() / 2.0f + p2.getY() / 2.0f ));
     }
 
 
+    /**
+     * Draw the convex hull of the current bezier curve.
+     * @param g2d
+     */
     @Override
     public void draw(Graphics2D g2d) {
 
         AffineTransform saveAt = g2d.getTransform();
 
         myTranslationMatrix.translate(this.getX(), this.getY());
-        //myRotationMatrix.rotate(Math.toRadians(10));
         myRotationMatrix.rotate(Math.toRadians(90 - heading));
 
         g2d.transform(myTranslationMatrix);
         g2d.transform(myRotationMatrix);
-
-
-
-/*
-        g2d.drawRect(0, 0,
-                (int) ((length + 20)),
-                (int) (height));
-
-*/
 
         g2d.setColor(this.getColor());
         drawBezierCurve(this.controlPoint, 0, g2d);
@@ -164,6 +187,10 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
     }
 
 
+    /**
+     * Move the curve on the screen.
+     * @param framesPerSecond
+     */
     public void move(int framesPerSecond){
         float angle =  (90 - heading);
         float deltaY = (float) (Math.sin(Math.toRadians(angle))*speed);
@@ -176,9 +203,6 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
         this.setY(temp.getY());
 
     }
-
-
-
 
     @Override
     public boolean collidesWith(ICollider obj) {

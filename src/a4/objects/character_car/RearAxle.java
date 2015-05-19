@@ -6,6 +6,9 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 
+/**
+ * RearAxle a part of hierarchical main character's car.
+ */
 public class RearAxle extends AffineObject {
 
     Shaft shaft;
@@ -16,7 +19,11 @@ public class RearAxle extends AffineObject {
     private int height;
 
 
-
+    /**
+     * Create the object and define local coordinates.
+     * @param width width of the RearAxle
+     * @param height height of the RearAxle
+     */
     public RearAxle(int width, int height) {
 
         this.width = width;
@@ -35,6 +42,10 @@ public class RearAxle extends AffineObject {
 
     }
 
+    /**
+     * Draw the current part of the hierarchical object.
+     * @param g2d
+     */
     @Override
     public void draw(Graphics2D g2d) {
         AffineTransform saveAt = g2d.getTransform();

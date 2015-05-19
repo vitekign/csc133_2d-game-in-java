@@ -42,19 +42,22 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     MouseEvent lastMouseEvent = null;
 
 
+    /**
+     * Define the boundaries.
+     */
     private double winRight = 845;
     private double winTop = 709;
     private double winLeft = 0;
     private double winBottom = 0;
 
 
-
+    /**
+     * Create MapView.
+     */
     public MapView(){
         this.addMouseWheelListener(this);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
-
-
 
         imageRes = null;
 
@@ -66,7 +69,6 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
 
         theVTM = new AffineTransform();
     }
@@ -99,9 +101,13 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         repaint();
     }
 
+    /**
+     * Logic - to go through all world objects and
+     * pass them Graphics.
+     * @param g
+     */
     @Override
     protected void paintComponent(Graphics g) {
-
 
         //Draw background with an image
         super.paintComponent(g);
@@ -112,9 +118,7 @@ public class MapView extends JPanel implements IObserver, MouseListener,
                 }
             }
 
-
         AffineTransform worldToND, ndToScreen;
-
 
         Graphics2D g2d = (Graphics2D)g;
         worldToND = buildWorldToNDXform(winRight - winLeft, winTop - winBottom, winLeft, winBottom);
@@ -125,7 +129,6 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         Services.supplyServicesWithVTM(theVTM);
         g2d.transform(theVTM);
        // g2d.setClip(0,0,500,500);
-
 
 
         /**
@@ -151,11 +154,14 @@ public class MapView extends JPanel implements IObserver, MouseListener,
       }
     }
 
-
-
-
-
-
+    /**
+     * Build a WorldToND space.
+     * @param winWidth
+     * @param winHeight
+     * @param winLeft
+     * @param winBottom
+     * @return
+     */
     private AffineTransform buildWorldToNDXform(double winWidth, double winHeight, double winLeft, double winBottom) {
 
         AffineTransform  myTranslationMatrix = new AffineTransform();
@@ -177,7 +183,12 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     }
 
 
-
+    /**
+     * Build a NDToScreen space.
+     * @param width
+     * @param height
+     * @return
+     */
     private AffineTransform buildNDToScreenXForm(double width, double height) {
 
         AffineTransform  myTranslationMatrix = new AffineTransform();
@@ -194,7 +205,6 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         return temp;
 
     }
-
 
 
     /**
@@ -254,6 +264,10 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
     }
 
+    /**
+     * Logic for zooming in.
+     * @param event
+     */
     public void zoomIn(MouseEvent event){
 
         double tempHeight = getWinHeight();
@@ -275,6 +289,11 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
         this.repaint();
     }
+
+    /**
+     * Logic for zooming out.
+     * @param event
+     */
     public void zoomOut(MouseEvent event){
 
         double tempHeight = getWinHeight();
@@ -294,7 +313,11 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     }
 
 
-
+    /**
+     * Detect when mouse is moved and trigger
+     * a corresponding zoom action.
+     * @param event
+     */
     @Override
     public void mouseWheelMoved(MouseWheelEvent event) {
         if(!gw.isItInPause()) {
@@ -310,9 +333,15 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     }
 
 
-    /*********************************************/
-    /*      Confirm To MouseMotionListener       */
-    /*********************************************/
+
+    //Confirm To MouseMotionListener
+
+    /**
+     * Detect when mouse is dragged and trigger
+     * a corresponding pan action.
+     *
+     * @param currrentMouseEvent
+     */
     @Override
     public void mouseDragged(MouseEvent currrentMouseEvent) {
 

@@ -1,10 +1,14 @@
-package a4.objects.character_car;
+/**
+ * Created by Victor Ignatenkov on 4/28/15.
+ */
 
+package a4.objects.character_car;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
+
 /**
- * Created by Victor Ignatenkov on 4/28/15.
+ * FrontAxle - a part of hierarchical main character's car.
  */
 public class FrontAxle extends AffineObject {
 
@@ -14,9 +18,13 @@ public class FrontAxle extends AffineObject {
 
     private int width;
     private int height;
-
     private int steeringDirection;
 
+    /**
+     * Create a FrontAxle and define local coordinates.
+     * @param width width of the front axle
+     * @param height height of the front axle
+     */
     public FrontAxle(int width, int height){
         this.width = width;
         this.height = height;
@@ -33,6 +41,10 @@ public class FrontAxle extends AffineObject {
         rightTire.translate(25, 0);
     }
 
+    /**
+     * Draw the current part of the main character's car.
+     * @param g2d
+     */
     @Override
     public void draw(Graphics2D g2d) {
         AffineTransform saveAt = g2d.getTransform();
@@ -47,6 +59,10 @@ public class FrontAxle extends AffineObject {
         g2d.setTransform(saveAt);
     }
 
+    /**
+     * Change the steering direction of the tires.
+     * @param steeringDirection
+     */
     public void updateSteeringDirection(float steeringDirection) {
 
         this.steeringDirection = ((int)steeringDirection);

@@ -20,15 +20,9 @@ public class GameObject {
     protected float X;
     protected float Y;
 
-
-
-
-
     /**
      *  Define Affine properties with corresponding setters.
      */
-
-
 
     protected AffineTransform myTranslationMatrix;
     protected AffineTransform myRotationMatrix;

@@ -6,17 +6,27 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 
+/**
+ * Body - a part of hierarchical main character's car.
+ */
 public class Body extends AffineObject{
 
     private int width;
     private int height;
 
+    /**
+     * Define necessary boundaries in terms of Local Coordinates.
+     */
     private int leftSide, rightSide, bottom, top, narrowLeft, narrowRight, upToNarrow;
 
 
+    /**
+     * Create a body of the main character's car and
+     * calculate local coordinates.
+     * @param width width of the car
+     * @param height height of the car
+     */
     public Body(int width, int height){
-
-
 
 
         myTranslation = new AffineTransform();
@@ -39,9 +49,12 @@ public class Body extends AffineObject{
 
     }
 
+    /**
+     * Draw the current part of hierarchical object.
+     * @param g2d
+     */
     @Override
     public void  draw(Graphics2D g2d) {
-
 
         g2d.setColor(new Color(43, 43, 43));
 
@@ -54,7 +67,5 @@ public class Body extends AffineObject{
 
         g2d.setColor(Color.BLACK);
     }
-
-
 
 }
