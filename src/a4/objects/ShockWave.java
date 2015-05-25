@@ -117,9 +117,9 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
      */
     private boolean straightEnough (Point2D.Double[] controlPointVector) {
         // find length around control polygon
-        double d1 = lengthOf(controlPointVector[0],controlPointVector[1]) + lengthOf(controlPointVector[1], controlPointVector[2]) + lengthOf(controlPointVector[2], controlPointVector[3]);
+        double d1 = getLengthBtwnPoints(controlPointVector[0], controlPointVector[1]) + getLengthBtwnPoints(controlPointVector[1], controlPointVector[2]) + getLengthBtwnPoints(controlPointVector[2], controlPointVector[3]);
        // find distance directly between first and last control point
-        double d2 = lengthOf(controlPointVector[0], controlPointVector[3]) ;
+        double d2 = getLengthBtwnPoints(controlPointVector[0], controlPointVector[3]) ;
         if ( Math.abs(d1 - d2) < 0.001f )
             return true ;
         else
@@ -132,7 +132,7 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
      * @param secondPoint
      * @return
      */
-    private double lengthOf(Point2D.Double firstPoint, Point2D.Double secondPoint) {
+    private double getLengthBtwnPoints(Point2D.Double firstPoint, Point2D.Double secondPoint) {
         double distX = firstPoint.getX() - secondPoint.getX();
         double distY = firstPoint.getY() - secondPoint.getY();
         return Math.sqrt((distX*distX)+(distY*distY));

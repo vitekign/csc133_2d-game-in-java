@@ -27,8 +27,16 @@ public class NPCCar extends Car {
 
         AffineTransform saveAt = g2d.getTransform();
 
-        g2d.transform(myTranslationMatrix);
+      //  myRotationMatrix.rotate(Math.toRadians(90));
+        myRotationMatrix.rotate(Math.toRadians(90 - heading));
 
+
+        g2d.transform(myTranslationMatrix);
+        g2d.transform(myRotationMatrix);
+
+
+        g2d.setColor(new Color(234, 32, 0));
+        g2d.fillRect((int) (width/2) - 4, (int)-(length/2) , 5, ((int)length));
         g2d.setColor(color);
         g2d.drawRect(-(int) (width / 2),  -(int) (length / 2), (int) width, (int) length);
         g2d.setColor(Color.white);
@@ -37,6 +45,7 @@ public class NPCCar extends Car {
 
 
         //setToIdentity();
+        myRotationMatrix.setToIdentity();
         g2d.setTransform(saveAt);
     }
 
@@ -96,8 +105,8 @@ public class NPCCar extends Car {
 
         objectsCollidedWith = new Vector<>();
 
-        this.width = width;
-        this.length = length;
+        this.width = width + 10;
+        this.length = length - 5;
         this.steeringDirection = steeringDirection;
         this.maximumSpeed = maximumSpeed;
         this.fuelLevel = fuelLevel;

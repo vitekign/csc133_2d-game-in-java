@@ -10,6 +10,7 @@ import a4.model.GameWorld;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.Vector;
 
@@ -44,16 +45,7 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
 
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
 
-
-
-        String pathToResources = Services.getPathToImgResources();
-        File file = new File(pathToResources + "oilSlick.png");
-
-        try {
-            imageRes = ImageIO.read(file);
-        } catch (Exception e){
-            System.out.println("The picture for Oil Slick wasn't found");
-        }
+        imageRes = Services.getImage("oilSlick.png");
 
         scale(1,-1);
     }
@@ -94,6 +86,17 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
                 " width="   + (int)width +
                 " length="  + (int)length;
     }
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public void draw(Graphics2D g) {

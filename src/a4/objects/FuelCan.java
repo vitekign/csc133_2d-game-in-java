@@ -78,29 +78,10 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         rotate(addAngle);
 
         this.size = size;
-
         timer = (int)size;
 
-
-        try {
-            String pathToResources = Services.getPathToImgResources();
-            String imgName = "fuelcan.png";
-
-            imageRes= ImageIO.read(new File(pathToResources+imgName));
-
-        }catch (IOException ex){
-            System.out.println("An error happened: " + ex.getMessage());
-        }
-
-        try {
-            String pathToResources = Services.getPathToImgResources();
-            String imgName = "fuelcan_clicked.png";
-
-            imageResClicked= ImageIO.read(new File(pathToResources+imgName));
-
-        }catch (IOException ex){
-            System.out.println("An error happened: " + ex.getMessage());
-        }
+        imageRes = Services.getImage("fuelcan.png");
+        imageResClicked = Services.getImage("fuelcan_clicked.png");
 
 
 

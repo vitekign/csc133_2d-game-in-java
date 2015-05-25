@@ -465,9 +465,11 @@ public class GameWorld implements Container , IObservable, IGameWorld, ActionLis
      * @param loc
      */
     public void addOilSlickWithLocation(Location loc) {
-        OilSlick oilSlick =  factory.makeOilSlickWithLocatin(loc);
-        theWorldVector.addElement(oilSlick);
-        notifyObserver();
+      //  if(Services.isThereOilSlick(new Point2D.Double(loc.getX(), loc.getY()))) {
+            OilSlick oilSlick = factory.makeOilSlickWithLocatin(loc);
+            theWorldVector.addElement(oilSlick);
+            notifyObserver();
+       // }
     }
 
 

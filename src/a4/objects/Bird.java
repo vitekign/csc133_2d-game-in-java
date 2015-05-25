@@ -50,15 +50,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         scaleY = 2;
 
 
-        String pathToResources = Services.getPathToImgResources();
-        File file = new File(pathToResources + "bird.png");
-
-        try {
-            imageRes = ImageIO.read(file);
-        } catch (Exception e){
-            System.out.println("The picture for Bird wasn't found");
-        }
-
+        imageRes = Services.getImage("bird.png");
 
 
         myTranslationMatrix.translate(location.getX(), location.getY());
@@ -99,13 +91,8 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         int width = (int)size;
         int length = (int)size;
 
-
-
-
         AffineTransform saveAt = g2d.getTransform();
         //    myTranslationMatrix.translate((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2));
-
-
 
         g2d.transform(myTranslationMatrix);
         g2d.transform(myRotationMatrix);
@@ -114,7 +101,6 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         g2d.setColor(this.getColor());
         g2d.drawImage(imageRes, 0, 0, 20, 20, null);
         g2d.setColor(Color.black);
-
 
        // setToIdentity();
         g2d.setTransform(saveAt);

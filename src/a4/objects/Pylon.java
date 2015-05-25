@@ -79,23 +79,8 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         sequenceNumber = count++;
 
 
-        String pathToResources = Services.getPathToImgResources();
-        File file = new File(pathToResources + "pylon.png");
-
-        try {
-            imageRes = ImageIO.read(file);
-        } catch (Exception e){
-            System.out.println("The picture for Bird wasn't found");
-        }
-
-        File fileImagePressed = new File(pathToResources + "pylon_pressed.png");
-        try {
-            imagePressed = ImageIO.read(fileImagePressed);
-        } catch (Exception e){
-            System.out.println("The picture for Bird wasn't found");
-        }
-
-
+        imageRes = Services.getImage("pylon.png");
+        imagePressed = Services.getImage("pylon_pressed.png");
 
     }
 

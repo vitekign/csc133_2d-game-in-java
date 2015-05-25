@@ -55,7 +55,6 @@ public class FollowThePlayerCarStrategy implements IStrategy {
             car.setX(deltaX);
             car.setY(deltaY);
 
-
         }
 
     }

@@ -147,15 +147,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
 
         heading = 180;
 
-        try {
-
-            String pathToResources = Services.getPathToImgResources();
-            String imgName = "car.png";
-            imageRes= ImageIO.read(new File(pathToResources + imgName));
-        }catch (IOException ex){
-            System.out.println("An error happened: " + ex.getMessage());
-        }http://bigbangtv.ru/video/s3e13.php
-
+        imageRes = Services.getImage("car.png");
 
         myRotationMatrix = new AffineTransform();
         myTranslationMatrix = new AffineTransform();
@@ -204,7 +196,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
                 changeFuelLevel((float) -0.02);
             } else {
 
-                if(gw.getTime()%5 == 0 && gw.getTime() != 0)
+                if(gw.getTime()%3 == 0 && gw.getTime() != 0)
                   heading += steeringDirection;
                 float angle = (float) (90 - heading);
                 float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
