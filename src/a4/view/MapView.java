@@ -62,13 +62,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         imageRes = null;
 
         //Retrieve an image for background
-        String pathToResources = Services.getPathToImgResources();
-        String imgName = "asphalt_light.jpg";
-        try {
-            imageRes = ImageIO.read(new File(pathToResources + imgName));
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+        imageRes = Services.getImage("asphalt_light.jpg");
+
 
         theVTM = new AffineTransform();
     }

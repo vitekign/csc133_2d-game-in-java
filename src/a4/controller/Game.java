@@ -1,5 +1,6 @@
-package a4.controller;
+/* Created by Victor Ignatenkov on 2/9/15.*/
 
+package a4.controller;
 import a4.app.commands.*;
 import a4.model.GameWorld;
 import a4.view.MapView;
@@ -11,17 +12,13 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-/**
- * Created by Victor Ignatenkov on 2/9/15.
- */
 
-
-/**
+/*
  * Override the JButton to avoid issues with
  * hitting "SPACE" key.
  */
-class ButtonSpaceKeyFocusAgnostic extends JButton{
 
+class ButtonSpaceKeyFocusAgnostic extends JButton{
     public ButtonSpaceKeyFocusAgnostic(String str){
         super(str);
         this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
@@ -30,17 +27,14 @@ class ButtonSpaceKeyFocusAgnostic extends JButton{
         this.setOpaque(true);
         this.setBorderPainted(false);
         this.setForeground(Color.WHITE);
-
     }
-
 }
 
-/**
- * Game - functions as a controller of the
- * game.
+/*
+ * Game - takes a role of a controller.
  */
-public class Game extends JFrame{
 
+public class Game extends JFrame{
 
     private GameWorld gw;
     private ScoreView scoreView;
@@ -58,19 +52,14 @@ public class Game extends JFrame{
 
         setLayout(new BorderLayout());
 
-
         gw.addObserver(scoreView);
         gw.addObserver(mapView);
-
-
-
-
 
         gw.notifyObserver();
 
 
         //**********************************************
-        //              commands                      **
+        //                 COMMANDS                   **
         //**********************************************
 
         /**
@@ -80,13 +69,8 @@ public class Game extends JFrame{
          */
 
         QuitTheGame quitAction = QuitTheGame.getInstance();
-//        TriggerTick tickAction = TriggerTick.getInstance();
-//        CollideWithBird colWithBirdAction = CollideWithBird.getInstance();
-//        CollideWithPylon colWithPylonAction = CollideWithPylon.getInstance();
         CollideWithNPC colWithNPCAction = CollideWithNPC.getInstance();
         PickUpFuelCan pickUpFuelCanAction = PickUpFuelCan.getInstance();
-//        EnterOilSlick enterOilSlickAction = EnterOilSlick.getInstance();
-//        LeaveOilSlick leaveOilSlickAction = LeaveOilSlick.getInstance();
 
         PlayPause playPause = PlayPause.getInstance();
         playPause.setTarget(gw);
@@ -141,8 +125,8 @@ public class Game extends JFrame{
         //**********************************************
 
         /**
-         * The ScoreView is implemented in the
-         * different class, and then just add it the
+         * The ScoreView is implemented in a
+         * different class, and then just added to the
          * main JPanel.
          */
         add(scoreView, BorderLayout.NORTH);
@@ -154,12 +138,10 @@ public class Game extends JFrame{
 
         /**
          * Left Panel - represents a set of buttons
-         * which are located on the left side.
+         * which are located at the left side.
          * 1. Create a button.
          * 2. Supply the button's setAction with appropriate Command
          */
-
-
 
         JPanel leftPanel = new JPanel();
         leftPanel.setBackground(new Color(22, 22, 22));
@@ -178,7 +160,6 @@ public class Game extends JFrame{
         leftPanel.setLayout(new GridLayout(20, 1));
         ((GridLayout)leftPanel.getLayout()).setVgap(10);
 
-       // leftPanel.setBorder(new LineBorder(green, 2));
         this.add(leftPanel, BorderLayout.WEST);
 
         JButton playBtn = new ButtonSpaceKeyFocusAgnostic("Play");
@@ -195,52 +176,6 @@ public class Game extends JFrame{
 
 
 
-        /*
-        JButton collideWithNPC = new ButtonSpaceKeyFocusAgnostic("Collide With NPC");
-        leftPanel.add(collideWithNPC);
-        colWithNPCAction.setTarget(gw);
-        collideWithNPC.setAction(colWithNPCAction);
-        colWithNPCAction.putValue(Action.NAME, "Collide With NPC");
-
-
-
-        JButton collideWithPylon = new ButtonSpaceKeyFocusAgnostic("");
-        leftPanel.add(collideWithPylon);
-        colWithPylonAction.setTarget(gw);
-        collideWithPylon.setAction(colWithPylonAction);
-        colWithPylonAction.putValue(Action.NAME, "Collide With Pylon");
-
-        JButton collideWithBird = new ButtonSpaceKeyFocusAgnostic("");
-        leftPanel.add(collideWithBird);
-        colWithBirdAction.setTarget(gw);
-        collideWithBird.setAction(colWithBirdAction);
-        colWithBirdAction.putValue(Action.NAME, "Collide With Bird");
-
-
-
-        JButton pickUpFuelCan = new ButtonSpaceKeyFocusAgnostic("Picked Up FuelCan");
-        leftPanel.add(pickUpFuelCan);
-        pickUpFuelCanAction.setTarget(gw);
-        pickUpFuelCan.setAction(pickUpFuelCanAction);
-        pickUpFuelCanAction.putValue(Action.NAME, "Picked Up FuelCan");
-
-        JButton enterOilSlick = new ButtonSpaceKeyFocusAgnostic("Entered Oil Slick");
-        leftPanel.add(enterOilSlick);
-        enterOilSlickAction.setTarget(gw);
-        enterOilSlick.setAction(enterOilSlickAction);
-        enterOilSlickAction.putValue(Action.NAME, "Entered Oil Slick");
-
-        JButton exitOilSlick = new ButtonSpaceKeyFocusAgnostic("Exited Oil Slick");
-        leftPanel.add(exitOilSlick);
-        leaveOilSlickAction.setTarget(gw);
-        exitOilSlick.setAction(leaveOilSlickAction);
-        leaveOilSlickAction.putValue(Action.NAME, "Exited Oil Slick");
-
-        JButton switchStrategy = new ButtonSpaceKeyFocusAgnostic("Switch Strategy");
-        leftPanel.add(switchStrategy);
-        switchStrategy.setAction(switchStrategiesAction);
-        switchStrategiesAction.putValue(Action.NAME, "Switch Strategy");
-        */
 
 
 
@@ -316,7 +251,7 @@ public class Game extends JFrame{
 
         /**
          * Central panel is implemented in another class
-         * and then just add the main JPanel.
+         * and then just added to the main JPanel.
          */
         this.add(mapView, BorderLayout.CENTER);
 
@@ -327,8 +262,8 @@ public class Game extends JFrame{
 
         /**
          * Create a menu in the main JPanel.
-         * All buttons in the menu do specific functionality
-         * by supplying them with an appropriate Command.
+         * All buttons, in the menu, do specific functionality
+         * by receiving a corresponding Command.
          */
 
         JMenuBar bar = new JMenuBar();
@@ -401,26 +336,18 @@ public class Game extends JFrame{
         setResizable(true);
         setSize(gw.GLOBAL_WIDTH, gw.GLOBAL_HEIGHT);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-       // setBackground(Color.GRAY);
         setVisible(true);
 
 
         /**
          * Right now play() is not used,
-         * however, it might be need in the next
+         * however, it might be needed in the next
          * versions of the game by implementing
          * a game loop.
          */
-        play();
+      //  play();
 
     }
-
-
-
-
-
-
-
 
     /**
      * Main loop of the game

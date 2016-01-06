@@ -23,10 +23,6 @@ public class MoveTowardsPylonStrategy implements IStrategy {
     /**
      * The functionality which is responsible for
      * moving a NPCCar, functioning as its strategy.
-     * @param car
-     * Car
-     * @param gw
-     * GameWorld
      *
      *   1. Retrieve all pylons of the world
      *   2. Sort'em
@@ -63,8 +59,6 @@ public class MoveTowardsPylonStrategy implements IStrategy {
                     }
                 });
 
-                int lastIndex = 1;
-
                 Pylon nextPylonToFollow = null;
 
                 java.util.Iterator<Pylon> iterInALlPylons;
@@ -94,7 +88,6 @@ public class MoveTowardsPylonStrategy implements IStrategy {
 
                     float deltaY = (float) (Math.sin(Math.toRadians(car.getHeading())) * car.getSpeed() * 10);
                     float deltaX = (float) (Math.cos(Math.toRadians(car.getHeading())) * car.getSpeed() * 10);
-                    Location temp = new Location(car.getLocation().getX() + deltaX, car.getLocation().getY() + deltaY);
 
                     car.setX(deltaX);
                     car.setY(deltaY);

@@ -17,7 +17,6 @@ import java.awt.*;
 
 
 class scoreLabel extends JLabel{
-
     public scoreLabel(String st){
         super(st);
         setForeground(new Color(200,200,200));
@@ -32,7 +31,7 @@ public class ScoreView extends JPanel implements IObserver {
     //**********************************************
 
     /**
-     * The state which are going to be updated.
+     * The state which is going to be updated.
      */
     private JLabel currentTime;
     private JLabel livesLeft;
@@ -41,9 +40,6 @@ public class ScoreView extends JPanel implements IObserver {
     private JLabel playerDamageLevel;
     private JLabel soundStatus;
 
-    int time = 0;
-    long lastTime = 0;
-
     public ScoreView(){
         setBorder(new LineBorder(new Color(0, 0, 0), 2));
         this.setForeground(new Color(200, 200, 200));
@@ -51,9 +47,6 @@ public class ScoreView extends JPanel implements IObserver {
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 16, 0));
         this.setBackground(new Color(20, 20, 20));
-
-
-
 
         currentTime = new scoreLabel("Time: ");
         add(currentTime);
@@ -80,8 +73,9 @@ public class ScoreView extends JPanel implements IObserver {
     public void update (GameWorldProxy gw, Object arg){
         /**
          * Code here to update JLabels from data in the Observable.
-         * Every time there is a change in the GameWorld date, the
-         * information is going to be updated with update() method.
+         * Every time there is a change in the GameWorld data state,
+         * the data in this class is going be to be updated by the
+         * observable's triggering update method in this class.
          */
 
         livesLeft.setText("Lives Left: " + gw.getLivesRemaining());

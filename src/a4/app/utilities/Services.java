@@ -15,6 +15,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 
@@ -42,13 +45,26 @@ public class Services {
     public static String pathToResources = Services.getPathToImgResources();
 
 
-
-
+    /**
+     * Load all images for the game.
+     * @param name
+     * @return
+     */
     public static Image getImage(String name) {
+
+
+
+        Iterable<Path> dirs = FileSystems.getDefault().getRootDirectories();
+        for(Path nameOfDir : dirs){
+            System.out.println(nameOfDir);
+        }
+
+
 
         if (images == null) {
             initServices();
 
+            //TODO use reflection to go through the folder and find all files
             List<String> imageNames = Arrays.asList("asphalt.png",
                    "asphalt_light copy.jpg", "asphalt_light.jpg", "asphalt_light.png",
                     "bird copy.png", "bird.png", "car.png",
@@ -70,22 +86,11 @@ public class Services {
 
             }
         }
-
-
         if(images.containsKey(name)){
             return images.get(name);
         }
-
         return null;
     }
-
-
-
-
-
-
-
-
 
 
 
