@@ -7,13 +7,10 @@ package a4.objects;
 import a4.app.utilities.Services;
 import a4.model.GameWorld;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
 
@@ -271,7 +268,7 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
     public void handleCollision(ICollider otherObject) {
         if(otherObject instanceof Car && !(otherObject instanceof NPCCar)){
             System.out.println("Just collided Fuel Can");
-            gw.gameObjectsToDelete.add((GameObject)this);
+            gw.gameObjectsToBeRemoved.add((GameObject)this);
             if(!objectsCollidedWith.contains((GameObject)otherObject)){
                 objectsCollidedWith.add((GameObject)otherObject);
 

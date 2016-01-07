@@ -128,18 +128,18 @@ public class Services {
      * @return pylon found in the main collection
      * @throws Exception there is no Pylons to be found
      */
-    public static Pylon findPylonWithIndexNumber(int indexNumber) {
+    public static Optional<Pylon> findPylonWithIndexNumber(int indexNumber) {
         Iterator iter = gw.getIterator();
 
         while (iter.hasNext()) {
             GameObject mObj = (GameObject) iter.getNext();
             if (mObj instanceof Pylon) {
                 if (((Pylon) mObj).getIndexNumber() == indexNumber) {
-                    return ((Pylon) mObj);
+                    return Optional.of((Pylon) mObj);
                 }
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**

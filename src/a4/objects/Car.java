@@ -7,11 +7,8 @@ import a4.objects.character_car.Body;
 import a4.objects.character_car.FrontAxle;
 import a4.objects.character_car.RearAxle;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
 import java.util.Vector;
 
@@ -246,7 +243,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
     /**
      * Accelerate the car
      * @param additionalSpeed
-     * amount of speed to accelerate car
+     * amount of speed to accelerateTheCar car
      */
     public void accelerate(float additionalSpeed){
         //if (isCarInOilSlick()) return;
@@ -546,7 +543,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider{
        }
        /********* FUEL CAN ***********/
         else if(otherObject instanceof FuelCan){
-           gw.gameObjectsToDelete.add((GameObject) otherObject);
+           gw.gameObjectsToBeRemoved.add((GameObject) otherObject);
            if(!objectsCollidedWith.contains((GameObject)otherObject)){
                objectsCollidedWith.add((GameObject)otherObject);
 

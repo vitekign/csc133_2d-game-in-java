@@ -34,7 +34,7 @@ public class Brake extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
-            gw.brake();
+            gw.showDownTheCar();
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }

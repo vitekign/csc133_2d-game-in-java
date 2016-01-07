@@ -32,7 +32,7 @@ public class Accelerate extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
-            gw.accelerate();
+            gw.accelerateTheCar();
         } else {
             System.out.println("The target for " + this.getClass().getName() + " is not set up");
         }

@@ -30,7 +30,7 @@ public class TurnRight extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(gw != null){
-            gw.changeSteeringToRight();
+            gw.rotateSteeringToRight();
         } else {
             System.out.println("\nThe target for " + this.getClass().getName() + " is not set up");
         }

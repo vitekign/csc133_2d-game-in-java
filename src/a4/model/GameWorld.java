@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Vector;
 
@@ -41,6 +42,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     private MouseEvent lastMouseEvent = null;
     private static int time;
     private int timeCounter;
+    private Iterator iterator;
 
     Car car;
     Timer timer;
@@ -51,7 +53,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
     Vector<GameObject> gameObjects;
     Vector<IObserver> observers = new Vector<>();
-    public Vector<GameObject> gameObjectsToDelete;
+    public Vector<GameObject> gameObjectsToBeRemoved;
 
     FollowThePlayerCarStrategy followPlayer;
     MoveTowardsPylonStrategy moveFromPylonToPylon;
@@ -62,7 +64,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     public void initLayout() {
         /*Collection with all game object */
         gameObjects = new Vector<>();
-        gameObjectsToDelete = new Vector<>();
+        gameObjectsToBeRemoved = new Vector<>();
         factory = new GameObjectsFactory();
         factory.setTargetForGameWorld(this);
 
@@ -99,34 +101,29 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         gameObjects.add(npcCar2);
         gameObjects.add(npcCar3);
 
-        /**
-         * Place the car at the location of the first pylon
-         */
+        gameObjects.add(factory.makeBirdWithRandomData());
+        gameObjects.add(factory.makeBirdWithRandomData());
+
+        /* Place the car at the location of the first pylon */
         Location locationToPlaceCar;
-        try {
-            firstPylonInTheGameWorld = Services.findPylonWithIndexNumber(THE_FIRST_PYLON);
+
+        Optional<Pylon> locationOfFirstPylon = Services.findPylonWithIndexNumber(THE_FIRST_PYLON);
+        if(locationOfFirstPylon.isPresent()){
+            firstPylonInTheGameWorld = locationOfFirstPylon.get();
             locationToPlaceCar = firstPylonInTheGameWorld.getLocation();
-            if(locationToPlaceCar != null)
-                car = factory.makeCarWithLocation(locationToPlaceCar);
-            else
-                car = factory.makeCarWithLocation(new Location(300,300));
-            gameObjects.add(car);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            car = factory.makeCarWithLocation(locationToPlaceCar);
+        } else {
+            car = factory.makeCarWithLocation(new Location(300,300));
         }
-
-        gameObjects.add(factory.makeBirdWithRandomData());
-        gameObjects.add(factory.makeBirdWithRandomData());
+        gameObjects.add(car);
 
 
-        //Initialize the timer for the game.
         if(timer == null)
             timer = new Timer(MILISEC_PER_FRAME, this);
 
-
-        System.out.println("The number of pylons is: " + Pylon.getCount());
+        iterator = this.getIterator();
     }
-
+    //TODO think a bit about iterator being used inside the class
     private static void createFuelCansAndAddToGameWorld(Vector<GameObject> gameObjects, GameObjectsFactory factory,
                                                         int numberOfCans) {
         while(numberOfCans > 0) {
@@ -136,23 +133,19 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     }
 
 
-    /**
-     * Start timer.
-     */
+    /* Start timer */
     public void startTimer(){
-
         //Logic for STOP
         if(timer.isRunning()){
             timer.stop();
             stopBGMusic();
         } else {
             //Logic for PLAY
-            gameObjectsToDelete.removeAllElements();
+            gameObjectsToBeRemoved.removeAllElements();
             lastMouseEvent = null;
 
-            Iterator iter = this.getIterator();
-            while(iter.hasNext()){
-                GameObject temp = (GameObject)iter.getNext();
+            while(this.iterator.hasNext()){
+                GameObject temp = (GameObject)this.iterator.getNext();
                 if(temp instanceof ISelectable){
                     ((ISelectable) temp).setSelected(false);
                 }
@@ -160,25 +153,18 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
             notifyObserver();
             timer.start();
 
-            if(sound == true) {
+            if(sound) {
                 startBGMusic();
             }
         }
     }
 
 
-    /**
-     * Get time.
-     * @return
-     */
     public int getTimer(){
         return time;
     }
 
-    /**
-     * Listen to each tick.
-     * @param e
-     */
+    /* Listen to each tick */
     @Override
     public void actionPerformed(ActionEvent e) {
         Iterator iter = this.getIterator();
@@ -190,7 +176,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                   ((Moveable)obj).move(MILISEC_PER_FRAME /10);
                   doCollisionChecking();
                   doShockWaveChecking();
-                  deleteUnnecessaryOjbects();
+                  removeUnnecessaryObjects();
             }
         }
         if(this.getTime()%50 == 0 && this.getTime()!= 0){
@@ -200,21 +186,19 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                 switchStrategies();
             }
         }
-
-
         notifyObserver();
     }
 
 
     public void doShockWaveChecking(){
-        Iterator iter = this.getIterator();
-        while(iter.hasNext()) {
+        Iterator iterator = this.getIterator();
+        while(iterator.hasNext()) {
 
-            GameObject currObject = (GameObject) iter.getNext();
+            GameObject currObject = (GameObject) iterator.getNext();
             if(currObject instanceof ShockWave){
                 if(Math.abs(currObject.getX()) > 1000 ||
                         Math.abs(currObject.getY())> 1000){
-                    gameObjectsToDelete.addElement(currObject);
+                    gameObjectsToBeRemoved.addElement(currObject);
                 }
             }
         }
@@ -225,88 +209,67 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         gameObjects.add(myShockWave);
     }
 
-
-
-    /**
-     * Get time counter.
-     * @return
-     */
+    /* Get time counter */
     public int getTime(){
        return timeCounter;
     }
 
-    /**
-     * Set time to zero.
-     */
+    /* Set time to zero */
     public void resetTime(){
         timeCounter = 0;
     }
 
-    /**
-     * Logic for cheching for collisions.
-     */
+    /* Check if two game objects just collided */
     public void doCollisionChecking(){
-        Iterator iter = this.getIterator();
-        while(iter.hasNext()){
-            ICollider currObject = (ICollider)iter.getNext();
+        Iterator firstIterator = this.getIterator();
+        while(firstIterator.hasNext()){
+            ICollider currObject = (ICollider)firstIterator.getNext();
 
-            //Check if the FuelCan's timer equals to zero
+            /* Check if the FuelCan's timer equals to zero */
             if(currObject instanceof FuelCan){
                 if (((FuelCan)currObject).getTimer() <= 0){
-                    gameObjectsToDelete.add((GameObject)currObject);
+                    gameObjectsToBeRemoved.add((GameObject)currObject);
                 }
             }
-
-            Iterator iter2 = this.getIterator();
-            while (iter2.hasNext()) {
-                ICollider otherObject = (ICollider) iter2.getNext();
-                if(otherObject != currObject){
+            Iterator secondIterator = this.getIterator();
+            while (secondIterator.hasNext()) {
+                ICollider anotherObject = (ICollider) secondIterator.getNext();
+                if(anotherObject != currObject){
                     //check for collision
-                    if(currObject.collidesWith(otherObject)){
-                            /*
-                            Check if two collided objects are in a collision state.
-                             */
-                           if( !((GameObject)currObject).objectsCollidedWith.contains((GameObject)otherObject)){
-                            currObject.handleCollision(otherObject);
-                           }
+                    if(currObject.collidesWith(anotherObject)){
+                        /* Check if two collided objects are in a collision state */
+                        if( !((GameObject)currObject).objectsCollidedWith.contains(anotherObject)){
+                        currObject.handleCollision(anotherObject);}
                     } else {
-                        /*
-                        Clear the collision state.
-                         */
-                        if(((GameObject)currObject).objectsCollidedWith.contains((GameObject)otherObject)){
-                            if(((GameObject)otherObject) instanceof OilSlick && (GameObject)currObject instanceof Car &&
-                                    !((GameObject)currObject instanceof NPCCar)){
+                        /* Clear the collision state */
+                        if(((GameObject)currObject).objectsCollidedWith.contains(anotherObject)){
+                            if((anotherObject) instanceof OilSlick && currObject instanceof Car &&
+                                    !(currObject instanceof NPCCar)){
                                 this.leaveOilSlick();
                                 System.out.println("Leaving oil slick");
                             }
-                            ((GameObject)currObject).objectsCollidedWith.remove((GameObject)otherObject);
+                            ((GameObject)currObject).objectsCollidedWith.remove(anotherObject);
                         }
                     }
                 }
-
             }
         }
     }
 
-    /**
-     * Delete objects which are to be deleted.
-     */
-    private void deleteUnnecessaryOjbects(){
-            for (int i = 0; i < gameObjectsToDelete.size(); i++) {
+    /* Remove all objects which have been thrown away */
+    private void removeUnnecessaryObjects(){
+            for (int i = 0; i < gameObjectsToBeRemoved.size(); i++) {
                 for (int j = 0; j < gameObjects.size(); j++) {
-                    if (gameObjectsToDelete.elementAt(i) == gameObjects.elementAt(j)) {
+                    if (gameObjectsToBeRemoved.elementAt(i) == gameObjects.elementAt(j)) {
                         gameObjects.remove(j);
                     }
                 }
             }
-        gameObjectsToDelete.clear();
+        gameObjectsToBeRemoved.clear();
     }
 
 
-    /**
-     * Create a new Pylon and add it to the game.
-     * @param seqNumberOfPylon
-     */
+    /* Create a new Pylon and add it to the game */
     public void createNewPylon(int seqNumberOfPylon){
 
         Vector<Pylon> allPylons = Services.getAllPylons();
@@ -344,10 +307,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
     }
 
-    /**
-     * Create new fuel can and add it to the game.
-     * @param input
-     */
+    /* Create new fuel can and add it to the game */
     public void createNewFuelCan(int input){
         if(isItInPause() ){
 
@@ -371,42 +331,27 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
      * objects and related game date
      */
 
-    /**
-     * Accelerate the car
-     */
-    public void accelerate() {
+    public void accelerateTheCar() {
         car.accelerate(2.5f);
         notifyObserver();
     }
 
-    /**
-     * Slow down the car
-     */
-    public void brake() {
+    public void showDownTheCar() {
         car.brake(2.5f);
         notifyObserver();
     }
 
-    /**
-     * Apply left steering to the car
-     */
-    public void changeSteeringToLeft() {
+    public void rotateSteeringToLeft() {
         car.changeCurrentHeadingToTheLeft();
         notifyObserver();
 
     }
 
-    /**
-     * Apply right steering to the car
-     */
-    public void changeSteeringToRight() {
+    public void rotateSteeringToRight() {
         car.changeCurrentHeadingToTheRight();
         notifyObserver();
     }
 
-    /**
-     * Add new oilSlick to the collection
-     */
     public void addOilSlick() {
         OilSlick oilSlick = new OilSlick(new Location(rand.nextFloat() * GLOBAL_WIDTH,
                 rand.nextFloat() * GLOBAL_HEIGHT), rand.nextFloat() * 50,
@@ -416,56 +361,31 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
-    /**
-     * Create new oil slick with location
-     * @param loc
-     */
+    /* Create new oil slick with location */
     public void addOilSlickWithLocation(Location loc) {
-      //  if(Services.isThereOilSlick(new Point2D.Double(loc.getX(), loc.getY()))) {
-            OilSlick oilSlick = factory.makeOilSlickWithLocatin(loc);
-            gameObjects.addElement(oilSlick);
-            notifyObserver();
-       // }
+        OilSlick oilSlick = factory.makeOilSlickWithLocatin(loc);
+        gameObjects.addElement(oilSlick);
+        notifyObserver();
     }
 
-
-    /**
-     * Pretend that the car has collided with
-     * another car
-     */
-
     public void carCollideWithCar(NPCCar theOtherCar) {
-
-
         car.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS);
         if(theOtherCar instanceof NPCCar){
             theOtherCar.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS/10);
         }
-
         notifyObserver();
     }
 
-    /**
-     * Pretend that the car has collided with a
-     * pylon
-     *
-     * @param num sequential number of the pylon to place the car in
-     */
-    public void carCollideWithPylon(int num) {
-        car.collideWithPylon(num);
+
+    public void carCollideWithPylon(int pylon) {
+        car.collideWithPylon(pylon);
 
         notifyObserver();
     }
 
 
-    /**
-     * Pretend that the car has picked up a fuel can.
-     * Grab hold of the first fuelCan in the collection
-     * by using general-purpose Services class.
-     */
     public void pickUpFuelCan() {
-
-        FuelCan temp = null;
+        FuelCan temp;
         try {
             temp = Services.findTheFirstFuelCan();
             car.pickUpFuelCan(temp);
@@ -489,7 +409,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
      */
     public void pickUpFuelCan(FuelCan fuelCan) {
 
-        FuelCan temp = null;
+        FuelCan temp;
         try {
             car.pickUpFuelCan(fuelCan);
 
@@ -534,21 +454,14 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
-    /**
-     * Generate and apply random colors to
-     * the objects which have the ability to
-     * have their color changed.
-     */
+
     public void generateNewColors() {
-        Iterator iter = this.getIterator();
+        Iterator iterator = this.getIterator();
 
-        while(iter.hasNext()) {
-            GameObject mObj = (GameObject) iter.getNext();
+        while(iterator.hasNext()) {
+            GameObject mObj = (GameObject) iterator.getNext();
             mObj.changeColor(Services.generateRandomColor());
-
         }
-
-
         notifyObserver();
     }
 
@@ -573,18 +486,11 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     }
 
 
-    /**
-     * Is sound on.
-     * @return
-     */
     public boolean isSound() {
         return sound;
     }
 
-    /**
-     * Get the number of frames per second.
-     * @return
-     */
+
     @Override
     public int getFramesPerSecond() {
         return MILISEC_PER_FRAME;
@@ -601,7 +507,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     @Override
     public void addToTheDeleteObjectsCollection(GameObject obj) {
 
-        gameObjectsToDelete.addElement(obj);
+        gameObjectsToBeRemoved.addElement(obj);
     }
 
     /**
@@ -610,8 +516,8 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
      */
     @Override
     public void eraseFromTheDeleteObjectsCollections(GameObject obj) {
-       if(gameObjectsToDelete.contains(obj)){
-           gameObjectsToDelete.removeElement(obj);
+       if(gameObjectsToBeRemoved.contains(obj)){
+           gameObjectsToBeRemoved.removeElement(obj);
        }
     }
 
@@ -631,16 +537,12 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     public void deleteSelectedElements(){
        // System.out.println("Delete All Objects");
 
-        this.deleteUnnecessaryOjbects();
-       // gameObjectsToDelete.removeAllElements();
+        this.removeUnnecessaryObjects();
+       // gameObjectsToBeRemoved.removeAllElements();
         this.setLastMouseEvent(null);
         notifyObserver();
     }
 
-
-    /**
-     * Start background music
-     */
     public void startBGMusic(){
         if(!isItInPause())
             backgroundMusic.loop();

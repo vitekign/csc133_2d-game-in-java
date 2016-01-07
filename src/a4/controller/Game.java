@@ -221,11 +221,11 @@ public class Game extends JFrame{
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("N"), "changeColors");
         this.getRootPane().getActionMap().put("changeColors", changeColorsAction);
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0),"accelerate");
-        this.getRootPane().getActionMap().put("accelerate", accelerateAction);
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0),"accelerateTheCar");
+        this.getRootPane().getActionMap().put("accelerateTheCar", accelerateAction);
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"brake");
-        this.getRootPane().getActionMap().put("brake", brakeAction);
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"showDownTheCar");
+        this.getRootPane().getActionMap().put("showDownTheCar", brakeAction);
 
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("LEFT"),"turnLeft");
         this.getRootPane().getActionMap().put("turnLeft", turnLeftAction);
