@@ -8,14 +8,14 @@ import a4.controller.IGameWorld;
 import a4.objects.*;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Vector;
+import java.util.*;
+import java.util.List;
 
     /*   Code here to hold and manipulate world objects, handle    *
      *   observer registration, invoke observer callbacks, etc.    *
@@ -51,8 +51,8 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     GameObjectsFactory factory;
     Random rand = new Random();
 
-    Vector<GameObject> gameObjects;
-    Vector<IObserver> observers = new Vector<>();
+    List<GameObject> gameObjects;
+    List<IObserver> observers = new ArrayList<>();
     public Vector<GameObject> gameObjectsToBeRemoved;
 
     FollowThePlayerCarStrategy followPlayer;
@@ -63,7 +63,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
     public void initLayout() {
         /*Collection with all game object */
-        gameObjects = new Vector<>();
+        gameObjects = new ArrayList<>();
         gameObjectsToBeRemoved = new Vector<>();
         factory = new GameObjectsFactory();
         factory.setTargetForGameWorld(this);
@@ -260,7 +260,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     private void removeUnnecessaryObjects(){
             for (int i = 0; i < gameObjectsToBeRemoved.size(); i++) {
                 for (int j = 0; j < gameObjects.size(); j++) {
-                    if (gameObjectsToBeRemoved.elementAt(i) == gameObjects.elementAt(j)) {
+                    if (gameObjectsToBeRemoved.elementAt(i) == gameObjects.get(j)) {
                         gameObjects.remove(j);
                     }
                 }
@@ -356,7 +356,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         OilSlick oilSlick = new OilSlick(new Location(rand.nextFloat() * GLOBAL_WIDTH,
                 rand.nextFloat() * GLOBAL_HEIGHT), rand.nextFloat() * 50,
                 rand.nextFloat() * 50, Color.black, this);
-        gameObjects.addElement(oilSlick);
+        gameObjects.add(oilSlick);
 
         notifyObserver();
     }
@@ -364,7 +364,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     /* Create new oil slick with location */
     public void addOilSlickWithLocation(Location loc) {
         OilSlick oilSlick = factory.makeOilSlickWithLocatin(loc);
-        gameObjects.addElement(oilSlick);
+        gameObjects.add(oilSlick);
         notifyObserver();
     }
 
@@ -668,9 +668,8 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     @Override
     public void notifyObserver() {
         GameWorldProxy proxy = new GameWorldProxy(this);
-
-        for (int i = 0; i < observers.size(); i++){
-            observers.elementAt(i).update(proxy,null);
+        for (IObserver observer : observers) {
+            observer.update(proxy, null);
 
         }
     }
@@ -715,7 +714,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         @Override
         public Object getNext() {
             if(this.hasNext()){
-                return gameObjects.elementAt(index++);
+                return gameObjects.get(index++);
             }
             return null;
         }
