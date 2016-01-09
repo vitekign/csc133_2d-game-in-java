@@ -370,7 +370,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
     public void carCollideWithCar(NPCCar theOtherCar) {
         car.increaseDamageLevelAndUpdateGameWorld(DAMAGE_FOR_COLLIDING_WITH_CARS);
-        if(theOtherCar instanceof NPCCar){
+        if(theOtherCar != null){
             theOtherCar.increaseDamageLevelAndUpdateGameWorld(DAMAGE_FOR_COLLIDING_WITH_CARS/10);
         }
         notifyObserver();
@@ -404,9 +404,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
     /**
      * Tell the car to accept the increase in the fuel level and
-     * then create a new fuel can.
-     * @param fuelCan
-     */
+     * then create a new fuel can.*/
     public void pickUpFuelCan(FuelCan fuelCan) {
 
         FuelCan temp;
@@ -422,23 +420,17 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
-    /**
-     * Pretend that a bird has flown over the car,
-     * thus making the car gain some damage
-     */
+    /* Pretend that a bird has flown over the car,
+     * thus making the car gain some damage */
     public void birdFlyOver() {
-        car.increaseDamageLevelAndUpdateGameWorld(car.getAmountOfDamageForCollidingWithBirds());
+        car.increaseDamageLevelAndUpdateGameWorld(Car.getAmountOfDamageForCollidingWithBirds());
 
         notifyObserver();
     }
 
 
-    /**
-     * Pretend that the car has entered
-     * an oilSlick
-     */
-
-
+    /* Pretend that the car has entered
+     * an oilSlick */
     public void enterOilSlick() {
         car.enterOilSlick();
         notifyObserver();
@@ -500,20 +492,14 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
      Confirms to the IGameWorld
      */
 
-    /**
-     * Add objects, which are to be deleted, to the collection.
-     * @param obj
-     */
+    /* Add objects, which are to be deleted, to the collection */
     @Override
     public void addToTheDeleteObjectsCollection(GameObject obj) {
 
         gameObjectsToBeRemoved.addElement(obj);
     }
 
-    /**
-     * Erase object from the collection
-     * @param obj
-     */
+    /* Erase object from the collection */
     @Override
     public void eraseFromTheDeleteObjectsCollections(GameObject obj) {
        if(gameObjectsToBeRemoved.contains(obj)){
@@ -521,10 +507,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
        }
     }
 
-    /**
-     * Is the game in a pause mode.
-     * @return
-     */
+    /* Is the game in a pause mode. */
     @Override
     public boolean isItInPause(){
         return !timer.isRunning();
@@ -555,10 +538,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         backgroundMusic.stop();
     }
 
-    /**
-     * Part of turn on/off music logic.
-     * @param value
-     */
+    /* Part of turn on/off music logic */
     public void setSound(boolean value){
         sound = value;
         notifyObserver();
@@ -730,24 +710,8 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
 
     private class GameObjectsIterator implements Iterator {
-
-        /**
-         * Implicit initialization
-         * with 0 for index. Feature of the
-         * Java, initialize everything with
-         * 0, null...
-         * </p>
-         */
         int index;
 
-        /**
-         * Return the next object from the
-         * primary collection of the game objects.
-         * Implicitly set the pointer to the next object,
-         * so no need in (i++)
-         * @return
-         * object from the primary collection of the game objects
-         */
         @Override
         public Object getNext() {
             if(this.hasNext()){
@@ -758,10 +722,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
         @Override
         public boolean hasNext() {
-            if(index < gameObjects.size()){
-                return true;
-            }
-            return false;
+            return (index < gameObjects.size());
         }
     }
 }
