@@ -42,7 +42,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     private MouseEvent lastMouseEvent = null;
     private static int time;
     private int timeCounter;
-    private Iterator iterator;
+
 
     Car car;
     Timer timer;
@@ -84,7 +84,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         gameObjects.add(factory.makeOilSlickWithRandomData());
         gameObjects.add(factory.makeOilSlickWithRandomData());
 
-        createFuelCansAndAddToGameWorld(gameObjects, factory, 7);
+        createFuelCansAndAddToGameWorld(factory, 7);
 
         NPCCar npcCar1 = factory.makeNPCCarWithRandomData();
         NPCCar npcCar2 = factory.makeNPCCarWithRandomData();
@@ -121,10 +121,9 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         if(timer == null)
             timer = new Timer(MILISEC_PER_FRAME, this);
 
-        iterator = this.getIterator();
+
     }
-    //TODO think a bit about iterator being used inside the class
-    private static void createFuelCansAndAddToGameWorld(Vector<GameObject> gameObjects, GameObjectsFactory factory,
+    private void createFuelCansAndAddToGameWorld(GameObjectsFactory factory,
                                                         int numberOfCans) {
         while(numberOfCans > 0) {
             gameObjects.add(factory.makeFuelCanWithRandomData());
@@ -135,6 +134,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
     /* Start timer */
     public void startTimer(){
+        Iterator iterator = this.getIterator();
         //Logic for STOP
         if(timer.isRunning()){
             timer.stop();
@@ -144,8 +144,8 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
             gameObjectsToBeRemoved.removeAllElements();
             lastMouseEvent = null;
 
-            while(this.iterator.hasNext()){
-                GameObject temp = (GameObject)this.iterator.getNext();
+            while(iterator.hasNext()){
+                GameObject temp = (GameObject)iterator.getNext();
                 if(temp instanceof ISelectable){
                     ((ISelectable) temp).setSelected(false);
                 }
@@ -167,11 +167,11 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     /* Listen to each tick */
     @Override
     public void actionPerformed(ActionEvent e) {
-        Iterator iter = this.getIterator();
+        Iterator iterator = this.getIterator();
         timeCounter++;
 
-        while(iter.hasNext()){
-            GameObject obj = (GameObject)iter.getNext();
+        while(iterator.hasNext()){
+            GameObject obj = (GameObject)iterator.getNext();
             if(obj instanceof Moveable){
                   ((Moveable)obj).move(MILISEC_PER_FRAME /10);
                   doCollisionChecking();
@@ -236,7 +236,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                 ICollider anotherObject = (ICollider) secondIterator.getNext();
                 if(anotherObject != currObject){
                     //check for collision
-                    if(currObject.collidesWith(anotherObject)){
+                    if(currObject.didCollideWithAnotherObject(anotherObject)){
                         /* Check if two collided objects are in a collision state */
                         if( !((GameObject)currObject).objectsCollidedWith.contains(anotherObject)){
                         currObject.handleCollision(anotherObject);}
@@ -332,12 +332,12 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
      */
 
     public void accelerateTheCar() {
-        car.accelerate(2.5f);
+        car.accelerateTheCar(2.5f);
         notifyObserver();
     }
 
     public void showDownTheCar() {
-        car.brake(2.5f);
+        car.applyBreaks(2.5f);
         notifyObserver();
     }
 
@@ -369,16 +369,16 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     }
 
     public void carCollideWithCar(NPCCar theOtherCar) {
-        car.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS);
+        car.increaseDamageLevelAndUpdateGameWorld(DAMAGE_FOR_COLLIDING_WITH_CARS);
         if(theOtherCar instanceof NPCCar){
-            theOtherCar.increaseDamageLevel(DAMAGE_FOR_COLLIDING_WITH_CARS/10);
+            theOtherCar.increaseDamageLevelAndUpdateGameWorld(DAMAGE_FOR_COLLIDING_WITH_CARS/10);
         }
         notifyObserver();
     }
 
 
     public void carCollideWithPylon(int pylon) {
-        car.collideWithPylon(pylon);
+        car.collideWithPylonAndUpdateGameWorld(pylon);
 
         notifyObserver();
     }
@@ -427,7 +427,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
      * thus making the car gain some damage
      */
     public void birdFlyOver() {
-        car.increaseDamageLevel(car.damageForCollidingWithBirds());
+        car.increaseDamageLevelAndUpdateGameWorld(car.getAmountOfDamageForCollidingWithBirds());
 
         notifyObserver();
     }
@@ -440,7 +440,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
 
     public void enterOilSlick() {
-        car.enterAnOilSlick();
+        car.enterOilSlick();
         notifyObserver();
     }
 
@@ -449,7 +449,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
      * oilSlick
      */
     public void leaveOilSlick() {
-        car.exitAnOilSlick();
+        car.exitOilSlick();
 
         notifyObserver();
     }

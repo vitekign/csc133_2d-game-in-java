@@ -159,7 +159,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
      * @return true if collision has happened
      */
     @Override
-    public boolean collidesWith(ICollider obj) {
+    public boolean didCollideWithAnotherObject(ICollider obj) {
 
         double distX = this.getX() - ((GameObject)obj).getX();
         double distY = this.getY() - ((GameObject)obj).getY();

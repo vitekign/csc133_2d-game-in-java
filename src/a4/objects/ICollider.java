@@ -7,7 +7,7 @@ package a4.objects;
 
 public interface ICollider {
 
-    public boolean collidesWith(ICollider obj);
+    public boolean didCollideWithAnotherObject(ICollider obj);
     public void handleCollision(ICollider otherObject);
     public float getDistanceOfReference();
 

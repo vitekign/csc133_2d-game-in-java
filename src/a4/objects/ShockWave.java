@@ -205,7 +205,7 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
     }
 
     @Override
-    public boolean collidesWith(ICollider obj) {
+    public boolean didCollideWithAnotherObject(ICollider obj) {
         return false;
     }
 

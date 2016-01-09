@@ -49,20 +49,8 @@ public class NPCCar extends Car {
         g2d.setTransform(saveAt);
     }
 
-
-
-
     IStrategy strategy;
     private int firstPylonToMove;
-
-    /**
-     *
-     * @return
-     */
-    public int getFirstPylonToMove() {
-
-        return firstPylonToMove;
-    }
 
     public IStrategy returnCurrentStrategy(){
         return strategy;
@@ -72,31 +60,15 @@ public class NPCCar extends Car {
         strategy = str;
     }
 
-
-
     public int getZIndex(){
         return NPCCar.zIndex;
     }
 
 
 
-    /**
-     * Create a NPC car.
+    /* Create a NPC car.
      * The class needs to override the information
-     * inherited from the Car.
-     * @param location
-     * @param gw
-     * @param color
-     * @param width
-     * @param length
-     * @param steeringDirection
-     * @param maximumSpeed
-     * @param fuelLevel
-     * @param speed
-     * @param damageLevel
-     * @param maximumDamageLevel
-     * @param lastHighestPylonReached
-     */
+     * inherited from the Car. */
     public NPCCar(Location location, GameWorld gw, Color color, float width, float length,
                   float steeringDirection, float maximumSpeed, float fuelLevel,
                   float speed, float damageLevel, float maximumDamageLevel, int lastHighestPylonReached){
@@ -147,12 +119,10 @@ public class NPCCar extends Car {
        return new Location((float)getX(), (float)getY());
     }
 
-    /**
-     * The move command is implemented by using a
+    /* The move command is implemented by using a
      * strategy pattern. Basically, it redirects move's
      * responsibility from NPCCar to the performStrategy
      * method of the Strategy class.
-     * @param framesPerSecond
      */
     @Override
     public void move(int framesPerSecond) {
@@ -165,26 +135,13 @@ public class NPCCar extends Car {
         }
     }
 
-    /**
-     * Information about the current state
-     * of the object.
-     * @return
-     * thorough information
-     */
+    /* Information about the current state
+     * of the object */
     @Override
     public String toString() {
         return "NPCCar: "       + super.toString() +
                 " strategy="  + this.strategy.toString() +
                 " \n\t  lastPylonReached=" + this.getLastHighestPylonReached();
-    }
-
-    /**
-     * Set the first pylon, so the the NPCCar object
-     * knows where to move after creation.
-     * @param firstPylonToMove
-     */
-    public void setFirstPylonToMove(int firstPylonToMove) {
-        this.firstPylonToMove = firstPylonToMove;
     }
 
     /**
@@ -210,7 +167,7 @@ public class NPCCar extends Car {
      */
     //TODO Delete NPCCars with fatal level of damage
     @Override
-    public void increaseDamageLevel(float damage) {
+    public void increaseDamageLevelAndUpdateGameWorld(float damage) {
         damageLevel += damage;
         if(damageLevel > maximumDamageLevel){
             damageLevel = maximumDamageLevel;
@@ -233,7 +190,7 @@ public class NPCCar extends Car {
      * @return true if collision has happened
      */
     @Override
-    public boolean collidesWith(ICollider obj) {
+    public boolean didCollideWithAnotherObject(ICollider obj) {
         double distX = this.getX() - ((GameObject)obj).getX();
         double distY = this.getY() - ((GameObject)obj).getY();
         float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);

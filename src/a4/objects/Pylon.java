@@ -319,7 +319,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
      * @return true if collision has happened
      */
     @Override
-    public boolean collidesWith(ICollider obj) {
+    public boolean didCollideWithAnotherObject(ICollider obj) {
         double distX = this.getX() - ((GameObject)obj).getX();
         double distY = this.getY() - ((GameObject)obj).getY();
         float distanceBtwnCenters = (float) Math.sqrt(distX * distX + distY * distY);
