@@ -189,7 +189,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
-
     public void doShockWaveChecking(){
         Iterator iterator = this.getIterator();
         while(iterator.hasNext()) {
@@ -238,17 +237,17 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                     //check for collision
                     if(currObject.didCollideWithAnotherObject(anotherObject)){
                         /* Check if two collided objects are in a collision state */
-                        if( !((GameObject)currObject).objectsCollidedWith.contains(anotherObject)){
+                        if( !((GameObject)currObject).getObjectsCollidedWith().contains(anotherObject)){
                         currObject.handleCollision(anotherObject);}
                     } else {
                         /* Clear the collision state */
-                        if(((GameObject)currObject).objectsCollidedWith.contains(anotherObject)){
+                        if(((GameObject)currObject).getObjectsCollidedWith().contains(anotherObject)){
                             if((anotherObject) instanceof OilSlick && currObject instanceof Car &&
                                     !(currObject instanceof NPCCar)){
                                 this.leaveOilSlick();
                                 System.out.println("Leaving oil slick");
                             }
-                            ((GameObject)currObject).objectsCollidedWith.remove(anotherObject);
+                            ((GameObject)currObject).getObjectsCollidedWith().remove(anotherObject);
                         }
                     }
                 }
@@ -278,7 +277,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
             if(pylon.getIndexNumber() == seqNumberOfPylon)
                 isPylonInGW = true;
         }
-
         if(isPylonInGW) {
             JOptionPane.showMessageDialog(null, "Sorry, the pylon with this number already exists...");
         }
@@ -290,12 +288,10 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                     return 1;
                 }
             });
-
             if (isItInPause()) {
                 if(lastMouseEvent == null){
                     JOptionPane.showMessageDialog(null, "Please click on the map and then press Add Pylon");
                 } else {
-
                     Point2D mouseWorldLoc =  Services.applyInverseAndGetPoint(lastMouseEvent);
 
                     gameObjects.add(factory.makePylonWithLocationAndSequenceNumber(new Location((int)mouseWorldLoc.getX(), (int)mouseWorldLoc.getY()), seqNumberOfPylon));
@@ -304,7 +300,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                 }
             }
         }
-
     }
 
     /* Create new fuel can and add it to the game */
@@ -323,13 +318,10 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                 JOptionPane.showMessageDialog(null, "Please click on the map and then press Add FuelCan");
             }
         }
-
     }
 
-    /**
-     * Additional methods to manipulate world
-     * objects and related game date
-     */
+    /* Additional methods to manipulate world
+     * objects and related game date */
 
     public void accelerateTheCar() {
         car.accelerateTheCar(2.5f);
@@ -402,11 +394,9 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     }
 
 
-    /**
-     * Tell the car to accept the increase in the fuel level and
+    /* Tell the car to accept the increase in the fuel level and
      * then create a new fuel can.*/
     public void pickUpFuelCan(FuelCan fuelCan) {
-
         FuelCan temp;
         try {
             car.pickUpFuelCan(fuelCan);
@@ -416,7 +406,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
         notifyObserver();
     }
 
@@ -436,10 +425,8 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
-    /**
-     * Pretend that the car has left the
-     * oilSlick
-     */
+    /* Pretend that the car has left the
+     * oilSlick */
     public void leaveOilSlick() {
         car.exitOilSlick();
 
@@ -457,40 +444,31 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
-    /**
-     * Pretend that one tick has happened.
-     * Make all classes run move method.
-     */
+    /* Pretend that one tick has happened.
+     * Make all classes run move method */
     public void makeTick() {
+        Iterator iterator = this.getIterator();
 
-
-        Iterator iter = this.getIterator();
-
-        while(iter.hasNext()) {
-            GameObject mObj = (GameObject) iter.getNext();
+        while(iterator.hasNext()) {
+            GameObject mObj = (GameObject) iterator.getNext();
             if(mObj instanceof Moveable){
               ((Moveable) mObj).move(MILISEC_PER_FRAME);
             }
-
         }
         currentClockTime++;
         notifyObserver();
     }
 
-
     public boolean isSound() {
         return sound;
     }
-
 
     @Override
     public int getFramesPerSecond() {
         return MILISEC_PER_FRAME;
     }
 
-    /*
-     Confirms to the IGameWorld
-     */
+    /* Confirms to the IGameWorld  */
 
     /* Add objects, which are to be deleted, to the collection */
     @Override
@@ -513,15 +491,8 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         return !timer.isRunning();
     }
 
-
-    /**
-     * Part of delete unnecessary objects logic.
-     */
     public void deleteSelectedElements(){
-       // System.out.println("Delete All Objects");
-
         this.removeUnnecessaryObjects();
-       // gameObjectsToBeRemoved.removeAllElements();
         this.setLastMouseEvent(null);
         notifyObserver();
     }
@@ -531,22 +502,18 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
             backgroundMusic.loop();
     }
 
-    /**
-     * Stop background music.
-     */
+
     public void stopBGMusic(){
         backgroundMusic.stop();
     }
 
-    /* Part of turn on/off music logic */
+    /* Part of turn on/off music functionality */
     public void setSound(boolean value){
         sound = value;
         notifyObserver();
     }
 
-    /**
-     * Part of turn on/off music logic.
-     */
+    /* Part of turn on/off music functionality */
     public void switchSound() {
         if(sound) {
             setSound(false);
@@ -559,14 +526,12 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
-    /**
-     * Switch to another strategy.
-     */
+    /* Switch to another strategy */
     public void switchStrategies(){
-        Iterator iter = this.getIterator();
+        Iterator iterator = this.getIterator();
 
-        while(iter.hasNext()) {
-            GameObject mObj = (GameObject) iter.getNext();
+        while(iterator.hasNext()) {
+            GameObject mObj = (GameObject) iterator.getNext();
             if(mObj instanceof NPCCar){
                 if(((NPCCar) mObj).returnCurrentStrategy() instanceof MoveTowardsPylonStrategy)
                 {
@@ -580,22 +545,11 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
-    /**
-     * Update currentFuelLevel in the collection
-     *
-     * @param volume update the level of fuel in the main collection
-     */
     public void setNewFuelLevel(float volume) {
         currentFuelLevel = volume;
         notifyObserver();
     }
 
-    /**
-     * Update the number of the lastPylon reached.
-     *
-     * @param seqNum update the sequential number of the last pylon
-     *               reached in the main collection
-     */
     public void updateLastPylonReached(int seqNum) {
         lastPylonReached = seqNum;
         notifyObserver();
@@ -604,56 +558,40 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     public void updateDamageLevel(float newLevel) {
         damageLevel = newLevel;
         if (damageLevel == 100) {
-            deleteOneLife();
+            deleteOneLifeAndRestartLevel();
         }
 
         notifyObserver();
     }
 
-    /**
-     * Decrease the number of lives and restart the game.
-     * If the number of lives is equal to zero, then quit the game.
-     */
-    public void deleteOneLife() {
+    /* Decrease one life and restart the level.
+     * If the number of lives is equal to zero, then quit the game */
+    public void deleteOneLifeAndRestartLevel() {
         livesRemaining--;
         if (livesRemaining == 0) {
-
             System.out.println("You're out of lives!");
             quitTheGame();
         }
-
         if(isSound())
             lostLife.play();
 
         notifyObserver();
-        resetTheGame();
-
-
+        resetLevel();
     }
 
-    /**
-     * Reset the game after losing one life.
-     */
-    private void resetTheGame() {
-        System.out.println("You've lost one life, your game has been reset");
-        //init layout
+    /* Reset level after losing one life. */
+    private void resetLevel() {
         gameObjects = null;
         Pylon.resetSequenceGeneratorTo(THE_FIRST_PYLON);
         initLayout();
         car.setLastHighestPylonReachedToZero();
         notifyObserver();
-
     }
 
-
-    /**
-     * Exit game
-     */
     public void quitTheGame() {
         System.out.println("Quitting the game...");
         System.exit(0);
     }
-
 
     @Override
     public Iterator getIterator() {

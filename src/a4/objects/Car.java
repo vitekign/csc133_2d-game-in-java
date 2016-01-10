@@ -32,9 +32,9 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
     public Sound collideWithNPCSound;
     public Sound collideWithFuelCanSound;
 
-    public Body myBody;
-    FrontAxle myFrontAxle;
-    RearAxle myRearAxle;
+    private Body myBody;
+    private FrontAxle myFrontAxle;
+    private RearAxle myRearAxle;
 
     public Car(Location location, GameWorld gw, Color color) {
         super(color);
@@ -147,7 +147,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         fuelLevel += volume;
         if (fuelLevel <= 0) {
             fuelLevel = 0;
-            gw.deleteOneLife();
+            gw.deleteOneLifeAndRestartLevel();
         } else {
             gw.setNewFuelLevel(this.fuelLevel);
         }
@@ -209,15 +209,9 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         return Car.zIndex;
     }
 
-    public float getWidth() {
-        return width;
-    }
-
     public float getSteeringDirection() {
         return steeringDirection;
     }
-
-
 
     public float getSpeed() {
         return speed;
@@ -242,7 +236,6 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         }
         gw.updateDamageLevel(damageLevel);
     }
-
 
     public int getLastHighestPylonReached() {
         return lastHighestPylonReached;
