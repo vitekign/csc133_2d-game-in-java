@@ -1,15 +1,10 @@
 package a4.objects;
 
-/**
- * Created by Victor Ignatenkov on 3/23/15.
- */
-
+/* Created by Victor Ignatenkov on 3/23/15 */
 
 public interface ICollider {
 
-    public boolean didCollideWithAnotherObject(ICollider obj);
-    public void handleCollision(ICollider otherObject);
-    public float getDistanceOfReference();
-
-
+    boolean didCollideWithAnotherObject(ICollider obj);
+    void handleCollision(ICollider otherObject);
+    float getDistanceOfReference();
 }
