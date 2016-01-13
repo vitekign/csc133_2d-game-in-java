@@ -3,7 +3,7 @@
  */
 
 package a4.objects;
-import a4.app.utilities.Services;
+import a4.app.utilities.Utilities;
 import a4.model.GameWorld;
 
 
@@ -50,7 +50,7 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
         //random heading, speed and color.
         this.heading = new Random().nextFloat()*360;
         this.speed = (new Random().nextFloat()*3)+2;
-        this.color = Services.generateRandomColor();
+        this.color = Utilities.generateRandomColor();
 
         //size of the curve
         length = (int) (50 + new Random().nextFloat()*10);

@@ -19,7 +19,7 @@ public class Sound {
 
     public Sound(String fileName) {
 
-        String pathToResources = Services.getPathToSoundResources();
+        String pathToResources = Utilities.getPathToSoundResources();
 
         try {
             File file = new File(pathToResources + fileName);

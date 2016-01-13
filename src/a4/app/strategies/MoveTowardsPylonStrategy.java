@@ -7,7 +7,7 @@ import a4.model.GameWorld;
 import a4.objects.Location;
 import a4.objects.NPCCar;
 import a4.objects.Pylon;
-import a4.app.utilities.Services;
+import a4.app.utilities.Utilities;
 
 import java.util.Vector;
 
@@ -36,7 +36,7 @@ public class MoveTowardsPylonStrategy implements IStrategy {
     public void performStrategy(NPCCar car, GameWorld gw) {
 
 
-            if(Services.findTheNumberOfPylons() != 0) {
+            if(Utilities.findTheNumberOfPylons() != 0) {
 
              /* **********************************************
               * **********************************************
@@ -45,7 +45,7 @@ public class MoveTowardsPylonStrategy implements IStrategy {
               * **********************************************/
 
                 /* 1. Retrieve all pylons of the world */
-                Vector<Pylon> allPylons = Services.getAllPylons();
+                Vector<Pylon> allPylons = Utilities.getAllPylons();
                 /* 2. Sort'em
                 *
                 * Returns negative one, zero, or one if the first argument is smaller,
@@ -69,7 +69,7 @@ public class MoveTowardsPylonStrategy implements IStrategy {
                         break;
                     }
                 }
-                    if(Services.findTheNumberOfPylons() != 0 && nextPylonToFollow == null){
+                    if(Utilities.findTheNumberOfPylons() != 0 && nextPylonToFollow == null){
                         nextPylonToFollow = allPylons.firstElement();
                     }
 

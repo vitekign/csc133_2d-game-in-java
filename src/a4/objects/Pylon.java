@@ -4,7 +4,7 @@ package a4.objects;
  * Created by Victor Ignatenkov on 2/14/15.
  */
 
-import a4.app.utilities.Services;
+import a4.app.utilities.Utilities;
 import a4.model.GameWorld;
 
 import javax.imageio.ImageIO;
@@ -79,8 +79,8 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         sequenceNumber = count++;
 
 
-        imageRes = Services.getImage("pylon.png");
-        imagePressed = Services.getImage("pylon_pressed.png");
+        imageRes = Utilities.loadImages("pylon.png");
+        imagePressed = Utilities.loadImages("pylon_pressed.png");
 
     }
 
@@ -101,7 +101,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         scale(1,1);
 
 
-        String pathToResources = Services.getPathToImgResources();
+        String pathToResources = Utilities.getPathToImgResources();
         File file = new File(pathToResources + "pylon.png");
 
         try {

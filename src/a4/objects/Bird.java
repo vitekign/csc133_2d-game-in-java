@@ -1,7 +1,7 @@
 /* Created by Victor Ignatenkov on 2/14/15 */
 package a4.objects;
 
-import a4.app.utilities.Services;
+import a4.app.utilities.Utilities;
 import a4.model.GameWorld;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -27,7 +27,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
     public Bird(Location location, float size, float heading, float speed, Color color, GameWorld gw){
         super(color);
 
-        imageRes = Services.getImage("bird.png");
+        imageRes = Utilities.loadImages("bird.png");
 
         this.gw = gw;
 

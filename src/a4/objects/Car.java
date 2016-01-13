@@ -1,7 +1,7 @@
 /* Created by Victor Ignatenkov on 2/9/15. */
 
 package a4.objects;
-import a4.app.utilities.Services;
+import a4.app.utilities.Utilities;
 import a4.app.utilities.Sound;
 import a4.model.GameWorld;
 import a4.objects.character_car.Body;
@@ -81,7 +81,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
 
         heading = 180;
 
-        imageRes = Services.getImage("car.png");
+        imageRes = Utilities.loadImages("car.png");
 
         myRotationMatrix = new AffineTransform();
         myTranslationMatrix = new AffineTransform();
@@ -243,7 +243,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
 
     public void collideWithPylonAndUpdateGameWorld(int numberOfPylon) {
 
-        Vector<Pylon> allPylons = Services.getAllPylons();
+        Vector<Pylon> allPylons = Utilities.getAllPylons();
 
         allPylons.sort((Pylon o1, Pylon o2)->{
                 if(o1.getIndexNumber() < o2.getIndexNumber()){

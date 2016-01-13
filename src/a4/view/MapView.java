@@ -1,69 +1,48 @@
-/**
- * Created by Victor Ignatenkov on 3/3/15.
- */
+/* Created by Victor Ignatenkov on 3/3/15 */
 
 package a4.view;
-import a4.app.utilities.Services;
+import a4.app.utilities.Utilities;
 import a4.model.*;
 import a4.objects.GameObject;
 import a4.objects.IDrawable;
 import a4.objects.ISelectable;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.io.File;
 
 
-/**
- * MapView is used to show the map of the current
- * state of the game. In this version, the date change
- * is shown in the Console and also in the textArea on the screen.
- */
-
+/* MapView is used to show the map of the current
+ * state of the game.*/
 
 public class MapView extends JPanel implements IObserver, MouseListener,
         MouseWheelListener, MouseMotionListener{
-    /**
-     * Create a textArea to show the current
-     * state of the game on the screen.
-     */
 
-    GameWorldProxy gw;
+    private GameWorldProxy gw;
 
-    private Image imageRes;
+    private Image backgroundPatternImage;
     private AffineTransform theVTM ;
+    private MouseEvent lastMouseEvent = null;
 
-
-   // protected double winWidth, winHeight, winLeft, winBottom;
-
-    MouseEvent lastMouseEvent = null;
-
-
-    /**
-     * Define the boundaries.
-     */
+    /* Define boundaries */
     private double winRight = 845;
     private double winTop = 709;
     private double winLeft = 0;
     private double winBottom = 0;
 
-
-    /**
-     * Create MapView.
-     */
     public MapView(){
         this.addMouseWheelListener(this);
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-        imageRes = null;
+        backgroundPatternImage = null;
 
-        //Retrieve an image for background
-        imageRes = Services.getImage("asphalt_light.jpg");
-
+        // Retrieve an image for background
+        // backgroundPatternImage = Services.loadImages("asphalt_light.jpg");
+        // backgroundPatternImage = Services.loadImages("red_square_weird.png");
+        // backgroundPatternImage = Services.loadImages("gray_square_with_rocks.png");
+        backgroundPatternImage = Utilities.loadImages("grass_1.png");
 
         theVTM = new AffineTransform();
     }
@@ -76,42 +55,17 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         return winRight - winLeft;
     }
 
-
-
     public void update(GameWorldProxy gw, Object arg){
-        /**
-         * Code here to output current map information (based on
-         * the data in the Observable ) to the console and to the
-         * screen through JTextAre
-         */
-        //gw = game world proxy
         this.gw = gw;
-
-        Iterator iter = gw.getIterator();
-
-        while(iter.hasNext()) {
-            GameObject mObj = (GameObject) iter.getNext();
-
-        }
         repaint();
     }
 
-    /**
-     * Logic - to go through all world objects and
-     * pass them Graphics.
-     * @param g
-     */
+
     @Override
     protected void paintComponent(Graphics g) {
-
-        //Draw background with an image
         super.paintComponent(g);
-            int ratio = 200;
-            for (int i = 0; i < 20; i++) {
-                for (int j = 0; j < 20; j++) {
-                    g.drawImage(imageRes, ratio * i, ratio * j, ratio, ratio, null);
-                }
-            }
+
+        fillUpScreenWithPatternImage(g);
 
         AffineTransform worldToND, ndToScreen;
 
@@ -121,10 +75,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         theVTM = (AffineTransform) ndToScreen.clone();
         theVTM.concatenate(worldToND);
 
-        Services.supplyServicesWithVTM(theVTM);
+        Utilities.supplyServicesWithVTM(theVTM);
         g2d.transform(theVTM);
-       // g2d.setClip(0,0,500,500);
-
 
         /**
          * Draw in the right order according the the zIndex
@@ -132,9 +84,9 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         int i = 0;
         int maxZIndex = 0;
          while(true) {
-          Iterator iter = gw.getIterator();
-          while (iter.hasNext()) {
-              GameObject mObj = (GameObject) iter.getNext();
+          Iterator iterator = gw.getIterator();
+          while (iterator.hasNext()) {
+              GameObject mObj = (GameObject) iterator.getNext();
               if (mObj.getZIndex() > maxZIndex)
                   maxZIndex = mObj.getZIndex();
               if (mObj.getZIndex() == i) {
@@ -149,16 +101,16 @@ public class MapView extends JPanel implements IObserver, MouseListener,
       }
     }
 
-    /**
-     * Build a WorldToND space.
-     * @param winWidth
-     * @param winHeight
-     * @param winLeft
-     * @param winBottom
-     * @return
-     */
-    private AffineTransform buildWorldToNDXform(double winWidth, double winHeight, double winLeft, double winBottom) {
+    private void fillUpScreenWithPatternImage(Graphics g) {
+        int ratio = 65;
+        for (int i = 0; i < 20; i++) {
+            for (int j = 0; j < 20; j++) {
+                g.drawImage(backgroundPatternImage, ratio * i, ratio * j, ratio, ratio, null);
+            }
+        }
+    }
 
+    private AffineTransform buildWorldToNDXform(double winWidth, double winHeight, double winLeft, double winBottom) {
         AffineTransform  myTranslationMatrix = new AffineTransform();
         AffineTransform  myScaleMatrix = new AffineTransform();
 
@@ -173,23 +125,15 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         temp.setTransform(myScaleMatrix);
         temp.concatenate(myTranslationMatrix);
 
-
         return temp;
     }
 
 
-    /**
-     * Build a NDToScreen space.
-     * @param width
-     * @param height
-     * @return
-     */
     private AffineTransform buildNDToScreenXForm(double width, double height) {
-
         AffineTransform  myTranslationMatrix = new AffineTransform();
         AffineTransform  myScaleMatrix = new AffineTransform();
 
-        myScaleMatrix.scale(width, -height);  //width, -height
+        myScaleMatrix.scale(width, -height);
         myTranslationMatrix.translate(0, height);
 
         AffineTransform temp = new AffineTransform();
@@ -198,32 +142,22 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         temp.concatenate(myScaleMatrix);
 
         return temp;
-
     }
 
 
-    /**
-     * Logic for detecting if an object has been selected.
-     * @param e
-     */
+    /* Functionality for detecting if an object has been selected */
     @Override
     public void mouseClicked(MouseEvent e) {
-
         gw.setLastMouseEvent(e);
-
-        Point p = e.getPoint();
-        GameObject temp = null;
-
-        Point2D mouseWorldLoc =  Services.applyInverseAndGetPoint(e);
+        GameObject temp;
+        Point2D mouseWorldLoc =  Utilities.applyInverseAndGetPoint(e);
 
         if(gw.isItInPause()) {
-            Iterator iter = gw.getIterator();
-            while (iter.hasNext()) {
-                temp = (GameObject) iter.getNext();
+            Iterator iterator = gw.getIterator();
+            while (iterator.hasNext()) {
+                temp = (GameObject) iterator.getNext();
                 if (temp instanceof ISelectable) {
-
                     if (((ISelectable) temp).contains(mouseWorldLoc)) {
-
                         ((ISelectable) temp).setSelected(true);
                         gw.addToTheDeleteObjectsCollection(temp);
                     } else {
@@ -259,23 +193,12 @@ public class MapView extends JPanel implements IObserver, MouseListener,
 
     }
 
-    /**
-     * Logic for zooming in.
-     * @param event
-     */
     public void zoomIn(MouseEvent event){
-
         double tempHeight = getWinHeight();
         double tempWidth = getWinWidth();
 
-        System.out.println("x: " + event.getX() + " y: " + event.getY());
-
         double xRatio = (double)event.getX() / 845;
         double yRatio = (double)event.getY() / 709;
-
-        System.out.println("xRatio: " + xRatio + " yRation: " + yRatio);
-
-
 
         winLeft += tempWidth*(0.05 * ( xRatio));
         winRight -= tempWidth*(0.05 * (1 - xRatio));
@@ -285,19 +208,12 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         this.repaint();
     }
 
-    /**
-     * Logic for zooming out.
-     * @param event
-     */
     public void zoomOut(MouseEvent event){
-
         double tempHeight = getWinHeight();
         double tempWidth = getWinWidth();
 
-
         double xRatio = (double)event.getX() / 845;
         double yRatio = (double)event.getY() / 709;
-
 
         winLeft -= tempWidth*(0.05 * ( xRatio));
         winRight += tempWidth*(0.05 * (1 - xRatio));
@@ -307,18 +223,10 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         this.repaint();
     }
 
-
-    /**
-     * Detect when mouse is moved and trigger
-     * a corresponding zoom action.
-     * @param event
-     */
     @Override
     public void mouseWheelMoved(MouseWheelEvent event) {
         if(!gw.isItInPause()) {
-            if (event.isShiftDown()) {
-            } else {
-
+            if (!event.isShiftDown()) {
                 if (event.getWheelRotation() > 0)
                     zoomIn(event);
                 else
@@ -328,31 +236,19 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     }
 
 
-
-    //Confirm To MouseMotionListener
-
-    /**
-     * Detect when mouse is dragged and trigger
-     * a corresponding pan action.
-     *
-     * @param currrentMouseEvent
-     */
     @Override
-    public void mouseDragged(MouseEvent currrentMouseEvent) {
-
+    public void mouseDragged(MouseEvent currentMouseEvent) {
         if(!gw.isItInPause()) {
-
             this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
             if (lastMouseEvent == null) {
-                lastMouseEvent = currrentMouseEvent;
+                lastMouseEvent = currentMouseEvent;
             } else {
-                double difX = currrentMouseEvent.getX() - lastMouseEvent.getX();
-                double difY = currrentMouseEvent.getY() - lastMouseEvent.getY();
+                double difX = currentMouseEvent.getX() - lastMouseEvent.getX();
+                double difY = currentMouseEvent.getY() - lastMouseEvent.getY();
 
                 double winRatioX = (winRight - winLeft) / this.getWidth();
                 double winRationY = (winTop - winBottom) / this.getHeight();
-
 
                 winLeft -= difX * winRatioX;
                 winRight -= difX * winRatioX;
@@ -360,8 +256,7 @@ public class MapView extends JPanel implements IObserver, MouseListener,
                 winBottom += difY * winRationY;
                 winTop += difY * winRationY;
 
-
-                lastMouseEvent = currrentMouseEvent;
+                lastMouseEvent = currentMouseEvent;
             }
         }
     }
@@ -370,5 +265,4 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     public void mouseMoved(MouseEvent e) {
 
     }
-    /*---------------------------------------------*/
 }

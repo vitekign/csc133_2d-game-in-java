@@ -4,14 +4,11 @@ package a4.objects;
  * Created by Victor Ignatenkov on 2/14/15.
  */
 
-import a4.app.utilities.Services;
+import a4.app.utilities.Utilities;
 import a4.model.GameWorld;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.io.File;
 import java.util.Vector;
 
 /**
@@ -45,7 +42,7 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
 
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
 
-        imageRes = Services.getImage("oilSlick.png");
+        imageRes = Utilities.loadImages("oilSlick.png");
 
         scale(1,-1);
     }

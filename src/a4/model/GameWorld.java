@@ -2,7 +2,7 @@
 package a4.model;
 import a4.app.strategies.FollowThePlayerCarStrategy;
 import a4.app.strategies.MoveTowardsPylonStrategy;
-import a4.app.utilities.Services;
+import a4.app.utilities.Utilities;
 import a4.app.utilities.Sound;
 import a4.controller.IGameWorld;
 import a4.objects.*;
@@ -78,7 +78,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         gameObjects.add(factory.makePylonWithLocation(new Location(400, 50)));
         gameObjects.add(factory.makePylonWithLocation(new Location(600, 600)));
 
-        Services.supplyServicesWithGameWorld(this);
+        Utilities.supplyServicesWithGameWorld(this);
 
         /*Add another required objects with random data */
         gameObjects.add(factory.makeOilSlickWithRandomData());
@@ -107,7 +107,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         /* Place the car at the location of the first pylon */
         Location locationToPlaceCar;
 
-        Optional<Pylon> locationOfFirstPylon = Services.findPylonWithIndexNumber(THE_FIRST_PYLON);
+        Optional<Pylon> locationOfFirstPylon = Utilities.findPylonWithIndexNumber(THE_FIRST_PYLON);
         if(locationOfFirstPylon.isPresent()){
             firstPylonInTheGameWorld = locationOfFirstPylon.get();
             locationToPlaceCar = firstPylonInTheGameWorld.getLocation();
@@ -271,7 +271,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     /* Create a new Pylon and add it to the game */
     public void createNewPylon(int seqNumberOfPylon){
 
-        Vector<Pylon> allPylons = Services.getAllPylons();
+        Vector<Pylon> allPylons = Utilities.getAllPylons();
         boolean isPylonInGW = false;
         for(Pylon pylon : allPylons){
             if(pylon.getIndexNumber() == seqNumberOfPylon)
@@ -292,7 +292,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                 if(lastMouseEvent == null){
                     JOptionPane.showMessageDialog(null, "Please click on the map and then press Add Pylon");
                 } else {
-                    Point2D mouseWorldLoc =  Services.applyInverseAndGetPoint(lastMouseEvent);
+                    Point2D mouseWorldLoc =  Utilities.applyInverseAndGetPoint(lastMouseEvent);
 
                     gameObjects.add(factory.makePylonWithLocationAndSequenceNumber(new Location((int)mouseWorldLoc.getX(), (int)mouseWorldLoc.getY()), seqNumberOfPylon));
                     notifyObserver();
@@ -308,7 +308,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
             if(lastMouseEvent != null){
 
-                Point2D mouseWorldLoc =  Services.applyInverseAndGetPoint(lastMouseEvent);
+                Point2D mouseWorldLoc =  Utilities.applyInverseAndGetPoint(lastMouseEvent);
 
                 gameObjects.add(factory.makeFuelCanWithLocation(new Location((int) mouseWorldLoc.getX(), (int) mouseWorldLoc.getY()), input));
                 notifyObserver();
@@ -375,22 +375,22 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
-
+    //Got confused with this method
     public void pickUpFuelCan() {
-        FuelCan temp;
-        try {
-            temp = Services.findTheFirstFuelCan();
-            car.pickUpFuelCan(temp);
-            addToTheDeleteObjectsCollection(temp);
+        Optional<FuelCan> temp;
+        temp = Utilities.findTheFirstFuelCan();
+        if(temp.isPresent()){
+            car.pickUpFuelCan(temp.get());
+            addToTheDeleteObjectsCollection(temp.get());
 
+            FuelCan newFuelCan = new FuelCan(new Location(new Random().nextInt(800), new Random().nextInt(800)), (rand.nextFloat() * 50) + 1, Utilities.generateRandomColor(),this);
+            gameObjects.add(newFuelCan);
 
-            temp = new FuelCan(new Location(new Random().nextInt(800), new Random().nextInt(800)), (rand.nextFloat() * 50) + 1, Services.generateRandomColor(),this);
-            gameObjects.add(temp);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            notifyObserver();
+        } else {
+
         }
 
-        notifyObserver();
     }
 
 
@@ -401,7 +401,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         try {
             car.pickUpFuelCan(fuelCan);
 
-            temp = new FuelCan(new Location(new Random().nextInt(800), new Random().nextInt(800)), (rand.nextFloat() * 50) + 1, Services.generateRandomColor(),this);
+            temp = new FuelCan(new Location(new Random().nextInt(800), new Random().nextInt(800)), (rand.nextFloat() * 50) + 1, Utilities.generateRandomColor(),this);
             gameObjects.add(temp);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -439,7 +439,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
         while(iterator.hasNext()) {
             GameObject mObj = (GameObject) iterator.getNext();
-            mObj.changeColor(Services.generateRandomColor());
+            mObj.changeColor(Utilities.generateRandomColor());
         }
         notifyObserver();
     }

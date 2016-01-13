@@ -1,6 +1,6 @@
 /*Created by Victor Ignatenkov on 2/14/15.*/
 package a4.objects;
-import a4.app.utilities.Services;
+import a4.app.utilities.Utilities;
 import a4.model.GameWorld;
 
 import java.awt.*;
@@ -43,8 +43,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         this.size = size;
         timer = (int)size;
 
-        imageRes = Services.getImage("fuelcan.png");
-        imageResClicked = Services.getImage("fuelcan_clicked.png");
+        imageRes = Utilities.loadImages("fuelcan.png");
+        imageResClicked = Utilities.loadImages("fuelcan_clicked.png");
     }
 
     @Override
