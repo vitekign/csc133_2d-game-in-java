@@ -73,11 +73,11 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         theVTM = (AffineTransform) ndToScreen.clone();
         theVTM.concatenate(worldToND);
 
-        Utilities.supplyServicesWithVTM(theVTM);
+        Utilities.supplyUtilitiesWithVTM(theVTM);
         g2d.transform(theVTM);
 
         /**
-         * Draw in the right order according the the zIndex
+         * Draw in the right order according the zIndex
          */
         int i = 0;
         int maxZIndex = 0;
@@ -112,8 +112,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         AffineTransform  myTranslationMatrix = new AffineTransform();
         AffineTransform  myScaleMatrix = new AffineTransform();
 
-        myTranslationMatrix.translate(-winLeft, -winBottom);//-winLeft, -winBottom
-        myScaleMatrix.scale((double)1/winWidth, (double)1/winHeight); //(1 / winWidth, 1 / winHeight)
+        myTranslationMatrix.translate(-winLeft, -winBottom);
+        myScaleMatrix.scale((double)1/winWidth, (double)1/winHeight);
 
         //public void concatenate(AffineTransform Tx)
         //Cx'(p) = Cx(Tx(p))
@@ -195,8 +195,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         double tempHeight = getWinHeight();
         double tempWidth = getWinWidth();
 
-        double xRatio = (double)event.getX() / 845;
-        double yRatio = (double)event.getY() / 709;
+        double xRatio = (double)event.getX() / winRight;
+        double yRatio = (double)event.getY() / winTop;
 
         winLeft += tempWidth*(0.05 * ( xRatio));
         winRight -= tempWidth*(0.05 * (1 - xRatio));
@@ -210,8 +210,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         double tempHeight = getWinHeight();
         double tempWidth = getWinWidth();
 
-        double xRatio = (double)event.getX() / 845;
-        double yRatio = (double)event.getY() / 709;
+        double xRatio = (double)event.getX() / winRight;
+        double yRatio = (double)event.getY() / winTop;
 
         winLeft -= tempWidth*(0.05 * ( xRatio));
         winRight += tempWidth*(0.05 * (1 - xRatio));

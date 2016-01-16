@@ -87,6 +87,10 @@ public class Game extends JFrame{
         addFuelCanAction.setTarget(gw);
         addFuelCanAction.setEnabled(false);
 
+        TurnOnOffBezier addTurnOnBezierAction = TurnOnOffBezier.getInstance();
+        addTurnOnBezierAction.setTarget(gw);
+        addTurnOnBezierAction.setEnabled(false);
+
         AddOilSlick addOilSlickAction = AddOilSlick.getInstance();
         addOilSlickAction.setTarget(gw);
 
@@ -163,14 +167,10 @@ public class Game extends JFrame{
         this.add(leftPanel, BorderLayout.WEST);
 
         JButton playBtn = new ButtonSpaceKeyFocusAgnostic("Play");
-
         playBtn.setFont(new Font("SansSerif", Font.BOLD, 20));
-
         leftPanel.add(playBtn);
         colWithNPCAction.setTarget(gw);
         playBtn.setAction(playPause);
-
-
         colWithNPCAction.putValue(Action.NAME, "Play");
 
 
@@ -197,6 +197,11 @@ public class Game extends JFrame{
         leftPanel.add(addFuelCanBtn);
         addFuelCanBtn.setAction(addFuelCanAction);
         addFuelCanBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
+
+        JButton turnOnOffBezierCurveBtn = new ButtonSpaceKeyFocusAgnostic("turn OnOffBezierCurve");
+        leftPanel.add(turnOnOffBezierCurveBtn);
+        turnOnOffBezierCurveBtn.setAction(addTurnOnBezierAction);
+        turnOnOffBezierCurveBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
 
         ButtonSpaceKeyFocusAgnostic quitTheGame = new ButtonSpaceKeyFocusAgnostic("");
         quitTheGame.setAction(quitAction);

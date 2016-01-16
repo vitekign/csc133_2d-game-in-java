@@ -1,6 +1,4 @@
-/**
- * Created by Victor Ignatenkov on 3/3/15.
- */
+/* Created by Victor Ignatenkov on 3/3/15 */
 
 package a4.view;
 import a4.model.GameWorldProxy;
@@ -9,12 +7,9 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 
-/**
- * ScoreView is used to show some of the data
+/* ScoreView is used to show some of the data
  * of the current state of the game on the screen.
- * It's going to be stick to the top part of the window.
- */
-
+ * It's going to be stick to the top part of the window */
 
 class scoreLabel extends JLabel{
     public scoreLabel(String st){
@@ -23,16 +18,12 @@ class scoreLabel extends JLabel{
     }
 }
 
-
 public class ScoreView extends JPanel implements IObserver {
 
     //**********************************************
-    //              top panel                     **
+    // top panel - to show the state of the game  **
     //**********************************************
 
-    /**
-     * The state which is going to be updated.
-     */
     private JLabel currentTime;
     private JLabel livesLeft;
     private JLabel highestPylon;
@@ -65,18 +56,13 @@ public class ScoreView extends JPanel implements IObserver {
 
         soundStatus = new scoreLabel("Sound: ");
         add(soundStatus);
-
     }
 
-
-
     public void update (GameWorldProxy gw, Object arg){
-        /**
-         * Code here to update JLabels from data in the Observable.
+        /* Code here to update JLabels from data in the Observable.
          * Every time there is a change in the GameWorld data state,
-         * the data in this class is going be to be updated by the
-         * observable's triggering update method in this class.
-         */
+         * the data in this object is going be to be updated by the
+         * observable's triggering update method in the object */
 
         livesLeft.setText("Lives Left: " + gw.getLivesRemaining());
         highestPylon.setText("Highest Player Pylon: " + gw.getLastPylonReached());
@@ -85,12 +71,5 @@ public class ScoreView extends JPanel implements IObserver {
         playerDamageLevel.setText("Player Damage Level: " + gw.getDamageLevel());
         soundStatus.setText("Sound: " + (gw.isSound() ? "ON" : "OFF"));
         currentTime.setText("Time: " + gw.getTimer());
-
-
-
-
-
-
-
     }
 }

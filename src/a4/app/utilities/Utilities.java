@@ -28,13 +28,12 @@ public class Utilities {
 
     private static GameWorld gw;
     private static AffineTransform theVTM;
-    public static HashMap<String, Image> images;
-    public static String pathToResources = Utilities.getPathToImgResources();
+    private static HashMap<String, Image> images;
+    private static String pathToResources = Utilities.getPathToImgResources();
 
     private Utilities() {}
 
     public static String getPathToImgResources() {
-
         String slash = File.separator;
         return "." + slash + "resources" + slash + "img" + slash;
     }
@@ -86,10 +85,9 @@ public class Utilities {
     public static Color generateRandomColor() {
         //(inclusive)(exclusive)
         Random rand = new Random();
-        Color temp = new Color(rand.nextInt(255) + 1,
+        return new Color(rand.nextInt(255) + 1,
                 rand.nextInt(255) + 1,
                 rand.nextInt(255) + 1);
-        return temp;
     }
 
     public static Optional<Pylon> findPylonWithIndexNumber(int indexNumber) {
@@ -150,7 +148,7 @@ public class Utilities {
         return "." + slash + "resources" + slash + "sounds" + slash;
     }
 
-    public static void supplyServicesWithVTM(AffineTransform vtm) {
+    public static void supplyUtilitiesWithVTM(AffineTransform vtm) {
         theVTM = vtm;
     }
 
@@ -166,9 +164,7 @@ public class Utilities {
         return null;
     }
 
-
     public static Point2D applyInverseAndGetPoint(MouseEvent lastMouseEvent) {
-
         AffineTransform inverseOfVTM = getInverseOfVTM();
 
         Point2D mouseScreenLocation = new Point();
