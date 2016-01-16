@@ -27,7 +27,7 @@ public class Bird extends Moveable implements IDrawable, ICollider {
     public Bird(Location location, float size, float heading, float speed, Color color, GameWorld gw){
         super(color);
 
-        imageRes = Utilities.loadImages("bird.png");
+        imageRes = Utilities.loadImage("bird.png");
 
         this.gw = gw;
 

@@ -79,8 +79,8 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         sequenceNumber = count++;
 
 
-        imageRes = Utilities.loadImages("pylon.png");
-        imagePressed = Utilities.loadImages("pylon_pressed.png");
+        imageRes = Utilities.loadImage("pylon.png");
+        imagePressed = Utilities.loadImage("pylon_pressed.png");
 
     }
 

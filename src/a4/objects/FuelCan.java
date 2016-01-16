@@ -43,8 +43,8 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         this.size = size;
         timer = (int)size;
 
-        imageRes = Utilities.loadImages("fuelcan.png");
-        imageResClicked = Utilities.loadImages("fuelcan_clicked.png");
+        imageRes = Utilities.loadImage("fuelcan.png");
+        imageResClicked = Utilities.loadImage("fuelcan_clicked.png");
     }
 
     @Override
@@ -78,10 +78,6 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
 
 
         if((Math.abs(px) < this.getDistanceOfReference() && Math.abs(py) < this.getDistanceOfReference())){
-
-            System.out.println("Mouse x location is: " + px);
-            System.out.println("Mouse y location is: " + py);
-            System.out.println("");
             return true;
         }
         else

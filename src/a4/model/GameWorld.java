@@ -245,7 +245,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                             if((anotherObject) instanceof OilSlick && currObject instanceof Car &&
                                     !(currObject instanceof NPCCar)){
                                 this.leaveOilSlick();
-                                System.out.println("Leaving oil slick");
                             }
                             ((GameObject)currObject).getObjectsCollidedWith().remove(anotherObject);
                         }
@@ -271,7 +270,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     /* Create a new Pylon and add it to the game */
     public void createNewPylon(int seqNumberOfPylon){
 
-        Vector<Pylon> allPylons = Utilities.getAllPylons();
+        List<Pylon> allPylons = Utilities.getAllPylons();
         boolean isPylonInGW = false;
         for(Pylon pylon : allPylons){
             if(pylon.getIndexNumber() == seqNumberOfPylon)
@@ -310,7 +309,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
                 Point2D mouseWorldLoc =  Utilities.applyInverseAndGetPoint(lastMouseEvent);
 
-                gameObjects.add(factory.makeFuelCanWithLocation(new Location((int) mouseWorldLoc.getX(), (int) mouseWorldLoc.getY()), input));
+                gameObjects.add(factory.makeFuelCanWithLocationAndSize(new Location((int) mouseWorldLoc.getX(), (int) mouseWorldLoc.getY()), input));
                 notifyObserver();
                 lastMouseEvent = null;
             }
@@ -355,7 +354,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
     /* Create new oil slick with location */
     public void addOilSlickWithLocation(Location loc) {
-        OilSlick oilSlick = factory.makeOilSlickWithLocatin(loc);
+        OilSlick oilSlick = factory.makeOilSlickWithLocation(loc);
         gameObjects.add(oilSlick);
         notifyObserver();
     }
@@ -569,7 +568,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     public void deleteOneLifeAndRestartLevel() {
         livesRemaining--;
         if (livesRemaining == 0) {
-            System.out.println("You're out of lives!");
             quitTheGame();
         }
         if(isSound())
@@ -589,7 +587,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     }
 
     public void quitTheGame() {
-        System.out.println("Quitting the game...");
         System.exit(0);
     }
 

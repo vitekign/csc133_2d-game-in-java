@@ -42,7 +42,7 @@ public class OilSlick extends Fixed implements IDrawable, ICollider {
 
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
 
-        imageRes = Utilities.loadImages("oilSlick.png");
+        imageRes = Utilities.loadImage("oilSlick.png");
 
         scale(1,-1);
     }

@@ -36,13 +36,11 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-        backgroundPatternImage = null;
-
         // Retrieve an image for background
-        // backgroundPatternImage = Services.loadImages("asphalt_light.jpg");
-        // backgroundPatternImage = Services.loadImages("red_square_weird.png");
-        // backgroundPatternImage = Services.loadImages("gray_square_with_rocks.png");
-        backgroundPatternImage = Utilities.loadImages("grass_1.png");
+        // backgroundPatternImage = Services.loadImage("asphalt_light.jpg");
+        // backgroundPatternImage = Services.loadImage("red_square_weird.png");
+        // backgroundPatternImage = Services.loadImage("gray_square_with_rocks.png");
+        backgroundPatternImage = Utilities.loadImage("grass_1.png");
 
         theVTM = new AffineTransform();
     }

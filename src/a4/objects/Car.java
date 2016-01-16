@@ -7,8 +7,10 @@ import a4.model.GameWorld;
 import a4.objects.character_car.Body;
 import a4.objects.character_car.FrontAxle;
 import a4.objects.character_car.RearAxle;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -81,7 +83,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
 
         heading = 180;
 
-        imageRes = Utilities.loadImages("car.png");
+        imageRes = Utilities.loadImage("car.png");
 
         myRotationMatrix = new AffineTransform();
         myTranslationMatrix = new AffineTransform();
@@ -243,7 +245,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
 
     public void collideWithPylonAndUpdateGameWorld(int numberOfPylon) {
 
-        Vector<Pylon> allPylons = Utilities.getAllPylons();
+        List<Pylon> allPylons = Utilities.getAllPylons();
 
         allPylons.sort((Pylon o1, Pylon o2)->{
                 if(o1.getIndexNumber() < o2.getIndexNumber()){
