@@ -12,8 +12,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.File;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 
@@ -43,15 +41,10 @@ public class Utilities {
 
 
     public static void loadImages() {
-            //TODO use reflection to go through the folder and find all files
-            List<String> imageNames = Arrays.asList("asphalt.png",
-                    "asphalt_light copy.jpg", "asphalt_light.jpg", "asphalt_light.png",
-                    "bird copy.png", "bird.png", "car.png",
-                    "fuelcan copy.png", "fuelcan.png", "fuelcan_clicked.png",
-                    "oilSlick.png", "pylon.png", "pylon_pressed.png", "red_square_weird.png",
-                    "gray_square_with_rocks.png", "grass_1.png");
 
-            for(String imageName : imageNames){
+        List<String> pictureNames = getPictureNamesDynamically();
+
+        for(String imageName : pictureNames){
                 File file = new File(pathToResources + imageName);
 
                 Image tempImage = null;
@@ -63,6 +56,11 @@ public class Utilities {
                 }
                 images.put(imageName, tempImage);
         }
+    }
+
+    private static List<String> getPictureNamesDynamically() {
+        File imageFolder = new File(pathToResources);
+        return Arrays.asList(imageFolder.list());
     }
 
 
