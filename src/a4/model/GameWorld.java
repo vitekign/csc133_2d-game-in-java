@@ -204,8 +204,10 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     }
 
     public void createNewShockWave(Location location){
-        myShockWave = new ShockWave(location, 60,40, Color.BLACK, this);
-        gameObjects.add(myShockWave);
+        for(int i =0; i < 5; i++) {
+            myShockWave = new ShockWave(location, 60, 40, Color.BLACK, this);
+            gameObjects.add(myShockWave);
+        }
     }
 
     /* Get time counter */

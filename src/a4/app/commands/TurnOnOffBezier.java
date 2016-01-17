@@ -11,11 +11,13 @@ public class TurnOnOffBezier extends AbstractAction {
     private GameWorld gw;
 
     private TurnOnOffBezier(){
+        super("Turn On Bezier");
     }
 
     private static TurnOnOffBezier turnOnOffBezier = new TurnOnOffBezier();
 
     public static TurnOnOffBezier  getInstance(){
+
         return turnOnOffBezier;
     }
 

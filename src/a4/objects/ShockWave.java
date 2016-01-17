@@ -25,8 +25,9 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
 
         //random heading, speed and color.
         this.heading = new Random().nextFloat()*360;
-        this.speed = (new Random().nextFloat()*3)+2;
-        this.color = Utilities.generateRandomColor();
+        this.speed = (new Random().nextFloat()*50)+200;
+        //this.color = Utilities.generateRandomColor();
+        this.color = Color.RED;
 
         objectsCollidedWith = new ArrayList<>();
 
@@ -103,16 +104,16 @@ public class ShockWave extends Moveable implements IDrawable,ICollider {
 
         g2d.setColor(this.getColor());
         drawBezierCurve(this.controlPoints, 0, g2d);
-        g2d.setColor(Color.GREEN);
+        g2d.setColor(Color.RED);
         g2d.drawLine((int) controlPoints[0].getX(), (int) controlPoints[0].getY(),
                 (int) controlPoints[1].getX(), (int) controlPoints[1].getY());
         g2d.setColor(Color.RED);
         g2d.drawLine((int) controlPoints[1].getX(), (int) controlPoints[1].getY(),
                 (int) controlPoints[2].getX(), (int) controlPoints[2].getY());
-        g2d.setColor(Color.BLUE);
+        g2d.setColor(Color.RED);
         g2d.drawLine((int) controlPoints[2].getX(), (int) controlPoints[2].getY(),
                 (int) controlPoints[3].getX(), (int) controlPoints[3].getY());
-        g2d.setColor(Color.ORANGE);
+        g2d.setColor(Color.RED);
         g2d.drawLine((int) controlPoints[0].getX(), (int) controlPoints[0].getY(),
                 (int) controlPoints[3].getX(), (int) controlPoints[3].getY());
 

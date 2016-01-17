@@ -2,6 +2,7 @@
 
 package a4.controller;
 import a4.app.commands.*;
+import a4.app.utilities.Utilities;
 import a4.model.GameWorld;
 import a4.view.MapView;
 import a4.view.ScoreView;
@@ -9,6 +10,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -147,18 +149,31 @@ public class Game extends JFrame{
          * 2. Supply the button's setAction with appropriate Command
          */
 
-        JPanel leftPanel = new JPanel();
+        JPanel leftPanel = new JPanel(){
+//            @Override
+//            protected void paintComponent(Graphics g) {
+//                Image backgroundImage = Utilities.loadImage("motionBlur.png");
+//                int tileSze = 150;
+//                for(int i = 0; i < 15; i++){
+//                    for(int j = 0; j < 4; j++){
+//                        g.drawImage(backgroundImage,j*tileSze,i*tileSze,tileSze,tileSze,null);
+//                    }
+//                }
+//
+//            }
+        };
         leftPanel.setBackground(new Color(22, 22, 22));
 
         Border loweredetched = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
         TitledBorder title;
         title = BorderFactory.createTitledBorder(
                 loweredetched, "options");
+        title.setTitleFont(new Font(Utilities.BASE_FONT, Font.PLAIN, 15));
         title.setTitleJustification(TitledBorder.CENTER);
 
         leftPanel.setBorder(title);
 
-       ((TitledBorder)leftPanel.getBorder()).setTitleColor(new Color(65, 65, 65));
+       ((TitledBorder)leftPanel.getBorder()).setTitleColor(new Color(101, 101, 101));
 
 
         leftPanel.setLayout(new GridLayout(20, 1));
@@ -167,16 +182,11 @@ public class Game extends JFrame{
         this.add(leftPanel, BorderLayout.WEST);
 
         JButton playBtn = new ButtonSpaceKeyFocusAgnostic("Play");
-        playBtn.setFont(new Font("SansSerif", Font.BOLD, 20));
+        playBtn.setFont(new Font(Utilities.BASE_FONT, Font.BOLD, 22));
         leftPanel.add(playBtn);
         colWithNPCAction.setTarget(gw);
         playBtn.setAction(playPause);
         colWithNPCAction.putValue(Action.NAME, "Play");
-
-
-
-
-
 
 
         pickUpFuelCanAction.setTarget(gw);
@@ -185,29 +195,29 @@ public class Game extends JFrame{
         JButton deleteGameObjectBtn = new ButtonSpaceKeyFocusAgnostic("Delete");
         leftPanel.add(deleteGameObjectBtn);
         deleteGameObjectBtn.setAction(deleteObjectAction);
-        deleteGameObjectBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
+        deleteGameObjectBtn.setFont(new Font(Utilities.BASE_FONT, Font.BOLD, 17));
 
 
         JButton addPylonBtn = new ButtonSpaceKeyFocusAgnostic("Add Pylon");
         leftPanel.add(addPylonBtn);
         addPylonBtn.setAction(addPylonAction);
-        addPylonBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
+        addPylonBtn.setFont(new Font(Utilities.BASE_FONT, Font.BOLD, 17));
 
         JButton addFuelCanBtn = new ButtonSpaceKeyFocusAgnostic("Add FuelCan");
         leftPanel.add(addFuelCanBtn);
         addFuelCanBtn.setAction(addFuelCanAction);
-        addFuelCanBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
+        addFuelCanBtn.setFont(new Font(Utilities.BASE_FONT, Font.BOLD, 17));
 
         JButton turnOnOffBezierCurveBtn = new ButtonSpaceKeyFocusAgnostic("turn OnOffBezierCurve");
         leftPanel.add(turnOnOffBezierCurveBtn);
         turnOnOffBezierCurveBtn.setAction(addTurnOnBezierAction);
-        turnOnOffBezierCurveBtn.setFont(new Font("SansSerif", Font.BOLD, 15));
+        turnOnOffBezierCurveBtn.setFont(new Font(Utilities.BASE_FONT, Font.BOLD, 17));
 
         ButtonSpaceKeyFocusAgnostic quitTheGame = new ButtonSpaceKeyFocusAgnostic("");
         quitTheGame.setAction(quitAction);
         leftPanel.add(quitTheGame);
         quitAction.putValue(Action.NAME, "Quit");
-        quitTheGame.setFont(new Font("SansSerif", Font.BOLD, 18 ));
+        quitTheGame.setFont(new Font(Utilities.BASE_FONT, Font.BOLD, 22 ));
 
 
 

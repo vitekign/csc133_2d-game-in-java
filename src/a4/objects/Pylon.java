@@ -1,9 +1,5 @@
 package a4.objects;
-
-/**
- * Created by Victor Ignatenkov on 2/14/15.
- */
-
+/* Created by Victor Ignatenkov on 2/14/15 */
 import a4.app.utilities.Utilities;
 import a4.model.GameWorld;
 
@@ -14,13 +10,6 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.Vector;
-
-/**
- * Pylon class.
- *
- * Not allowed to change color once they're created
- */
-
 
 public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
@@ -69,18 +58,20 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         initObject();
          //   this.X = location.getX();
           //  this.Y = location.getY();
-            this.radius = radius;
 
+
+       this.radius = 100;
 
         tr = new AffineTransform();
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
-        scale(1,1);
+        myRotationMatrix.rotate(180);
+        scale(-1,-1);
 
         sequenceNumber = count++;
 
 
-        imageRes = Utilities.loadImage("pylon.png");
-        imagePressed = Utilities.loadImage("pylon_pressed.png");
+        imageRes = Utilities.loadImage(Utilities.IMAGE_NAME_PYLON);
+        imagePressed = Utilities.loadImage(Utilities.IMAGE_NAME_PYLON_PRESSED);
 
     }
 
@@ -96,13 +87,17 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         this.radius = radius;
 
 
+        this.radius = 100;
+
         tr = new AffineTransform();
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
-        scale(1,1);
+        myRotationMatrix.rotate(180);
+        scale(-1,-1);
+
 
 
         String pathToResources = Utilities.getPathToImgResources();
-        File file = new File(pathToResources + "pylon.png");
+        File file = new File(pathToResources + Utilities.IMAGE_NAME_PYLON);
 
         try {
             imageRes = ImageIO.read(file);
@@ -110,7 +105,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
             System.out.println("The picture for Bird wasn't found");
         }
 
-        File fileImagePressed = new File(pathToResources + "pylon_pressed.png");
+        File fileImagePressed = new File(pathToResources + Utilities.IMAGE_NAME_PYLON_PRESSED);
         try {
             imagePressed = ImageIO.read(fileImagePressed);
         } catch (Exception e){
@@ -280,11 +275,35 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
 
         scale(1,-1);
     } else {
+//        g2d.setColor(new Color(14, 40, 3));
+//        g2d.drawImage(imageRes, (int) -(radius/2), (int) -(radius/2), (int)radius, (int)radius, null);
+//        //g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
+//        g2d.setColor(Color.white);
+//      //  g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
+//        g2d.setColor(Color.white);
+//
+//
+//
+//        AffineTransform addTranslate = new AffineTransform();
+//        addTranslate.translate(15,15);
+//
+//
+//        myScaleMatrix.scale(1, -1);
+//        g2d.transform(addTranslate);
+//        g2d.transform(myScaleMatrix);
+//
+//        g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 30));
+//        g2d.setColor(new Color(164, 164, 164));
+//        g2d.drawString(String.valueOf(getIndexNumber()), (int) -(radius / 2), (int) (radius / 2));
+//        g2d.setColor(Color.black);
+//
+//        scale(1, -1);
+
         g2d.setColor(new Color(14, 40, 3));
+
         g2d.drawImage(imageRes, (int) -(radius/2), (int) -(radius/2), (int)radius, (int)radius, null);
-        //g2d.fillOval((int) -(radius/2), (int) -(radius/2), (int) radius, (int) radius);
         g2d.setColor(Color.white);
-      //  g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
+        //  g2d.fillOval((int) -(radius/2), (int) -(radius/2), 1, 1);
         g2d.setColor(Color.white);
 
 

@@ -43,7 +43,7 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         this.size = size;
         timer = (int)size;
 
-        imageRes = Utilities.loadImage("fuelcan.png");
+        imageRes = Utilities.loadImage("hay_2.png");
         imageResClicked = Utilities.loadImage("fuelcan_clicked.png");
     }
 
@@ -115,7 +115,7 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
                     (int) size + ADDITIONAL_WIDTH_LENGTH, (int) size + ADDITIONAL_WIDTH_LENGTH, null);
         }
 
-        g2d.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 10));
+        g2d.setFont(new Font(Utilities.BASE_FONT, Font.BOLD, 10));
         g2d.setColor(new Color(255, 255, 255));
         myScaleMatrix.scale(-1, 1);
         g2d.transform(myScaleMatrix);

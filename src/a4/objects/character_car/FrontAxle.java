@@ -48,7 +48,8 @@ public class FrontAxle extends AffineObject {
     @Override
     public void draw(Graphics2D g2d) {
         AffineTransform saveAt = g2d.getTransform();
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(Color.WHITE);
+        g2d.setBackground(myColor.WHITE);
 
         g2d.transform(myTranslation);
 

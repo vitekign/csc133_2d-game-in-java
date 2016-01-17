@@ -2,6 +2,8 @@
  * Created by Victor Ignatenkov on 4/28/15.
  */
 package a4.objects.character_car;
+import a4.app.utilities.Utilities;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
@@ -13,7 +15,7 @@ public class Body extends AffineObject{
 
     private int width;
     private int height;
-
+    Image bodyImage;
     /**
      * Define necessary boundaries in terms of Local Coordinates.
      */
@@ -28,6 +30,8 @@ public class Body extends AffineObject{
      */
     public Body(int width, int height){
 
+
+         bodyImage = Utilities.loadImage("tank_body.png");
 
         myTranslation = new AffineTransform();
         myRotation = new AffineTransform();
@@ -64,6 +68,7 @@ public class Body extends AffineObject{
 
 
         g2d.fillPolygon(xPoints, yPoints, 6);
+      //  g2d.drawImage(bodyImage, leftSide, bottom, rightSide+140, top+140, null);
 
         g2d.setColor(Color.BLACK);
     }

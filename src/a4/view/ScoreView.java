@@ -1,6 +1,7 @@
 /* Created by Victor Ignatenkov on 3/3/15 */
 
 package a4.view;
+import a4.app.utilities.Utilities;
 import a4.model.GameWorldProxy;
 import a4.model.IObserver;
 import javax.swing.*;
@@ -10,13 +11,6 @@ import java.awt.*;
 /* ScoreView is used to show some of the data
  * of the current state of the game on the screen.
  * It's going to be stick to the top part of the window */
-
-class scoreLabel extends JLabel{
-    public scoreLabel(String st){
-        super(st);
-        setForeground(new Color(200,200,200));
-    }
-}
 
 public class ScoreView extends JPanel implements IObserver {
 
@@ -31,30 +25,41 @@ public class ScoreView extends JPanel implements IObserver {
     private JLabel playerDamageLevel;
     private JLabel soundStatus;
 
+    class scoreLabelWithPreferredFont extends JLabel{
+        public scoreLabelWithPreferredFont(String value){
+            super(value);
+        }
+        @Override
+        public void setFont(Font font) {
+            super.setFont(new Font(Utilities.BASE_FONT, Font.PLAIN, 15));
+        }
+    }
+
     public ScoreView(){
         setBorder(new LineBorder(new Color(0, 0, 0), 2));
         this.setForeground(new Color(200, 200, 200));
         this.setOpaque(true);
 
-        setLayout(new FlowLayout(FlowLayout.LEFT, 16, 0));
-        this.setBackground(new Color(20, 20, 20));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 28, 0));
+        this.setBackground(new Color(219, 219, 219));
 
-        currentTime = new scoreLabel("Time: ");
+        currentTime = new scoreLabelWithPreferredFont("Time: ");
         add(currentTime);
 
-        livesLeft = new scoreLabel("Lives Left: ");
+        livesLeft = new scoreLabelWithPreferredFont("Lives Left: ");
         add(livesLeft);
 
-        highestPylon = new scoreLabel("Highest Player Pylon: ");
+        highestPylon = new scoreLabelWithPreferredFont("Highest Player Pylon: ");
+
         add(highestPylon);
 
-        remainingFuelLevel = new scoreLabel("Player Fuel Remaining: ");
+        remainingFuelLevel = new scoreLabelWithPreferredFont("Player Fuel Remaining: ");
         add(remainingFuelLevel);
 
-        playerDamageLevel = new scoreLabel("Player Damage Level: ");
+        playerDamageLevel = new scoreLabelWithPreferredFont("Player Damage Level: ");
         add(playerDamageLevel);
 
-        soundStatus = new scoreLabel("Sound: ");
+        soundStatus = new scoreLabelWithPreferredFont("Sound: ");
         add(soundStatus);
     }
 

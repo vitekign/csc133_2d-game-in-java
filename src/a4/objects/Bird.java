@@ -1,6 +1,5 @@
 /* Created by Victor Ignatenkov on 2/14/15 */
 package a4.objects;
-
 import a4.app.utilities.Utilities;
 import a4.model.GameWorld;
 import java.awt.*;
@@ -14,25 +13,21 @@ import java.util.LinkedList;
  * half the damage of colliding with another car */
 
 public class Bird extends Moveable implements IDrawable, ICollider {
-
-    public static int zIndex;
-
     private GameWorld gw;
     private Image imageRes;
     private float size;
     private int scaleX;
     private int scaleY;
 
+    public static int zIndex;
 
     public Bird(Location location, float size, float heading, float speed, Color color, GameWorld gw){
         super(color);
 
-        imageRes = Utilities.loadImage("bird.png");
-
+        imageRes = Utilities.loadImage(Utilities.IMAGE_NAME_BIRD);
         this.gw = gw;
 
         objectsCollidedWith = new LinkedList<>();
-
         this.X = location.getX();
         this.Y = location.getY();
         this.heading = heading;
@@ -61,7 +56,6 @@ public class Bird extends Moveable implements IDrawable, ICollider {
 
     @Override
     public void draw(Graphics2D g2d) {
-
         AffineTransform saveAt = g2d.getTransform();
 
         g2d.transform(myTranslationMatrix);
@@ -124,7 +118,6 @@ public class Bird extends Moveable implements IDrawable, ICollider {
                 "heading=" + (int)this.heading + "," +
                 " size=" + (int)this.size;
     }
-
 
     /* Handle collision of the Bird with other Game Objects */
     @Override

@@ -40,7 +40,11 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         // backgroundPatternImage = Services.loadImage("asphalt_light.jpg");
         // backgroundPatternImage = Services.loadImage("red_square_weird.png");
         // backgroundPatternImage = Services.loadImage("gray_square_with_rocks.png");
-        backgroundPatternImage = Utilities.loadImage("grass_1.png");
+        //backgroundPatternImage = Utilities.loadImage("grass_1.png");
+
+        //4 300
+        //
+        backgroundPatternImage = Utilities.loadImage("texturemate-grass04.png");
 
         theVTM = new AffineTransform();
     }
@@ -100,7 +104,7 @@ public class MapView extends JPanel implements IObserver, MouseListener,
     }
 
     private void fillUpScreenWithPatternImage(Graphics g) {
-        int ratio = 65;
+        int ratio = 300;
         for (int i = 0; i < 20; i++) {
             for (int j = 0; j < 20; j++) {
                 g.drawImage(backgroundPatternImage, ratio * i, ratio * j, ratio, ratio, null);
@@ -195,8 +199,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         double tempHeight = getWinHeight();
         double tempWidth = getWinWidth();
 
-        double xRatio = (double)event.getX() / winRight;
-        double yRatio = (double)event.getY() / winTop;
+        double xRatio = (double)event.getX() / 845;
+        double yRatio = (double)event.getY() / 709;
 
         winLeft += tempWidth*(0.05 * ( xRatio));
         winRight -= tempWidth*(0.05 * (1 - xRatio));
@@ -210,8 +214,8 @@ public class MapView extends JPanel implements IObserver, MouseListener,
         double tempHeight = getWinHeight();
         double tempWidth = getWinWidth();
 
-        double xRatio = (double)event.getX() / winRight;
-        double yRatio = (double)event.getY() / winTop;
+        double xRatio = (double)event.getX() / 845;
+        double yRatio = (double)event.getY() / 709;
 
         winLeft -= tempWidth*(0.05 * ( xRatio));
         winRight += tempWidth*(0.05 * (1 - xRatio));
