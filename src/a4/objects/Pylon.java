@@ -65,7 +65,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         tr = new AffineTransform();
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
         myRotationMatrix.rotate(180);
-        scale(-1,-1);
+        scale(-1.5,-1.5);
 
         sequenceNumber = count++;
 
@@ -92,7 +92,7 @@ public class Pylon extends Fixed implements IDrawable, ICollider, ISelectable {
         tr = new AffineTransform();
         myTranslationMatrix.translate(location.getX(), (int) location.getY());
         myRotationMatrix.rotate(180);
-        scale(-1,-1);
+        scale(1.5, 1.5);
 
 
 

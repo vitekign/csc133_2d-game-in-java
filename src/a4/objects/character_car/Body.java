@@ -30,8 +30,7 @@ public class Body extends AffineObject{
      */
     public Body(int width, int height){
 
-
-         bodyImage = Utilities.loadImage("tank_body.png");
+        bodyImage = Utilities.loadImage("tank_body.png");
 
         myTranslation = new AffineTransform();
         myRotation = new AffineTransform();
@@ -61,14 +60,14 @@ public class Body extends AffineObject{
     public void  draw(Graphics2D g2d) {
 
         g2d.setColor(new Color(43, 43, 43));
-
+        g2d.scale(1.2,1.2);
 
         int[] xPoints = {leftSide, rightSide, rightSide, narrowRight, narrowLeft, leftSide};
         int[] yPoints = {bottom, bottom, upToNarrow, top , top, upToNarrow};
 
 
-        g2d.fillPolygon(xPoints, yPoints, 6);
-      //  g2d.drawImage(bodyImage, leftSide, bottom, rightSide+140, top+140, null);
+        //g2d.fillPolygon(xPoints, yPoints, 6);
+        g2d.drawImage(bodyImage, leftSide, bottom, rightSide+160, top+140, null);
 
         g2d.setColor(Color.BLACK);
     }

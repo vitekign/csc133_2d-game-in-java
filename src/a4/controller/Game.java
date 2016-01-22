@@ -12,7 +12,9 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 
 /*
@@ -36,7 +38,7 @@ class ButtonSpaceKeyFocusAgnostic extends JButton{
  * Game - takes a role of a controller.
  */
 
-public class Game extends JFrame{
+public class Game extends JFrame implements KeyListener{
 
     private GameWorld gw;
     private ScoreView scoreView;
@@ -44,6 +46,9 @@ public class Game extends JFrame{
 
     public Game() {
         super("My Racing Game");
+
+        this.addKeyListener(this);
+        this.setFocusable(true);
 
         gw = new GameWorld();
         gw.initLayout();
@@ -125,6 +130,11 @@ public class Game extends JFrame{
         SwitchStrategies switchStrategiesAction = SwitchStrategies.getInstance();
         switchStrategiesAction.setTarget(gw);
 
+        RotateMuzzleToLeft rotateMuzzleToLeft = RotateMuzzleToLeft.getInstance();
+        rotateMuzzleToLeft.setTarget(gw);
+
+        RotateMuzzleToRight rotateMuzzleToRight = RotateMuzzleToRight.getInstance();
+        rotateMuzzleToRight.setTarget(gw);
 
         //**********************************************
         //              top panel                     **
@@ -227,7 +237,7 @@ public class Game extends JFrame{
 
         //TODO Find out how to switch the focus to another JComponent
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F"), "pickUpFuelCan");
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("C"), "pickUpFuelCan");
         this.getRootPane().getActionMap().put("pickUpFuelCan", pickUpFuelCanAction);
 
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("O"), "addOilSlick");
@@ -236,16 +246,18 @@ public class Game extends JFrame{
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("N"), "changeColors");
         this.getRootPane().getActionMap().put("changeColors", changeColorsAction);
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0),"accelerateTheCar");
-        this.getRootPane().getActionMap().put("accelerateTheCar", accelerateAction);
+//        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0),"accelerateTheCar");
+//        this.getRootPane().getActionMap().put("accelerateTheCar", accelerateAction);
 
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"showDownTheCar");
         this.getRootPane().getActionMap().put("showDownTheCar", brakeAction);
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("LEFT"),"turnLeft");
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,
+                0, false),"turnLeft");
         this.getRootPane().getActionMap().put("turnLeft", turnLeftAction);
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("RIGHT"),"turnRight");
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,
+                0, false),"turnRight");
         this.getRootPane().getActionMap().put("turnRight", turnRightAction);
 
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"),"switchStr");
@@ -256,6 +268,16 @@ public class Game extends JFrame{
 
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE,0),"deleteGameObjectBtn");
         this.getRootPane().getActionMap().put("deleteGameObjectBtn", deleteObjectAction);
+
+
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F,
+                0, false), "muzzleToRight");
+        this.getRootPane().getActionMap().put("muzzleToRight", rotateMuzzleToRight);
+
+
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+                0 , false),"muzzleToLeft");
+        this.getRootPane().getActionMap().put("muzzleToLeft", rotateMuzzleToLeft);
 
 
 
@@ -372,4 +394,39 @@ public class Game extends JFrame{
 
     }
 
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+       if(e.getKeyCode() == KeyEvent.VK_S){
+           gw.VK_S = true;
+       } else if(e.getKeyCode() == KeyEvent.VK_F){
+           gw.VK_F = true;
+       } else if(e.getKeyCode() == KeyEvent.VK_LEFT){
+           gw.VK_LEFT = true;
+       } else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+           gw.VK_RIGHT = true;
+       } else if(e.getKeyCode() == KeyEvent.VK_UP){
+           gw.VK_UP = true;
+
+       }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_S){
+            gw.VK_S = false;
+        } else if(e.getKeyCode() == KeyEvent.VK_F){
+            gw.VK_F = false;
+        } else if(e.getKeyCode() == KeyEvent.VK_LEFT){
+            gw.VK_LEFT = false;
+        } else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+            gw.VK_RIGHT = false;
+        } else if(e.getKeyCode() == KeyEvent.VK_UP){
+            gw.VK_UP = false;
+        }
+    }
 }

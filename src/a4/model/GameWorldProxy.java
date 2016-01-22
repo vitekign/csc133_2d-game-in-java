@@ -25,7 +25,6 @@ public class GameWorldProxy implements  IGameWorld {
         return realGameWorld.getIterator();
     }
 
-
     @Override
     public int getCurrentClockTime() {
         return realGameWorld.getCurrentClockTime();
@@ -94,5 +93,16 @@ public class GameWorldProxy implements  IGameWorld {
     public int getTimer(){
         return realGameWorld.getTimer();
     }
+
+    @Override
+    public void rotateMuzzleToLeft() {
+
+    }
+
+    @Override
+    public void rotateMuzzleToRight() {
+
+    }
+
 
 }

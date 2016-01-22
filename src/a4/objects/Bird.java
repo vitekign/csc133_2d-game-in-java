@@ -34,8 +34,8 @@ public class Bird extends Moveable implements IDrawable, ICollider {
         this.speed = speed;
         this.size = size;
 
-        scaleX = 2;
-        scaleY = 2;
+        scaleX = 4;
+        scaleY = 4;
 
         myTranslationMatrix.translate(location.getX(), location.getY());
 

@@ -26,4 +26,6 @@ public interface IGameWorld {
     int getTime();
     void resetTime();
     int getTimer();
+    void rotateMuzzleToLeft();
+    void rotateMuzzleToRight();
 }

@@ -7,12 +7,13 @@ import a4.model.GameWorld;
 import a4.objects.character_car.Body;
 import a4.objects.character_car.FrontAxle;
 import a4.objects.character_car.RearAxle;
+import a4.objects.character_car.TankMuzzle;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 
 public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
     protected float width;
@@ -37,11 +38,12 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
     private Body myBody;
     private FrontAxle myFrontAxle;
     private RearAxle myRearAxle;
+    private TankMuzzle myTankMuzzle;
 
     public Car(Location location, GameWorld gw, Color color) {
         super(color);
 
-        objectsCollidedWith = new Vector<>();
+        objectsCollidedWith = new ArrayList<>();
 
         /**
          * If further versions of the game require
@@ -52,7 +54,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         width = 25;
         length = 25;
         steeringDirection = 0;
-        maximumSpeed = 100;
+        maximumSpeed = 10;
         fuelLevel = 100;
         speed = 0;
         damageLevel = 0;
@@ -65,7 +67,9 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         myFrontAxle.translate(0, 20);
         myRearAxle = new RearAxle(40, 9);
         myRearAxle.translate(0, -20);
-
+        myTankMuzzle = new TankMuzzle();
+        myTankMuzzle.translate(width/2, length/2);
+        myTankMuzzle.translate(-5,7);
 
         inOilSlick = false;
         lastHighestPylonReached = 1;
@@ -91,6 +95,14 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
 
     }
 
+    public void changeCurrentDirectionOfMuzzleToLeft() {
+        myTankMuzzle.changeDirection(1);
+    }
+
+    public void changeCurrentDirectionOfMuzzleToRight() {
+        myTankMuzzle.changeDirection(-1);
+    }
+
     /*  If not in oil slick, then:
      *  1. the car’s
      *  heading should be incremented or decremented by the car’s
@@ -110,7 +122,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
 
             changeFuelLevel((float) -0.02);
         } else {
-            if (gw.getTime() % 3 == 0 && gw.getTime() != 0)
+            if (gw.getTime() % 1 == 0 && gw.getTime() != 0)
                 heading += steeringDirection;
             float angle = (90 - heading);
             float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
@@ -122,14 +134,14 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
             this.Y = temp.getY();
 
             changeFuelLevel((float) -0.02);
+            steeringDirection = 0;
         }
     }
 
     public void accelerateTheCar(float additionalSpeed) {
         speed += additionalSpeed;
         if (speed != maximumSpeed && fuelLevel != 0) {
-            if (speed == 0) {
-            } else {
+            if (speed != 0) {
                 if (damageLevel != 100) {
                     if (damageLevel == 0) {
                         speed += additionalSpeed;
@@ -165,7 +177,6 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         }
     }
 
-
     private boolean isCarInOilSlick() {
         return inOilSlick;
 
@@ -175,9 +186,11 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         if ((Math.abs(steeringDirection + deflection)) > Math.abs(MAX_HEADING_DEFLECTION)) {
             return;
         }
-        steeringDirection += deflection;
+        if(!inOilSlick) {
+            steeringDirection += deflection;
 
-        myFrontAxle.updateSteeringDirection((float) deflection);
+            myFrontAxle.updateSteeringDirection((float) deflection);
+        }
     }
 
     @Override
@@ -299,10 +312,10 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         g2d.transform(myRotationMatrix);
 
         myBody.translate(0, 0);
-        myFrontAxle.draw(g2d);
-        myRearAxle.draw(g2d);
+       // myFrontAxle.draw(g2d);
+       // myRearAxle.draw(g2d);
         myBody.draw(g2d);
-
+        myTankMuzzle.draw(g2d);
         g2d.drawOval(0, 0, 1, 1);
 
         setToIdentity();
@@ -380,4 +393,6 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         //TODO supply an actual number
         return 15;
     }
+
+
 }

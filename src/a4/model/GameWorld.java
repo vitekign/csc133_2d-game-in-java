@@ -33,6 +33,12 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     public final static float DAMAGE_FOR_COLLIDING_WITH_CARS = 5;
     public static final int NUMBER_OF_LIVES = 3;
 
+    public static boolean VK_S = false;
+    public static boolean VK_F = false;
+    public static boolean VK_LEFT = false;
+    public static boolean VK_RIGHT = false;
+    public static boolean VK_UP = false;
+
     private int currentClockTime;
     private int livesRemaining = NUMBER_OF_LIVES;
     private int lastPylonReached = THE_FIRST_PYLON;
@@ -163,6 +169,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     public int getTimer(){
         return time;
     }
+
 
     /* Listen to each tick */
     @Override
@@ -345,6 +352,18 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         notifyObserver();
     }
 
+    @Override
+    public void rotateMuzzleToLeft(){
+        car.changeCurrentDirectionOfMuzzleToLeft();
+        notifyObserver();
+    }
+
+    @Override
+    public void rotateMuzzleToRight(){
+        car.changeCurrentDirectionOfMuzzleToRight();
+        notifyObserver();
+    }
+
     public void addOilSlick() {
         OilSlick oilSlick = new OilSlick(new Location(rand.nextFloat() * GLOBAL_WIDTH,
                 rand.nextFloat() * GLOBAL_HEIGHT), rand.nextFloat() * 50,
@@ -414,7 +433,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
      * thus making the car gain some damage */
     public void birdFlyOver() {
         car.increaseDamageLevelAndUpdateGameWorld(Car.getAmountOfDamageForCollidingWithBirds());
-
         notifyObserver();
     }
 
@@ -456,6 +474,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
               ((Moveable) mObj).move(MILISEC_PER_FRAME);
             }
         }
+
         currentClockTime++;
         notifyObserver();
     }
@@ -608,6 +627,26 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         for (IObserver observer : observers) {
             observer.update(proxy, null);
 
+        }
+        if(getTime() % 2 == 0 && getTime() != 0) {
+            if (VK_S) {
+                car.changeCurrentDirectionOfMuzzleToLeft();
+            }
+            if (VK_F) {
+                car.changeCurrentDirectionOfMuzzleToRight();
+            }
+            if (VK_LEFT) {
+                car.changeCurrentHeadingToTheLeft();
+            }
+            if (VK_RIGHT) {
+                car.changeCurrentHeadingToTheRight();
+            }
+            if (VK_UP) {
+                car.accelerateTheCar((float) 0.3);
+            } else {
+                if(car.getSpeed() > 0)
+                    car.applyBreaks((float)0.4);
+            }
         }
     }
 
