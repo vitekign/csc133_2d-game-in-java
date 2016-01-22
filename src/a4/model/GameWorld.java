@@ -46,8 +46,8 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     private float damageLevel;
     private boolean sound;
     private MouseEvent lastMouseEvent = null;
-    private static int time;
-    private int timeCounter;
+    private static int seconds;
+    private int timeCounterInTicks;
 
 
     Car car;
@@ -126,13 +126,9 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         if(timer == null)
             timer = new Timer(MILISEC_PER_FRAME, this);
     }
-    
-    private void createFuelCansAndAddToGameWorld(GameObjectsFactory factory,
-                                                        int numberOfCans) {
-        while(numberOfCans > 0) {
-            gameObjects.add(factory.makeFuelCanWithRandomData());
-            numberOfCans--;
-        }
+
+    public void playPause() {
+        startTimer();
     }
 
     /* Start timer */
@@ -166,7 +162,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     @Override
     public void actionPerformed(ActionEvent e) {
         Iterator iterator = this.getIterator();
-        timeCounter++;
+        timeCounterInTicks++;
 
         while(iterator.hasNext()){
             GameObject obj = (GameObject)iterator.getNext();
@@ -177,28 +173,35 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                 removeUnnecessaryObjects();
             }
         }
-        if(this.getTime()%50 == 0 && this.getTime()!= 0){  /* 50 * 20 = 1000 (1 sec) */
-            resetTime();
-            time++;
-            if(time%10 == 0 && time != 0){
+        if(this.getTimeInTicks()%50 == 0 && this.getTimeInTicks()!= 0){  /* 50 * 20 = 1000 (1 sec) */
+            resetTimeCounterInTermsOfTicks();
+            seconds++;
+            if(seconds %10 == 0 && seconds != 0){
                 switchStrategies();
             }
         }
         notifyObserver();
     }
 
-    public int getTimer(){
-        return time;
+    public int getTimeInSeconds(){
+        return seconds;
     }
 
-    /* Get time counter */
-    public int getTime(){
-        return timeCounter;
+    public int getTimeInTicks(){
+        return timeCounterInTicks;
     }
 
-    /* Set time to zero */
-    public void resetTime(){
-        timeCounter = 0;
+    public void resetTimeCounterInTermsOfTicks(){
+        timeCounterInTicks = 0;
+    }
+
+
+    private void createFuelCansAndAddToGameWorld(GameObjectsFactory factory,
+                                                 int numberOfCans) {
+        while(numberOfCans > 0) {
+            gameObjects.add(factory.makeFuelCanWithRandomData());
+            numberOfCans--;
+        }
     }
 
     public void doShockWaveChecking(){
@@ -320,35 +323,28 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
     public void accelerateTheCar() {
         car.accelerateTheCar(2.5f);
-        
     }
 
     public void showDownTheCar() {
         car.applyBreaks(2.5f);
-        
     }
 
     public void rotateSteeringToLeft() {
         car.changeCurrentHeadingToTheLeft();
-        
-
     }
 
     public void rotateSteeringToRight() {
         car.changeCurrentHeadingToTheRight();
-        
     }
 
     @Override
     public void rotateMuzzleToLeft(){
         car.changeCurrentDirectionOfMuzzleToLeft();
-
     }
 
     @Override
     public void rotateMuzzleToRight(){
         car.changeCurrentDirectionOfMuzzleToRight();
-
     }
 
     public void addOilSlick() {
@@ -356,8 +352,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                 rand.nextFloat() * GLOBAL_HEIGHT), rand.nextFloat() * 50,
                 rand.nextFloat() * 50, Color.black, this);
         gameObjects.add(oilSlick);
-
-        
     }
 
     /* Create new oil slick with location */
@@ -390,7 +384,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         } else {
 
         }
-
     }
 
 
@@ -406,14 +399,12 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        
     }
 
     /* Pretend that a bird has flown over the car,
      * thus making the car gain some damage */
     public void birdFlyOver() {
         car.increaseDamageLevelAndUpdateGameWorld(Car.getAmountOfDamageForCollidingWithBirds());
-        
     }
 
 
@@ -421,15 +412,12 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
      * an oilSlick */
     public void enterOilSlick() {
         car.enterOilSlick();
-        
     }
 
     /* Pretend that the car has left the
      * oilSlick */
     public void leaveOilSlick() {
         car.exitOilSlick();
-
-        
     }
 
 
@@ -440,7 +428,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
             GameObject mObj = (GameObject) iterator.getNext();
             mObj.changeColor(Utilities.generateRandomColor());
         }
-        
     }
 
 
@@ -479,7 +466,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     public void deleteSelectedElements(){
         this.removeUnnecessaryObjects();
         this.setLastMouseEvent(null);
-        
     }
 
     public void startBGMusic(){
@@ -508,7 +494,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
             setSound(true);
             startBGMusic();
         }
-        
     }
 
     /* Switch to another strategy */
@@ -527,12 +512,10 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
                 }
             }
         }
-        
     }
 
     public void setNewFuelLevel(float volume) {
         currentFuelLevel = volume;
-        
     }
 
     public void updateLastPylonReached(int seqNum) {
@@ -545,8 +528,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         if (damageLevel == 100) {
             deleteOneLifeAndRestartLevel();
         }
-
-        
     }
 
     /* Decrease one life and restart the level.
@@ -558,7 +539,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         }
         if(isSound())
             lostLife.play();
-
         
         resetLevel();
     }
@@ -569,7 +549,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         Pylon.resetSequenceGeneratorTo(THE_FIRST_PYLON);
         initLayout();
         car.setLastHighestPylonReachedToZero();
-        
     }
 
     public void quitTheGame() {
@@ -593,7 +572,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
             observer.update(proxy, null);
 
         }
-        if(getTime() % 2 == 0 && getTime() != 0) {
+        if(getTimeInTicks() % 2 == 0 && getTimeInTicks() != 0) {
             if (VK_S) {
                 car.changeCurrentDirectionOfMuzzleToLeft();
             }
@@ -642,12 +621,6 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     public Car getCharacterCar() {
         return car;
     }
-
-    public void playPause() {
-        startTimer();
-
-    }
-
 
     private class GameObjectsIterator implements Iterator {
         int index;

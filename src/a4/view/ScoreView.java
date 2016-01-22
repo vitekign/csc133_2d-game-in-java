@@ -75,6 +75,6 @@ public class ScoreView extends JPanel implements IObserver {
         remainingFuelLevel.setText("Player Fuel Remaining: " + (int)gw.getCurrentFuelLevel());
         playerDamageLevel.setText("Player Damage Level: " + gw.getDamageLevel());
         soundStatus.setText("Sound: " + (gw.isSound() ? "ON" : "OFF"));
-        currentTime.setText("Time: " + gw.getTimer());
+        currentTime.setText("Time: " + gw.getTimeInSeconds());
     }
 }

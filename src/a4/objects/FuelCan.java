@@ -99,7 +99,7 @@ public class FuelCan extends Fixed implements IDrawable, ICollider, ISelectable{
         g2d.transform(myRotationMatrix);
         g2d.transform(myScaleMatrix);
 
-        if(gw.getTime()%50 == 0 && !gw.isItInPause()){
+        if(gw.getTimeInTicks()%50 == 0 && !gw.isItInPause()){
             timer--;
             size = timer;
         }

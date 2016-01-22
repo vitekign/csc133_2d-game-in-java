@@ -80,18 +80,18 @@ public class GameWorldProxy implements  IGameWorld {
     }
 
     @Override
-    public int getTime() {
-        return realGameWorld.getTime();
+    public int getTimeInTicks() {
+        return realGameWorld.getTimeInTicks();
     }
 
     @Override
-    public void resetTime(){
-        realGameWorld.resetTime();
+    public void resetTimeCounterInTermsOfTicks(){
+        realGameWorld.resetTimeCounterInTermsOfTicks();
     }
 
     @Override
-    public int getTimer(){
-        return realGameWorld.getTimer();
+    public int getTimeInSeconds(){
+        return realGameWorld.getTimeInSeconds();
     }
 
     @Override

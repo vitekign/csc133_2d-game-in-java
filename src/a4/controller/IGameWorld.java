@@ -23,9 +23,9 @@ public interface IGameWorld {
     void eraseFromTheDeleteObjectsCollections(GameObject obj);
     boolean isItInPause();
     void setLastMouseEvent(MouseEvent e);
-    int getTime();
-    void resetTime();
-    int getTimer();
+    int getTimeInTicks();
+    void resetTimeCounterInTermsOfTicks();
+    int getTimeInSeconds();
     void rotateMuzzleToLeft();
     void rotateMuzzleToRight();
 }

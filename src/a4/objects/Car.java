@@ -122,7 +122,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
 
             changeFuelLevel((float) -0.02);
         } else {
-            if (gw.getTime() % 1 == 0 && gw.getTime() != 0)
+            if (gw.getTimeInTicks() % 1 == 0 && gw.getTimeInTicks() != 0)
                 heading += steeringDirection;
             float angle = (90 - heading);
             float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
