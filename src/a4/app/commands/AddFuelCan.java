@@ -33,7 +33,7 @@ public class AddFuelCan extends AbstractAction {
         if(gw != null){
             try {
                 int input = proccessInput();
-                gw.createNewFuelCan(input);
+                gw.createNewFuelCanFromTheMenu(input);
             } catch (Exception ex) {
                 if(ex.getMessage() != "null") {
                     JOptionPane.showMessageDialog(null, "Please enter a number");

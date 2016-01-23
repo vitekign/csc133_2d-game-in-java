@@ -24,7 +24,7 @@ import java.util.List;
 public class GameWorld implements Container, IObservable, IGameWorld, ActionListener {
 
     public static final int FRAMES_PER_SECOND = 50;
-    public static final int MILISEC_PER_FRAME = 1000/FRAMES_PER_SECOND;
+    public static final int MILISEC_PER_FRAME = 1000 / FRAMES_PER_SECOND;
 
     public static final int GLOBAL_WIDTH = 1000;
     public static final int GLOBAL_HEIGHT = 800;
@@ -64,7 +64,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     FollowThePlayerCarStrategy followPlayer;
     MoveTowardsPylonStrategy moveFromPylonToPylon;
 
-    private  Sound backgroundMusic =  new Sound("troops.wav");
+    private Sound backgroundMusic = new Sound("troops.wav");
     Sound lostLife = new Sound("losingLife.wav");
 
     public void initLayout() {
@@ -90,14 +90,14 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         gameObjects.add(factory.makeOilSlickWithRandomData());
         gameObjects.add(factory.makeOilSlickWithRandomData());
 
-        createFuelCansAndAddToGameWorld(factory, 7);
+        createFuelCansDynamicallyAndAttachToGameWorld(factory, 7);
 
         NPCCar npcCar1 = factory.makeNPCCarWithRandomData();
         NPCCar npcCar2 = factory.makeNPCCarWithRandomData();
         NPCCar npcCar3 = factory.makeNPCCarWithRandomData();
 
-         followPlayer = new FollowThePlayerCarStrategy();
-         moveFromPylonToPylon = new MoveTowardsPylonStrategy();
+        followPlayer = new FollowThePlayerCarStrategy();
+        moveFromPylonToPylon = new MoveTowardsPylonStrategy();
 
         npcCar1.setUpStrategy(moveFromPylonToPylon);
         npcCar2.setUpStrategy(followPlayer);
@@ -114,16 +114,16 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         Location locationToPlaceCar;
 
         Optional<Pylon> locationOfFirstPylon = Utilities.findPylonWithIndexNumber(THE_FIRST_PYLON);
-        if(locationOfFirstPylon.isPresent()){
+        if (locationOfFirstPylon.isPresent()) {
             firstPylonInTheGameWorld = locationOfFirstPylon.get();
             locationToPlaceCar = firstPylonInTheGameWorld.getLocation();
             car = factory.makeCarWithLocation(locationToPlaceCar);
         } else {
-            car = factory.makeCarWithLocation(new Location(300,300));
+            car = factory.makeCarWithLocation(new Location(300, 300));
         }
         gameObjects.add(car);
 
-        if(timer == null)
+        if (timer == null)
             timer = new Timer(MILISEC_PER_FRAME, this);
     }
 
@@ -132,10 +132,10 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     }
 
     /* Start timer */
-    public void startTimer(){
+    public void startTimer() {
         Iterator iterator = this.getIterator();
         //Logic for STOP
-        if(timer.isRunning()){
+        if (timer.isRunning()) {
             timer.stop();
             stopBGMusic();
         } else {
@@ -143,16 +143,16 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
             gameObjectsToBeRemoved.removeAllElements();
             lastMouseEvent = null;
 
-            while(iterator.hasNext()){
-                GameObject temp = (GameObject)iterator.getNext();
-                if(temp instanceof ISelectable){
+            while (iterator.hasNext()) {
+                GameObject temp = (GameObject) iterator.getNext();
+                if (temp instanceof ISelectable) {
                     ((ISelectable) temp).setSelected(false);
                 }
             }
             notifyObserver();
             timer.start();
 
-            if(sound) {
+            if (sound) {
                 startBGMusic();
             }
         }
@@ -164,62 +164,53 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         Iterator iterator = this.getIterator();
         timeCounterInTicks++;
 
-        while(iterator.hasNext()){
-            GameObject obj = (GameObject)iterator.getNext();
-            if(obj instanceof Moveable){
-                ((Moveable)obj).move(MILISEC_PER_FRAME /10);
+        while (iterator.hasNext()) {
+            GameObject obj = (GameObject) iterator.getNext();
+            if (obj instanceof Moveable) {
+                ((Moveable) obj).move(MILISEC_PER_FRAME / 10);
                 doCollisionChecking();
                 doShockWaveChecking();
                 removeUnnecessaryObjects();
             }
         }
-        if(this.getTimeInTicks()%50 == 0 && this.getTimeInTicks()!= 0){  /* 50 * 20 = 1000 (1 sec) */
+        if (this.getTimeInTicks() % 50 == 0 && this.getTimeInTicks() != 0) {  /* 50 * 20 = 1000 (1 sec) */
             resetTimeCounterInTermsOfTicks();
             seconds++;
-            if(seconds %10 == 0 && seconds != 0){
+            if (seconds % 10 == 0 && seconds != 0) {
                 switchStrategies();
             }
         }
         notifyObserver();
     }
 
-    public int getTimeInSeconds(){
+    public int getTimeInSeconds() {
         return seconds;
     }
 
-    public int getTimeInTicks(){
+    public int getTimeInTicks() {
         return timeCounterInTicks;
     }
 
-    public void resetTimeCounterInTermsOfTicks(){
+    public void resetTimeCounterInTermsOfTicks() {
         timeCounterInTicks = 0;
     }
 
-
-    private void createFuelCansAndAddToGameWorld(GameObjectsFactory factory,
-                                                 int numberOfCans) {
-        while(numberOfCans > 0) {
-            gameObjects.add(factory.makeFuelCanWithRandomData());
-            numberOfCans--;
-        }
-    }
-
-    public void doShockWaveChecking(){
+    public void doShockWaveChecking() {
         Iterator iterator = this.getIterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
 
             GameObject currObject = (GameObject) iterator.getNext();
-            if(currObject instanceof ShockWave){
-                if(Math.abs(currObject.getX()) > 1000 ||
-                        Math.abs(currObject.getY())> 1000){
+            if (currObject instanceof ShockWave) {
+                if (Math.abs(currObject.getX()) > 1000 ||
+                        Math.abs(currObject.getY()) > 1000) {
                     gameObjectsToBeRemoved.addElement(currObject);
                 }
             }
         }
     }
 
-    public void createNewShockWave(Location location){
-        for(int i =0; i < 5; i++) {
+    public void createNewShockWave(Location location) {
+        for (int i = 0; i < 5; i++) {
             myShockWave = new ShockWave(location, 60, 40, Color.BLACK, this);
             gameObjects.add(myShockWave);
         }
@@ -262,46 +253,74 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     }
 
     /* Remove all objects which have been thrown away */
-    private void removeUnnecessaryObjects(){
-            for (int i = 0; i < gameObjectsToBeRemoved.size(); i++) {
-                for (int j = 0; j < gameObjects.size(); j++) {
-                    if (gameObjectsToBeRemoved.elementAt(i) == gameObjects.get(j)) {
-                        gameObjects.remove(j);
-                    }
+    private void removeUnnecessaryObjects() {
+        for (int i = 0; i < gameObjectsToBeRemoved.size(); i++) {
+            for (int j = 0; j < gameObjects.size(); j++) {
+                if (gameObjectsToBeRemoved.elementAt(i) == gameObjects.get(j)) {
+                    gameObjects.remove(j);
                 }
             }
+        }
         gameObjectsToBeRemoved.clear();
     }
 
     /* Create a new Pylon and add it to the game */
-    public void createNewPylon(int seqNumberOfPylon){
+    public void createNewPylon(int seqNumberOfPylon) {
         List<Pylon> allPylons = Utilities.getAllPylons();
         boolean isPylonInGW = false;
-        for(Pylon pylon : allPylons){
-            if(pylon.getIndexNumber() == seqNumberOfPylon)
+        for (Pylon pylon : allPylons) {
+            if (pylon.getIndexNumber() == seqNumberOfPylon)
                 isPylonInGW = true;
         }
-        if(isPylonInGW) {
+        if (isPylonInGW) {
             JOptionPane.showMessageDialog(null, "Sorry, the pylon with this number already exists...");
-        }
-        else {
-            allPylons.sort( ( p1,  p2) -> p1.getIndexNumber() < p2.getIndexNumber() ? -1 : 1);
+        } else {
+            allPylons.sort((p1, p2) -> p1.getIndexNumber() < p2.getIndexNumber() ? -1 : 1);
             if (isItInPause()) {
-                if(lastMouseEvent == null){
+                if (lastMouseEvent == null) {
                     JOptionPane.showMessageDialog(null, "Please click on the map and then press Add Pylon");
                 } else {
-                    Point2D mouseWorldLoc =  Utilities.applyInverseAndGetPoint(lastMouseEvent);
+                    Point2D mouseWorldLoc = Utilities.applyInverseAndGetPoint(lastMouseEvent);
 
-                    gameObjects.add(factory.makePylonWithLocationAndSequenceNumber(new Location((int)mouseWorldLoc.getX(), (int)mouseWorldLoc.getY()), seqNumberOfPylon));
-                    
+                    gameObjects.add(factory.makePylonWithLocationAndSequenceNumber(new Location((int) mouseWorldLoc.getX(), (int) mouseWorldLoc.getY()), seqNumberOfPylon));
+
                     lastMouseEvent = null;
                 }
             }
         }
     }
 
+    private void addGameObjectToGameWorld(GameObject objectToBeAdded) {
+        gameObjects.add(objectToBeAdded);
+    }
+
+    public boolean doesObjectCollidesWithAnother(GameObject gameObject) {
+        ICollider objectToCheck = (ICollider) gameObject;
+        Iterator secondIterator = this.getIterator();
+        while (secondIterator.hasNext()) {
+            ICollider anotherObject = (ICollider) secondIterator.getNext();
+            if (anotherObject != objectToCheck) {
+                //check for collision
+                if (objectToCheck.didCollideWithAnotherObject(anotherObject))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+
+    private void createFuelCansDynamicallyAndAttachToGameWorld(GameObjectsFactory factory, int numberOfCans) {
+        while(numberOfCans > 0) {
+            GameObject objectToAdd = factory.makeFuelCanWithRandomData();
+            if(!doesObjectCollidesWithAnother(objectToAdd)) {
+                addGameObjectToGameWorld(factory.makeFuelCanWithRandomData());
+                numberOfCans--;
+            }
+        }
+    }
+
     /* Create new fuel can and add it to the game */
-    public void createNewFuelCan(int input){
+    public void createNewFuelCanFromTheMenu(int input){
         if(isItInPause() ){
 
             if(lastMouseEvent != null){
