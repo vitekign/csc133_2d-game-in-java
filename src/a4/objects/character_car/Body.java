@@ -19,7 +19,7 @@ public class Body extends AffineObject{
     /**
      * Define necessary boundaries in terms of Local Coordinates.
      */
-    private int leftSide, rightSide, bottom, top, narrowLeft, narrowRight, upToNarrow;
+    private int left, rightSide, bottom, top, narrowLeft, narrowRight, upToNarrow;
 
 
     /**
@@ -38,18 +38,6 @@ public class Body extends AffineObject{
 
         this.width = width;
         this.height = height;
-
-        leftSide =- width/2;
-        rightSide =+ width/2;
-
-        bottom =- height/2;
-        top =+ height/2;
-
-        narrowLeft =- (width/2) + 5;
-        narrowRight =+ (width/2) -5;
-
-        upToNarrow = (height/2) -30;
-
     }
 
     /**
@@ -59,16 +47,9 @@ public class Body extends AffineObject{
     @Override
     public void  draw(Graphics2D g2d) {
 
-        g2d.setColor(new Color(43, 43, 43));
-        g2d.scale(1.2,1.2);
-
-        int[] xPoints = {leftSide, rightSide, rightSide, narrowRight, narrowLeft, leftSide};
-        int[] yPoints = {bottom, bottom, upToNarrow, top , top, upToNarrow};
-
-
-        //g2d.fillPolygon(xPoints, yPoints, 6);
-        g2d.drawImage(bodyImage, leftSide, bottom, rightSide+160, top+140, null);
-
+        g2d.setColor(new Color(206, 0, 7));
+        g2d.drawOval(-1, -1, 2, 2);
+        g2d.drawImage(bodyImage, -width/2, -height/2, width, height, null);
         g2d.setColor(Color.BLACK);
     }
 

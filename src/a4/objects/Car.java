@@ -60,16 +60,17 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         damageLevel = 0;
         maximumDamageLevel = 100;
 
+        myBody = new Body(50, 100);
 
-        myBody = new Body(30, 60);
+        heading = 0;
 
         myFrontAxle = new FrontAxle(40, 9);
         myFrontAxle.translate(0, 20);
         myRearAxle = new RearAxle(40, 9);
         myRearAxle.translate(0, -20);
-        myTankMuzzle = new TankMuzzle();
-        myTankMuzzle.translate(width/2, length/2);
-        myTankMuzzle.translate(-5,7);
+
+        myTankMuzzle = new TankMuzzle(getHeading());
+        myTankMuzzle.translate(0, 0);
 
         inOilSlick = false;
         lastHighestPylonReached = 1;
@@ -85,8 +86,6 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         collideWithNPCSound = new Sound("hittingWall.wav");
         collideWithFuelCanSound = new Sound("slurp.wav");
 
-        heading = 180;
-
         imageRes = Utilities.loadImage("car.png");
 
         myRotationMatrix = new AffineTransform();
@@ -95,10 +94,29 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
 
     }
 
+    public Location getLocationOfCar(){
+        Location locationToReturn = new Location();
+        locationToReturn.setX((float)this.getX()     );
+        locationToReturn.setY((float)this.getY()     );
+        return locationToReturn;
+    }
+
+    public Location getLocationOfMuzzle(){
+        Location locationToReturn = new Location();
+        locationToReturn.setX((float)this.getX() );
+        locationToReturn.setY((float)this.getY() );
+        return locationToReturn;
+    }
+
+    public float getHeadingOfMuzzle(){
+       return this.myTankMuzzle.getHeading();
+    }
+
+
+
     public void changeCurrentDirectionOfMuzzleToLeft() {
         myTankMuzzle.changeDirection(1);
     }
-
     public void changeCurrentDirectionOfMuzzleToRight() {
         myTankMuzzle.changeDirection(-1);
     }
@@ -112,8 +130,8 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
     public void move(int framesPerSecond) {
         if (isCarInOilSlick()) {
             float angle = (90 - heading);
-            float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
-            float deltaX = (float) (Math.cos(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
+            float deltaY = (float) (Math.sin(Math.toRadians(angle )) * speed * framesPerSecond / 5);
+            float deltaX = (float) (Math.cos(Math.toRadians(angle )) * speed * framesPerSecond / 5);
             Location temp = new Location(this.getLocation().getX() + deltaX,
                     this.getLocation().getY() + deltaY);
 
@@ -125,8 +143,8 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
             if (gw.getTimeInTicks() % 1 == 0 && gw.getTimeInTicks() != 0)
                 heading += steeringDirection;
             float angle = (90 - heading);
-            float deltaY = (float) (Math.sin(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
-            float deltaX = (float) (Math.cos(Math.toRadians(angle + 180)) * speed * framesPerSecond / 5);
+            float deltaY = (float) (Math.sin(Math.toRadians(angle )) * speed * framesPerSecond / 5);
+            float deltaX = (float) (Math.cos(Math.toRadians(angle )) * speed * framesPerSecond / 5);
             Location temp = new Location(this.getLocation().getX() + deltaX,
                     this.getLocation().getY() + deltaY);
 
@@ -304,14 +322,15 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
     public void draw(Graphics2D g2d) {
 
         AffineTransform saveAt = g2d.getTransform();
-        myTranslationMatrix.translate((int) getX() - (int) (width / 2), (int) getY() - (int) (length / 2));
-        myRotationMatrix.rotate(Math.toRadians(90));
+        myTranslationMatrix.translate((double)getX(), (double) getY());
+        myRotationMatrix.rotate(Math.toRadians(-90));
         myRotationMatrix.rotate(Math.toRadians(90 - heading));
+
 
         g2d.transform(myTranslationMatrix);
         g2d.transform(myRotationMatrix);
 
-        myBody.translate(0, 0);
+      //  myBody.translate(0, 0);
        // myFrontAxle.draw(g2d);
        // myRearAxle.draw(g2d);
         myBody.draw(g2d);

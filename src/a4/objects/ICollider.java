@@ -5,6 +5,6 @@ package a4.objects;
 public interface ICollider {
 
     boolean didCollideWithAnotherObject(ICollider obj);
-    void handleCollision(ICollider otherObject);
+    void handleCollision(ICollider otherObject); /* apply appropriate response algorithm */
     float getDistanceOfReference();
 }

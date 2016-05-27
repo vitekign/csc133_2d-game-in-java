@@ -136,6 +136,8 @@ public class Game extends JFrame implements KeyListener{
         RotateMuzzleToRight rotateMuzzleToRight = RotateMuzzleToRight.getInstance();
         rotateMuzzleToRight.setTarget(gw);
 
+        LaunchMissile launchMissileAction = LaunchMissile.getInstance();
+        launchMissileAction.setTarget(gw);
         //**********************************************
         //              top panel                     **
         //**********************************************
@@ -249,19 +251,27 @@ public class Game extends JFrame implements KeyListener{
 //        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP,0),"accelerateTheCar");
 //        this.getRootPane().getActionMap().put("accelerateTheCar", accelerateAction);
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"showDownTheCar");
-        this.getRootPane().getActionMap().put("showDownTheCar", brakeAction);
+//        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DOWN"),"showDownTheCar");
+//        this.getRootPane().getActionMap().put("showDownTheCar", brakeAction);
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,
-                0, false),"turnLeft");
-        this.getRootPane().getActionMap().put("turnLeft", turnLeftAction);
+//        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT,
+//                0, false),"turnLeft");
+//        this.getRootPane().getActionMap().put("turnLeft", turnLeftAction);
+//
+//        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,
+//                0, false),"turnRight");
+//        this.getRootPane().getActionMap().put("turnRight", turnRightAction);
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT,
-                0, false),"turnRight");
-        this.getRootPane().getActionMap().put("turnRight", turnRightAction);
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"),"switchStr");
-        this.getRootPane().getActionMap().put("switchStr", switchStrategiesAction);
+
+//        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"),"switchStr");
+//        this.getRootPane().getActionMap().put("switchStr", switchStrategiesAction);
+
+        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("SPACE"),"launchMissile");
+        this.getRootPane().getActionMap().put("launchMissile", launchMissileAction);
+
+
+
 
         this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("Q"),"quit");
         this.getRootPane().getActionMap().put("quit", quitAction);
@@ -270,14 +280,14 @@ public class Game extends JFrame implements KeyListener{
         this.getRootPane().getActionMap().put("deleteGameObjectBtn", deleteObjectAction);
 
 
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F,
-                0, false), "muzzleToRight");
-        this.getRootPane().getActionMap().put("muzzleToRight", rotateMuzzleToRight);
-
-
-        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-                0 , false),"muzzleToLeft");
-        this.getRootPane().getActionMap().put("muzzleToLeft", rotateMuzzleToLeft);
+//        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F,
+//                0, false), "muzzleToRight");
+//        this.getRootPane().getActionMap().put("muzzleToRight", rotateMuzzleToRight);
+//
+//
+//        this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+//                0 , false),"muzzleToLeft");
+//        this.getRootPane().getActionMap().put("muzzleToLeft", rotateMuzzleToLeft);
 
 
 

@@ -30,6 +30,8 @@ public class Utilities {
     public static final String IMAGE_NAME_PYLON = "farm_1.png";
     public static final String IMAGE_NAME_PYLON_PRESSED = "farm_1.png";
     public static final String IMAGE_NAME_BIRD = "bird_1.png";
+    public static final String IMAGE_NAME_MISSILE = "missile_1.png";
+
 
     public static final String BASE_FONT = "Pipe Dream";
 

@@ -119,7 +119,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
             locationToPlaceCar = firstPylonInTheGameWorld.getLocation();
             car = factory.makeCarWithLocation(locationToPlaceCar);
         } else {
-            car = factory.makeCarWithLocation(new Location(300, 300));
+            car = factory.makeCarWithLocation(new Location(600, 600));
         }
         gameObjects.add(car);
 
@@ -337,8 +337,8 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
         }
     }
 
-    /* Additional methods to manipulate world
-     * objects and related game date */
+    /*  Additional methods to manipulate world
+     *  objects and related game date          */
 
     public void accelerateTheCar() {
         car.accelerateTheCar(2.5f);
@@ -364,6 +364,12 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     @Override
     public void rotateMuzzleToRight(){
         car.changeCurrentDirectionOfMuzzleToRight();
+    }
+
+    public void
+    launchMissile() {
+        Missile missile = new Missile(car.getLocationOfMuzzle(), car.getLocationOfCar(), car.getHeading(), car.getHeadingOfMuzzle(),1 , this);
+        addGameObjectToGameWorld(missile);
     }
 
     public void addOilSlick() {
@@ -640,6 +646,7 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
     public Car getCharacterCar() {
         return car;
     }
+
 
     private class GameObjectsIterator implements Iterator {
         int index;
