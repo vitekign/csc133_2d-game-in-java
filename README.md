@@ -21,3 +21,12 @@ The following concept were covered in the project:
 	Affine Transformations, 
 	Java Optionals, 
 	Java Functional Programming.
+
+
+
+<img width="500" src="https://cloud.githubusercontent.com/assets/3220686/22534629/1014821a-e8aa-11e6-9930-c477075205c1.jpg" >
+<img width="500" src="https://cloud.githubusercontent.com/assets/3220686/22534631/10164014-e8aa-11e6-90f7-7453bf5d3e86.jpg" >
+<img width="500" src="ttps://cloud.githubusercontent.com/assets/3220686/22534630/1014d436-e8aa-11e6-96aa-e2c840d5e2e7.jpg" >
+
+
+
