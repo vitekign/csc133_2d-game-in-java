@@ -7,6 +7,9 @@ package a4.objects;
 //TODO override all methods which update the data in the model
 import a4.app.strategies.IStrategy;
 import a4.model.GameWorld;
+import a4.objects.character_car.Body;
+import a4.objects.character_car.TankMuzzle;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.Vector;
@@ -28,20 +31,25 @@ public class NPCCar extends Car {
         AffineTransform saveAt = g2d.getTransform();
 
       //  myRotationMatrix.rotate(Math.toRadians(90));
-        myRotationMatrix.rotate(Math.toRadians(90 - heading));
+        myRotationMatrix.rotate(Math.toRadians(360- heading));
 
 
         g2d.transform(myTranslationMatrix);
         g2d.transform(myRotationMatrix);
 
+        myBody.draw(g2d);
+        myTankMuzzle.draw(g2d);
 
-        g2d.setColor(new Color(234, 32, 0));
-        g2d.fillRect((int) (width/2) - 4, (int)-(length/2) , 5, ((int)length));
-        g2d.setColor(color);
-        g2d.drawRect(-(int) (width / 2),  -(int) (length / 2), (int) width, (int) length);
-        g2d.setColor(Color.white);
         g2d.drawOval(0, 0, 1, 1);
-        g2d.setColor(Color.black);
+
+
+//        g2d.setColor(new Color(234, 32, 0));
+//        g2d.fillRect((int) (width/2) - 4, (int)-(length/2) , 5, ((int)length));
+//        g2d.setColor(color);
+//        g2d.drawRect(-(int) (width / 2),  -(int) (length / 2), (int) width, (int) length);
+//        g2d.setColor(Color.white);
+//        g2d.drawOval(0, 0, 1, 1);
+//        g2d.setColor(Color.black);
 
 
         //setToIdentity();
@@ -87,6 +95,8 @@ public class NPCCar extends Car {
         this.maximumDamageLevel = maximumDamageLevel;
         this.lastHighestPylonReached = lastHighestPylonReached;
         inOilSlick = false;
+        myTankMuzzle = new TankMuzzle(getHeading(), TankMuzzle.TYPE_OF_IMAGE.DARK_IMAGE);
+        myBody = new Body(50, 100, Body.TYPE_OF_IMAGE.DARK_IMAGE);
 
 
         myTranslationMatrix.translate(location.getX(), location.getY());

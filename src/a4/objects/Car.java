@@ -35,10 +35,11 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
     public Sound collideWithNPCSound;
     public Sound collideWithFuelCanSound;
 
-    private Body myBody;
+    protected Body myBody;
     private FrontAxle myFrontAxle;
     private RearAxle myRearAxle;
-    private TankMuzzle myTankMuzzle;
+    protected TankMuzzle myTankMuzzle;
+
 
     public Car(Location location, GameWorld gw, Color color) {
         super(color);
@@ -60,7 +61,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         damageLevel = 0;
         maximumDamageLevel = 100;
 
-        myBody = new Body(50, 100);
+        myBody = new Body(50, 100, Body.TYPE_OF_IMAGE.LIGHT_IMAGE);
 
         heading = 0;
 
@@ -69,7 +70,7 @@ public class Car extends Moveable implements ISteerable , IDrawable, ICollider {
         myRearAxle = new RearAxle(40, 9);
         myRearAxle.translate(0, -20);
 
-        myTankMuzzle = new TankMuzzle(getHeading());
+        myTankMuzzle = new TankMuzzle(getHeading(), TankMuzzle.TYPE_OF_IMAGE.LIGHT_IMAGE);
         myTankMuzzle.translate(0, 0);
 
         inOilSlick = false;

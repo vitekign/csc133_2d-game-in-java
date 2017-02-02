@@ -94,18 +94,18 @@ public class GameWorld implements Container, IObservable, IGameWorld, ActionList
 
         NPCCar npcCar1 = factory.makeNPCCarWithRandomData();
         NPCCar npcCar2 = factory.makeNPCCarWithRandomData();
-        NPCCar npcCar3 = factory.makeNPCCarWithRandomData();
+      //  NPCCar npcCar3 = factory.makeNPCCarWithRandomData();
 
         followPlayer = new FollowThePlayerCarStrategy();
         moveFromPylonToPylon = new MoveTowardsPylonStrategy();
 
         npcCar1.setUpStrategy(moveFromPylonToPylon);
         npcCar2.setUpStrategy(followPlayer);
-        npcCar3.setUpStrategy(moveFromPylonToPylon);
+   //     npcCar3.setUpStrategy(moveFromPylonToPylon);
 
         gameObjects.add(npcCar1);
         gameObjects.add(npcCar2);
-        gameObjects.add(npcCar3);
+     //   gameObjects.add(npcCar3);
 
         gameObjects.add(factory.makeBirdWithRandomData());
         gameObjects.add(factory.makeBirdWithRandomData());

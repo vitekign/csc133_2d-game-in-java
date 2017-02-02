@@ -9,7 +9,8 @@ import java.awt.geom.AffineTransform;
 /**
  * Created by Victor Ignatenkov on 1/17/16.
  */
-public class TankMuzzle extends AffineObject {
+
+    public class TankMuzzle extends AffineObject {
 
     Image tankMuzzle;
 
@@ -18,7 +19,17 @@ public class TankMuzzle extends AffineObject {
 
     private float headig;
 
-    public TankMuzzle(float heading){
+    public enum TYPE_OF_IMAGE {
+        DARK_IMAGE, LIGHT_IMAGE,
+    }
+
+    public TankMuzzle(float heading, TYPE_OF_IMAGE type_of_image){
+        String name_of_img = "";
+        if(type_of_image == TYPE_OF_IMAGE.DARK_IMAGE){
+            name_of_img = "tank_muzzle_dark.png";
+        } else if(type_of_image == TYPE_OF_IMAGE.LIGHT_IMAGE){
+            name_of_img = "tank_muzzle_1.png";
+        }
         myTranslation = new AffineTransform();
         myRotation = new AffineTransform();
         myScale = new AffineTransform();
@@ -30,7 +41,7 @@ public class TankMuzzle extends AffineObject {
 
         this.headig = heading;
 
-        tankMuzzle  = Utilities.loadImage("tank_muzzle_1.png");
+        tankMuzzle  = Utilities.loadImage(name_of_img);
 
     }
 
