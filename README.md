@@ -23,10 +23,7 @@ The following concept were covered in the project:
 	Java Functional Programming.
 
 
-
-<img width="500" src="https://cloud.githubusercontent.com/assets/3220686/22534629/1014821a-e8aa-11e6-9930-c477075205c1.jpg" >
-<img width="500" src="https://cloud.githubusercontent.com/assets/3220686/22534631/10164014-e8aa-11e6-90f7-7453bf5d3e86.jpg" >
-
+<img width="1004" alt="game_world" src="https://user-images.githubusercontent.com/3220686/32759250-43f4db60-c89d-11e7-9b8b-3ec459e701f2.png">
 
 
 
